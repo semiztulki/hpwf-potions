@@ -1,4 +1,4 @@
-const adminState={sequence:[],ready:false,password:sessionStorage.getItem("hpwf-editor-password")||""};
+const adminState={sequence:[],ready:false,password:sessionStorage.getItem("hpwf-editor-password")||"",confirmedPotionId:null};
 const a$=id=>document.getElementById(id);
 const adminApi="https://hpwf-potions-editor-api-siidraen-3125.vercel.app/api";
 
@@ -109,6 +109,27 @@ function adminLocalMatch(){
   const key=adminStateKey(d.category);
   return adminFindPotion(d,state.potions?.[key]||[]);
 }
+function adminSetIfEmpty(id,value){
+  const input=a$(id);
+  if((input.value===""||input.value==null)&&value!==null&&value!==undefined) input.value=String(value);
+}
+function adminConfirmExistingPotion(){
+  const match=adminLocalMatch();
+  if(match.status!=="existing") return;
+  const p=match.potion,effects=adminEffectMap(p.effects);
+  adminSetIfEmpty("adminLevel",p.level);
+  adminSetIfEmpty("adminNumber",p.number);
+  adminSetIfEmpty("adminName",p.name);
+  adminSetIfEmpty("adminDuration",p.duration);
+  adminSetIfEmpty("adminObservedValue",p.value);
+  adminSetIfEmpty("adminConcentration",effects.concentration?.value);
+  adminSetIfEmpty("adminResistance",effects.resistance?.value);
+  adminSetIfEmpty("adminEfficiency",effects.efficiency?.value);
+  adminSetIfEmpty("adminDescription",p.description);
+  adminSetIfEmpty("adminAuthor",p.author);
+  adminState.confirmedPotionId=p.id;
+  adminRenderValidation();
+}
 function adminRenderPotionMatch(){
   const box=a$("adminPotionMatch"),d=adminDraft();
   const enough=(["standard_new","standard_old"].includes(d.category)?d.level&&d.number!=null:!!d.name);
@@ -120,7 +141,8 @@ function adminRenderPotionMatch(){
   if(m.status==="existing"){
     const p=m.potion;
     const meta=[adminCategoryLabel(p.category),p.level?p.level+" уровень":null,p.duration?state.mechanics?.toxicity?.durationLabels?.[p.duration]:null,p.toxicity==null?null:"токсикация "+p.toxicity].filter(Boolean).join(" · ");
-    box.innerHTML='<div class="admin-selected-card"><p class="eyebrow">Найдено в базе</p><h4>'+esc(potionTitle(p))+'</h4><div class="meta">'+esc(meta)+'</div>'+(potionEffectSummary(p)?'<div class="potion-effect">'+esc(potionEffectSummary(p))+'</div>':"")+'<p class="meta admin-match-note">Будет добавлен еще один рецепт к этому зелью.</p></div>';
+    const confirmed=adminState.confirmedPotionId===p.id;
+    box.innerHTML='<div class="admin-selected-card"><p class="eyebrow">Найдено в базе</p><h4>'+esc(potionTitle(p))+'</h4><div class="meta">'+esc(meta)+'</div>'+(potionEffectSummary(p)?'<div class="potion-effect">'+esc(potionEffectSummary(p))+'</div>':"")+(confirmed?'<p class="meta admin-match-note">Зелье подтверждено. Известные свойства подставлены; пустые поля можно дополнить.</p>':'<p class="meta admin-match-note">Вы хотите добавить новый рецепт к этому зелью?</p><button type="button" class="admin-secondary-btn" data-confirm-existing>Да, добавить рецепт</button>')+'</div>';
   }else if(m.status==="new"){
     box.innerHTML='<div class="admin-message ok">Такого зелья в базе не найдено. При сохранении оно будет создано автоматически.</div>';
   }else if(m.status==="ambiguous"){
@@ -183,6 +205,7 @@ function adminValidation(){
   errors.push(...adminValidatePotionDraft(d));
 
   const match=adminLocalMatch();
+  if(match.status==="existing"&&adminState.confirmedPotionId!==match.potion.id) errors.push("Подтвердите, что хотите добавить новый рецепт к найденному зелью.");
   if(match.status==="conflict") errors.push("Введенные данные противоречат уже существующему зелью: "+(match.conflicts||[]).join(", ")+".");
   if(match.status==="ambiguous") errors.push("По введенным данным найдено несколько зелий. Нужно уточнить параметры.");
 
@@ -322,10 +345,17 @@ async function adminSubmitRecipe(){
   if(result.created){
     potion={id:result.potionId,number:d.number,name:d.name,category:d.category,level:d.level,duration:d.duration,toxicity:d.toxicity,value:d.value,valueStatus:d.valueStatus,effects:d.effects,description:d.description,author:d.author,notes:null,sources:[{file:"Добавлено через форму",line:null}],validation:{status:"ok",issues:[]}};
     state.potions[key].push(potion);
+  }else if(result.updated&&potion){
+    for(const field of ["name","duration","toxicity","value","description","author"]){
+      if((potion[field]==null||potion[field]==="")&&d[field]!=null&&d[field]!=="") potion[field]=d[field];
+    }
+    if((!potion.effects||!potion.effects.length)&&d.effects.length) potion.effects=d.effects;
+    if(potion.value!=null) potion.valueStatus=d.valueStatus;
   }
   state.recipes[key].push({id:result.recipeId,potionId:result.potionId,sequence:adminState.sequence.map(x=>({...x})),source:{file:"Добавлено через форму",line:null},validation:{status:"ok",issues:[]}});
   renderRecipeBrowser();
   adminState.sequence=[];
+  adminState.confirmedPotionId=null;
   adminRenderSequence();
   adminRenderPotionMatch();
   adminRenderAuth();
@@ -343,6 +373,10 @@ function initAdmin(){
 
   ["adminCategory","adminLevel","adminNumber","adminName","adminDuration","adminObservedValue","adminConcentration","adminResistance","adminEfficiency","adminDescription","adminAuthor"]
     .forEach(id=>a$(id).addEventListener("input",adminRenderValidation));
+
+  a$("adminPotionMatch").addEventListener("click",e=>{
+    if(e.target.closest("[data-confirm-existing]")) adminConfirmExistingPotion();
+  });
 
   a$("adminAddIngredient").addEventListener("click",()=>adminAdd({type:"ingredient",ref:a$("adminIngredientSelect").value}));
   a$("adminAddAction").addEventListener("click",()=>adminAdd({type:"action",ref:a$("adminActionSelect").value}));
