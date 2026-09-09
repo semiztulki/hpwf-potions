@@ -152,7 +152,7 @@ function adminSuggestionPotions(){
   }
   const numberText=a$("adminNumber").value.trim();
   if(!numberText) return [];
-  return potions.filter(p=>(!d.level||Number(p.level)===Number(d.level))&&String(p.number??"").includes(numberText)).sort(comparePotions).slice(0,8);
+  return potions.filter(p=>(!d.level||Number(p.level)===Number(d.level))&&String(p.number??"").includes(numberText)).sort((a,b)=>Number(a.number)-Number(b.number)||comparePotions(a,b)).slice(0,8);
 }
 function adminRenderSuggestions(){
   const box=a$("adminPotionSuggestions");
