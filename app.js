@@ -9,6 +9,7 @@ const durationOrder=["5m","1h","5h","1w","1mo","2mo"];
 const effectLabels={concentration:"Концентрация",resistance:"Устойчивость",efficiency:"Эффективность",mana:"Мана"};
 const effectWords={concentration:"концентрации",resistance:"устойчивости",efficiency:"эффективности",mana:"маны"};
 let recipeView="special";
+const potionCollator=new Intl.Collator("ru",{numeric:true,sensitivity:"base"});
 
 function initTabs(){
   document.querySelectorAll(".tab").forEach(btn=>btn.addEventListener("click",()=>{
@@ -74,6 +75,15 @@ function potionTitle(p){
   const e=(p.effects||[])[0];
   if(e&&p.number!=null) return "Зелье "+(effectLabels[e.type]||e.type).toLowerCase()+" №"+p.number;
   return p.number!=null?"Зелье №"+p.number:"Зелье без названия";
+}
+function comparePotions(a,b){
+  const byTitle=potionCollator.compare(potionTitle(a),potionTitle(b));
+  if(byTitle) return byTitle;
+  const byNumber=(a.number??Number.MAX_SAFE_INTEGER)-(b.number??Number.MAX_SAFE_INTEGER);
+  if(byNumber) return byNumber;
+  const byDuration=durationOrder.indexOf(a.duration)-durationOrder.indexOf(b.duration);
+  if(byDuration) return byDuration;
+  return potionCollator.compare(potionEffectSummary(a),potionEffectSummary(b));
 }
 function effectValue(p,type){
   const e=(p.effects||[]).find(x=>x.type===type);
@@ -202,8 +212,18 @@ function visiblePotionCount(){
   ].filter(p=>p.level===Number(recipeView.replace("level","")));
   return q?list.filter(p=>potionSearchText(p,recipesForPotion(p.id)).includes(q)).length:list.length;
 }
+function renderRecipeSearchResults(){
+  const level=Number(recipeView.replace("level",""));
+  const list=recipeView==="special"?[...(state.potions.special||[]),...(state.potions.mana||[])]:[
+    ...(state.potions["standard-new"]||[]),...(state.potions["standard-old"]||[])
+  ].filter(p=>p.level===level);
+  const found=filterPotions(list).sort(comparePotions);
+  if(!found.length) return '<div class="panel empty-state">По этому запросу ничего не найдено.</div>';
+  return '<div class="recipe-page-title"><p class="eyebrow">Поиск</p><h2>Результаты по порядку названий</h2></div><div class="duration-content">'+found.map(renderPotionCard).join("")+'</div>';
+}
 function renderRecipeBrowser(){
-  $("recipeBrowser").innerHTML=recipeView==="special"?renderSpecialView():renderLevelView(Number(recipeView.replace("level","")));
+  const searching=norm($("recipeSearch").value)!=="";
+  $("recipeBrowser").innerHTML=searching?renderRecipeSearchResults():(recipeView==="special"?renderSpecialView():renderLevelView(Number(recipeView.replace("level",""))));
   $("recipeCount").textContent=visiblePotionCount()+" зелий";
   if(!$("recipeBrowser").innerHTML.trim()) $("recipeBrowser").innerHTML='<div class="panel empty-state">По этому запросу ничего не найдено.</div>';
 }
