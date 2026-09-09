@@ -1,4 +1,4 @@
-const adminState={sequence:[],ready:false,password:sessionStorage.getItem("hpwf-editor-password")||"",confirmedPotionId:null};
+const adminState={sequence:[],ready:false,password:sessionStorage.getItem("hpwf-editor-password")||"",confirmedPotionId:null,selectedPotionId:null};
 const a$=id=>document.getElementById(id);
 const adminApi="https://hpwf-potions-editor-api-siidraen-3125.vercel.app/api";
 
@@ -107,27 +107,77 @@ function adminFindPotion(d,potions){
 function adminLocalMatch(){
   const d=adminDraft();
   const key=adminStateKey(d.category);
-  return adminFindPotion(d,state.potions?.[key]||[]);
+  const potions=state.potions?.[key]||[];
+  if(adminState.selectedPotionId){
+    const selected=potions.find(p=>p.id===adminState.selectedPotionId);
+    if(selected){
+      const conflicts=adminPotionConflicts(d,selected);
+      return conflicts.length?{status:"conflict",potion:selected,candidates:[selected],conflicts}:{status:"existing",potion:selected,candidates:[selected]};
+    }
+  }
+  return adminFindPotion(d,potions);
 }
-function adminSetIfEmpty(id,value){
+function adminSetField(id,value,overwrite=false){
   const input=a$(id);
-  if((input.value===""||input.value==null)&&value!==null&&value!==undefined) input.value=String(value);
+  if(overwrite) input.value=value==null?"":String(value);
+  else if((input.value===""||input.value==null)&&value!==null&&value!==undefined) input.value=String(value);
+}
+function adminPopulatePotion(p,overwrite=false){
+  const effects=adminEffectMap(p.effects);
+  adminSetField("adminLevel",p.level,overwrite);
+  adminSetField("adminNumber",p.number,overwrite);
+  adminSetField("adminName",p.name,overwrite);
+  adminSetField("adminDuration",p.duration,overwrite);
+  adminSetField("adminObservedValue",p.value,overwrite);
+  adminSetField("adminConcentration",effects.concentration?.value,overwrite);
+  adminSetField("adminResistance",effects.resistance?.value,overwrite);
+  adminSetField("adminEfficiency",effects.efficiency?.value,overwrite);
+  adminSetField("adminDescription",p.description,overwrite);
+  adminSetField("adminAuthor",p.author,overwrite);
 }
 function adminConfirmExistingPotion(){
   const match=adminLocalMatch();
   if(match.status!=="existing") return;
-  const p=match.potion,effects=adminEffectMap(p.effects);
-  adminSetIfEmpty("adminLevel",p.level);
-  adminSetIfEmpty("adminNumber",p.number);
-  adminSetIfEmpty("adminName",p.name);
-  adminSetIfEmpty("adminDuration",p.duration);
-  adminSetIfEmpty("adminObservedValue",p.value);
-  adminSetIfEmpty("adminConcentration",effects.concentration?.value);
-  adminSetIfEmpty("adminResistance",effects.resistance?.value);
-  adminSetIfEmpty("adminEfficiency",effects.efficiency?.value);
-  adminSetIfEmpty("adminDescription",p.description);
-  adminSetIfEmpty("adminAuthor",p.author);
+  adminState.selectedPotionId=match.potion.id;
+  adminState.confirmedPotionId=match.potion.id;
+  adminPopulatePotion(match.potion);
+  adminRenderValidation();
+}
+function adminSuggestionPotions(){
+  const d=adminDraft(),potions=state.potions?.[adminStateKey(d.category)]||[];
+  if(d.category==="special"){
+    const q=norm(d.name);
+    if(q.length<2) return [];
+    return potions.filter(p=>norm(p.name).includes(q)).slice(0,8);
+  }
+  const numberText=a$("adminNumber").value.trim();
+  if(!numberText) return [];
+  return potions.filter(p=>(!d.level||Number(p.level)===Number(d.level))&&String(p.number??"").includes(numberText)).slice(0,8);
+}
+function adminRenderSuggestions(){
+  const box=a$("adminPotionSuggestions");
+  if(adminState.selectedPotionId){box.innerHTML="";return;}
+  const rows=adminSuggestionPotions();
+  box.innerHTML=rows.length?'<p class="admin-mini-title">Подходящие зелья</p><div class="admin-suggestion-list">'+rows.map(p=>{
+    const duration=p.duration?state.mechanics?.toxicity?.durationLabels?.[p.duration]:"длительность не указана";
+    return '<button type="button" class="admin-suggestion" data-potion-suggestion="'+esc(p.id)+'"><span><strong>'+esc(potionTitle(p))+'</strong><small>'+esc(adminCategoryLabel(p.category)+(p.level?" · "+p.level+" уровень":"")+" · "+duration)+'</small></span><span>'+esc(potionEffectSummary(p)||"эффект не указан")+'</span></button>';
+  }).join("")+'</div>':"";
+}
+function adminSelectPotion(id){
+  const d=adminDraft(),p=(state.potions?.[adminStateKey(d.category)]||[]).find(x=>x.id===id);
+  if(!p) return;
+  adminState.selectedPotionId=p.id;
   adminState.confirmedPotionId=p.id;
+  adminPopulatePotion(p,true);
+  adminRenderValidation();
+}
+function adminClearForm(){
+  a$("adminRecipeForm").reset();
+  adminState.sequence=[];
+  adminState.selectedPotionId=null;
+  adminState.confirmedPotionId=null;
+  adminStatus("");
+  adminRenderSequence();
   adminRenderValidation();
 }
 function adminRenderPotionMatch(){
@@ -242,6 +292,7 @@ function adminValidation(){
   return {errors,warnings,info};
 }
 function adminRenderValidation(){
+  adminRenderSuggestions();
   adminRenderPotionMatch();
   const box=a$("adminValidation"),v=adminValidation();
   box.innerHTML=[
@@ -356,6 +407,7 @@ async function adminSubmitRecipe(){
   renderRecipeBrowser();
   adminState.sequence=[];
   adminState.confirmedPotionId=null;
+  adminState.selectedPotionId=null;
   adminRenderSequence();
   adminRenderPotionMatch();
   adminRenderAuth();
@@ -372,11 +424,23 @@ function initAdmin(){
   adminPopulateBuilder();
 
   ["adminCategory","adminLevel","adminNumber","adminName","adminDuration","adminObservedValue","adminConcentration","adminResistance","adminEfficiency","adminDescription","adminAuthor"]
-    .forEach(id=>a$(id).addEventListener("input",adminRenderValidation));
+    .forEach(id=>a$(id).addEventListener("input",()=>{
+      if(["adminCategory","adminLevel","adminNumber","adminName"].includes(id)){
+        adminState.selectedPotionId=null;
+        adminState.confirmedPotionId=null;
+      }
+      adminRenderValidation();
+    }));
+
+  a$("adminPotionSuggestions").addEventListener("click",e=>{
+    const btn=e.target.closest("[data-potion-suggestion]");
+    if(btn) adminSelectPotion(btn.dataset.potionSuggestion);
+  });
 
   a$("adminPotionMatch").addEventListener("click",e=>{
     if(e.target.closest("[data-confirm-existing]")) adminConfirmExistingPotion();
   });
+  a$("adminClearForm").addEventListener("click",adminClearForm);
 
   a$("adminAddIngredient").addEventListener("click",()=>adminAdd({type:"ingredient",ref:a$("adminIngredientSelect").value}));
   a$("adminAddAction").addEventListener("click",()=>adminAdd({type:"action",ref:a$("adminActionSelect").value}));
