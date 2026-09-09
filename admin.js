@@ -148,11 +148,11 @@ function adminSuggestionPotions(){
   if(d.category==="special"){
     const q=norm(d.name);
     if(q.length<2) return [];
-    return potions.filter(p=>norm(p.name).includes(q)).slice(0,8);
+    return potions.filter(p=>norm(p.name).includes(q)).sort(comparePotions).slice(0,8);
   }
   const numberText=a$("adminNumber").value.trim();
   if(!numberText) return [];
-  return potions.filter(p=>(!d.level||Number(p.level)===Number(d.level))&&String(p.number??"").includes(numberText)).slice(0,8);
+  return potions.filter(p=>(!d.level||Number(p.level)===Number(d.level))&&String(p.number??"").includes(numberText)).sort(comparePotions).slice(0,8);
 }
 function adminRenderSuggestions(){
   const box=a$("adminPotionSuggestions");
