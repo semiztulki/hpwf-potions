@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Справочник и база зельеварения HPWF">
+  <title>HPWF Potions</title>
+  <link rel="stylesheet" href="style.css?v=20260909-2">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div>
+        <p class="eyebrow">HPWF tools</p>
+        <h1>Зельеварение</h1>
+        <p class="subtitle">Справочник по ингредиентам, действиям и механике, база рецептов и отдельная очередь записей, требующих сверки.</p>
+      </div>
+      <div class="status-badge" id="dataStatus">Загрузка данных…</div>
+    </div>
+  </header>
+  <nav class="wrap tabs" aria-label="Разделы">
+    <button class="tab active" data-tab="ingredients">Ингредиенты</button>
+    <button class="tab" data-tab="actions">Действия и Луна</button>
+    <button class="tab" data-tab="mechanics">Механика</button>
+    <button class="tab" data-tab="potions">Рецепты</button>
+    <button class="tab" data-tab="add-recipe">Добавить рецепт</button>
+    <button class="tab" data-tab="review">На проверку</button>
+  </nav>
+  <main class="wrap">
+    <section id="ingredients" class="tab-panel active">
+      <div class="panel controls">
+        <div class="section-heading">
+          <div><p class="eyebrow">Справочник</p><h2>Ингредиенты</h2></div>
+          <span id="ingredientCount" class="count-pill">0</span>
+        </div>
+        <div class="filter-grid">
+          <label class="field field-wide"><span>Поиск</span><input id="ingredientSearch" type="search" placeholder="Например: аконит, мавка, феникс"></label>
+          <label class="field"><span>Уровень</span><select id="ingredientLevel"><option value="">Все</option><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3">3 уровень</option></select></label>
+          <label class="field"><span>Категория</span><select id="ingredientRarity"><option value="">Все</option><option value="common">Обычные</option><option value="seasonal">Сезонные редкие</option><option value="very_rare">Особо редкие</option></select></label>
+          <label class="field"><span>Сезон</span><select id="ingredientSeason"><option value="">Все</option><option value="winter">Зима</option><option value="spring">Весна</option><option value="summer">Лето</option><option value="autumn">Осень</option></select></label>
+        </div>
+      </div>
+      <div class="power-table panel">
+        <p class="eyebrow">Сила ингредиентов</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Уровень</th><th>Обычный</th><th>Сезонный</th><th>Особо редкий</th></tr></thead>
+          <tbody><tr><td>1</td><td>200</td><td>1 000</td><td>5 000</td></tr><tr><td>2</td><td>550</td><td>2 500</td><td>13 500</td></tr><tr><td>3</td><td>1 500</td><td>7 500</td><td>36 000</td></tr></tbody>
+        </table></div>
+      </div>
+      <div id="ingredientCards" class="cards"></div>
+    </section>
+    <section id="actions" class="tab-panel">
+      <div class="section-heading"><div><p class="eyebrow">Справочник</p><h2>Действия и Свет полной луны</h2></div></div>
+      <div id="actionCards" class="cards"></div>
+    </section>
+    <section id="mechanics" class="tab-panel">
+      <div class="section-heading"><div><p class="eyebrow">Подтвержденные правила</p><h2>Механика</h2></div></div>
+      <div id="mechanicsContent" class="mechanics-grid"></div>
+    </section>
+    <section id="potions" class="tab-panel">
+      <div class="section-heading">
+        <div><p class="eyebrow">База</p><h2>Зелья и рецепты</h2></div>
+        <span id="recipeCount" class="count-pill" hidden>0</span>
+      </div>
+      <div id="databaseGate" class="panel editor-gate">
+        <h3>Этот раздел магически запечатан. Произнести пароль:</h3>
+        <div class="admin-add-row">
+          <div class="password-field">
+            <input id="databasePassword" type="password" autocomplete="current-password" placeholder="Введите пароль для доступа к базе и добавления рецептов" aria-label="Пароль для доступа к базе и добавления рецептов">
+            <button type="button" class="password-toggle" data-password-toggle="databasePassword" aria-label="Показать пароль" title="Показать пароль"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg></button>
+          </div>
+          <button type="button" id="databaseLoginButton" class="admin-primary-btn">Войти</button>
+        </div>
+        <div id="databaseLoginStatus" class="admin-status"></div>
+      </div>
+      <div id="databaseContent" hidden>
+        <div class="database-session-row">
+          <span class="meta">Доступ к базе открыт</span>
+          <button type="button" id="databaseLogoutButton" class="admin-secondary-btn">Выйти</button>
+        </div>
+        <div class="panel recipe-controls">
+          <label class="field"><span>Поиск по базе</span><input id="recipeSearch" type="search" placeholder="Номер зелья, ингредиент, действие, эффект"></label>
+          <div class="recipe-view-tabs" aria-label="Разделы базы">
+            <button class="recipe-view-btn active" data-recipe-view="special">Именные / особые</button>
+            <button class="recipe-view-btn" data-recipe-view="level1">1 уровень</button>
+            <button class="recipe-view-btn" data-recipe-view="level2">2 уровень</button>
+            <button class="recipe-view-btn" data-recipe-view="level3">3 уровень</button>
+          </div>
+          <p class="meta recipe-help">Структура повторяет факультетскую базу: эффект → длительность → зелья. Раздел длительности раскрывается по нажатию.</p>
+        </div>
+        <div id="recipeBrowser" class="recipe-browser"></div>
+      </div>
+    </section>
+    <section id="add-recipe" class="tab-panel">
+      <div class="section-heading">
+        <div><p class="eyebrow">Редактор базы</p><h2>Добавить рецепт</h2></div>
+      </div>
+
+      <div id="editorGate" class="panel editor-gate">
+        <h3>Этот раздел магически запечатан. Произнести пароль:</h3>
+        <div class="admin-add-row">
+          <div class="password-field">
+            <input id="editorPassword" type="password" autocomplete="current-password" placeholder="Введите пароль для доступа к базе и добавления рецептов" aria-label="Пароль для доступа к базе и добавления рецептов">
+            <button type="button" class="password-toggle" data-password-toggle="editorPassword" aria-label="Показать пароль" title="Показать пароль"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg></button>
+          </div>
+          <button type="button" id="editorLoginButton" class="admin-primary-btn">Войти</button>
+        </div>
+        <div id="editorLoginStatus" class="admin-status"></div>
+      </div>
+      <form id="adminRecipeForm" class="admin-form" hidden>
+        <div class="panel admin-block">
+          <div class="admin-block-head">
+            <div><p class="eyebrow">Шаг 1</p><h3>Данные зелья</h3></div>
+          </div>
+          <p class="meta">Заполняйте данные зелья каждый раз. Форма сама определит, есть ли оно уже в базе: существующему добавит новый рецепт, отсутствующее создаст автоматически.</p>
+          <div class="admin-grid">
+            <label class="field"><span>Раздел</span><select id="adminCategory">
+              <option value="standard_new">Новый образец</option>
+              <option value="standard_old">Старый образец</option>
+              <option value="special">Именное / особое</option>
+            </select></label>
+            <label class="field"><span>Уровень</span><select id="adminLevel"><option value="">Не указан</option><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3">3 уровень</option></select></label>
+            <label class="field"><span>Номер</span><input id="adminNumber" type="number" min="0" step="1" placeholder="Например: 108"></label>
+            <label class="field"><span>Название</span><input id="adminName" type="text" placeholder="Для именных и особых"></label>
+            <label class="field"><span>Длительность</span><select id="adminDuration">
+              <option value="">Не указана</option><option value="5m">5 минут</option><option value="1h">1 час</option><option value="5h">5 часов</option><option value="1w">1 неделя</option><option value="1mo">1 месяц</option><option value="2mo">2 месяца</option>
+            </select></label>
+            <label class="field"><span>Наблюдаемая ценность</span><input id="adminObservedValue" type="number" min="0" step="1" placeholder="Можно оставить пустым"></label>
+          </div>
+          <div class="admin-effects">
+            <p class="admin-mini-title">Эффекты</p>
+            <div class="admin-grid">
+              <label class="field"><span>Концентрация</span><input id="adminConcentration" type="number" step="1" placeholder="+"></label>
+              <label class="field"><span>Устойчивость</span><input id="adminResistance" type="number" step="1" placeholder="+"></label>
+              <label class="field"><span>Эффективность, %</span><input id="adminEfficiency" type="number" step="1" placeholder="+"></label>
+            </div>
+          </div>
+          <div class="admin-grid">
+            <label class="field field-wide"><span>Описание / примечание</span><input id="adminDescription" type="text" placeholder="Необязательно"></label>
+            <label class="field"><span>Автор</span><input id="adminAuthor" type="text" placeholder="Необязательно"></label>
+          </div>
+          <div id="adminPotionMatch" class="admin-selected-potion"></div>
+        </div>
+
+        <div class="panel admin-block">
+          <div class="admin-block-head">
+            <div><p class="eyebrow">Шаг 2</p><h3>Собрать рецепт</h3></div>
+            <span id="adminIngredientCount" class="count-pill">0 / 11</span>
+          </div>
+          <div class="admin-builder">
+            <div class="admin-add-row">
+              <select id="adminIngredientSelect" aria-label="Ингредиент"></select>
+              <button type="button" id="adminAddIngredient" class="admin-secondary-btn">Добавить ингредиент</button>
+            </div>
+            <div class="admin-add-row">
+              <select id="adminActionSelect" aria-label="Действие"></select>
+              <button type="button" id="adminAddAction" class="admin-secondary-btn">Добавить действие</button>
+            </div>
+            <div class="admin-add-row">
+              <button type="button" id="adminAddMoon" class="admin-secondary-btn">Добавить Свет полной луны</button>
+            </div>
+          </div>
+          <div id="adminSequence" class="admin-sequence empty"></div>
+          <div id="adminValidation" class="admin-validation"></div>
+        </div>
+
+        <div class="panel admin-block">
+          <div class="admin-block-head">
+            <div><p class="eyebrow">Шаг 3</p><h3>Записать в базу</h3></div>
+          </div>
+          <div class="admin-submit-row">
+            <button type="submit" id="adminSubmit" class="admin-primary-btn">Добавить в базу</button>
+            <button type="button" id="editorLogoutButton" class="admin-secondary-btn">Выйти</button>
+            <div id="adminStatus" class="admin-status"></div>
+          </div>
+        </div>
+      </form>
+    </section>
+    <section id="review" class="tab-panel">
+      <div class="section-heading">
+        <div><p class="eyebrow">Контроль качества</p><h2>Рецепты, требующие проверки</h2></div>
+        <span id="reviewCount" class="count-pill" hidden>0</span>
+      </div>
+      <div id="reviewPrivateContent" hidden>
+      <div class="panel controls">
+        <p class="callout">Здесь остались только записи, которые не объясняются текущей механикой и действительно требуют ручной сверки. Действия более высокого уровня и Свет полной луны из ошибок уровня исключены.</p>
+        <div class="filter-grid review-filters">
+          <label class="field field-wide"><span>Поиск</span><input id="reviewSearch" type="search" placeholder="Название зелья, ингредиент, действие, причина"></label>
+          <label class="field"><span>Проблема</span><select id="reviewIssue"><option value="">Все</option><option value="unresolved_token">Компонент не описан</option><option value="two_actions_in_row">Два действия подряд</option><option value="too_many_ingredients">Слишком много ингредиентов</option><option value="level_mismatch">Ингредиент выше уровня зелья</option><option value="source_uncertain">Поврежден источник</option></select></label>
+          <label class="field"><span>Уровень</span><select id="reviewLevel"><option value="">Все</option><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3">3 уровень</option><option value="none">Без уровня</option></select></label>
+        </div>
+      </div>
+      <div id="reviewCards" class="review-cards"></div>
+      <div id="reviewEmpty" class="panel empty-state" hidden>По этим фильтрам записей нет.</div>
+      </div>
+    </section>
+  </main>
+  <footer class="wrap footer"><p>HPWF Potions · справочник основан на подтвержденной игровой механике и данных, внесенных вручную.</p></footer>
+  <script src="app.js" defer></script>
+  <script src="admin.js?v=20260909-2" defer></script>
+  <script src="review.js?v=20260907-2" defer></script>
+</body>
+</html>

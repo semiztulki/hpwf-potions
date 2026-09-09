@@ -1,0 +1,67 @@
+[
+  {
+    "id": "action-stir",
+    "name": "Простое помешивание",
+    "kind": "action",
+    "level": 1,
+    "pauseSeconds": 15,
+    "basePower": 0,
+    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingr_spoon.png",
+    "rules": [
+      "Можно ставить между элементами рецепта",
+      "Не добавляет силы",
+      "Меняет идентичность рецепта"
+    ]
+  },
+  {
+    "id": "action-spell",
+    "name": "Простое заклинание",
+    "kind": "action",
+    "level": 2,
+    "pauseSeconds": 15,
+    "basePower": 0,
+    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/wand.png",
+    "rules": [
+      "Можно ставить между элементами рецепта",
+      "Не добавляет силы",
+      "Не повышает уровень самого зелья",
+      "Если зелье 1 уровня, бросок длительности делается как для 2 уровня"
+    ]
+  },
+  {
+    "id": "action-heat",
+    "name": "Нагревание",
+    "kind": "action",
+    "level": 3,
+    "pauseSeconds": 15,
+    "basePower": 0,
+    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/boil.png",
+    "rules": [
+      "Можно ставить между элементами рецепта",
+      "Не добавляет силы",
+      "Не повышает уровень самого зелья",
+      "Если зелье ниже 3 уровня, бросок длительности делается как для 3 уровня"
+    ]
+  },
+  {
+    "id": "full-moon",
+    "name": "Свет полной луны",
+    "kind": "moon",
+    "level": 2,
+    "pauseSeconds": 60,
+    "basePower": 0,
+    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/full-moon.png",
+    "availability": "Только во время полнолуния, около 72 часов в месяц",
+    "valueBonusMin": 0,
+    "valueBonusMax": 450,
+    "consumesIngredientSlot": false,
+    "rules": [
+      "Считается отдельным элементом рецепта, а не обычным действием",
+      "Не занимает одно из 11 мест ингредиентов",
+      "Не повышает уровень самого зелья; уровень зелья определяется только ингредиентами.",
+      "Добавляет отдельный случайный бонус 0–450 к ценности",
+      "Если 11-й ингредиент уже добавлен, Луну добавить поздно: варка завершается",
+      "Положение первым или последним само по себе не считается ошибкой"
+    ]
+  }
+]
