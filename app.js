@@ -50,9 +50,16 @@ function openFunctionalTab(id){
 function initTabs(){
   document.querySelectorAll(".tab").forEach(btn=>btn.addEventListener("click",()=>openFunctionalTab(btn.dataset.tab)));
   document.querySelectorAll("[data-home-tab]").forEach(btn=>btn.addEventListener("click",()=>openFunctionalTab(btn.dataset.homeTab)));
+  document.querySelectorAll("[data-home-anchor]").forEach(btn=>btn.addEventListener("click",()=>openCatalogTool(btn.dataset.homeAnchor)));
   $("functionalHomeButton").addEventListener("click",()=>showHome());
   $("footerHomeAction").addEventListener("click",()=>showHome());
   $("footerTopAction").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+}
+function openCatalogTool(id){
+  openFunctionalTab("ingredients");
+  if(id==="valueCalculator"){$("valueCalculator").hidden=false;$("valueCalculatorToggle").setAttribute("aria-expanded","true");updateValueCalculator();}
+  if(id==="moonStatus"){$("moonStatus").hidden=false;$("moonInfoToggle").setAttribute("aria-expanded","true");renderMoonStatus();}
+  requestAnimationFrame(()=>$(id).scrollIntoView({behavior:"smooth",block:"center"}));
 }
 function ingredientRow(x){
   const img=x.imageUrl?'<img class="catalog-icon" src="'+x.imageUrl+'" alt="">':'<span class="catalog-icon-placeholder">✦</span>';
