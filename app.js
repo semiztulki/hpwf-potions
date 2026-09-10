@@ -47,11 +47,7 @@ function openFunctionalTab(id){
 }
 
 function initTabs(){
-  document.querySelectorAll(".tab").forEach(btn=>btn.addEventListener("click",()=>{
-    document.querySelectorAll(".tab,.tab-panel").forEach(x=>x.classList.remove("active"));
-    btn.classList.add("active");
-    $(btn.dataset.tab).classList.add("active");
-  }));
+  document.querySelectorAll(".tab").forEach(btn=>btn.addEventListener("click",()=>openFunctionalTab(btn.dataset.tab)));
   document.querySelectorAll("[data-home-tab]").forEach(btn=>btn.addEventListener("click",()=>openFunctionalTab(btn.dataset.homeTab)));
   $("functionalHomeButton").addEventListener("click",()=>showHome());
 }
