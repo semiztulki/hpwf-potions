@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Справочник и база зельеварения HPWF">
   <title>HPWF Potions</title>
-  <link rel="stylesheet" href="style.css?v=20260910-17">
+  <link rel="stylesheet" href="style.css?v=20260910-18">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -33,6 +33,8 @@
       <div class="home-links" aria-label="Разделы сайта">
         <button type="button" data-home-tab="ingredients">Каталог ингредиентов</button>
         <button type="button" data-home-tab="mechanics">Полезные таблички</button>
+        <button type="button" data-home-anchor="valueCalculator">Рассчитать ценность зелья</button>
+        <button type="button" data-home-anchor="moonStatus">Узнать, когда полнолуние</button>
         <button type="button" data-home-tab="potions" data-auth-only>Рецепты</button>
         <button type="button" data-home-tab="add-recipe" data-auth-only>Добавить рецепт</button>
         <button type="button" data-home-tab="review" data-auth-only>На проверку</button>
@@ -109,14 +111,14 @@
           <ul class="moon-footnotes">
             <li>Свет полной луны добавляет случайный бонус 0–450 к ценности зелья</li>
             <li>Работает как дополнительный ингредиент, а не как действие</li>
-            <li>Доступно только в <button type="button" id="moonInfoToggle" class="inline-link" aria-expanded="false" aria-controls="moonStatus">реальное полнолуние</button></li>
+            <li>Доступно только в <button type="button" id="moonInfoToggle" class="inline-link discoverable-link" aria-expanded="false" aria-controls="moonStatus">реальное полнолуние</button></li>
             <li>Несмотря на то, что это действие второго уровня, оно доступно на первом — в составе зелья маны «Слеза дриады».</li>
           </ul>
         </div>
         <div id="moonStatus" class="moon-status" hidden aria-live="polite"></div>
       </div>
       <div class="power-table panel catalog-reference-table">
-        <h2>Сила ингредиентов для примерного <button type="button" id="valueCalculatorToggle" class="inline-link" aria-expanded="false" aria-controls="valueCalculator">расчёта ценности зелья</button></h2>
+        <h2>Сила ингредиентов для примерного <button type="button" id="valueCalculatorToggle" class="inline-link discoverable-link" aria-expanded="false" aria-controls="valueCalculator">расчёта ценности зелья</button></h2>
         <div class="table-wrap"><table>
           <thead><tr><th>Уровень</th><th>Обычный</th><th>Сезонный</th><th>Особо редкий</th></tr></thead>
           <tbody><tr><td>1</td><td>200</td><td>1 000</td><td>5 000</td></tr><tr><td>2</td><td>550</td><td>2 500</td><td>13 500</td></tr><tr><td>3</td><td>1 500</td><td>7 500</td><td>36 000</td></tr></tbody>
@@ -282,7 +284,7 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260910-15" defer></script>
+  <script src="app.js?v=20260910-16" defer></script>
   <script src="admin.js?v=20260910-2" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
