@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Справочник и база зельеварения HPWF">
   <title>HPWF Potions</title>
-  <link rel="stylesheet" href="style.css?v=20260910-19">
+  <link rel="stylesheet" href="style.css?v=20260910-20">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -60,6 +60,7 @@
   <nav class="wrap tabs" aria-label="Разделы">
     <button type="button" class="tab home-tab" id="stickyHomeButton">Главная</button>
     <button class="tab active" data-tab="ingredients">Каталог ингредиентов</button>
+    <button type="button" class="tab" data-home-anchor="valueCalculator">Калькулятор ценности</button>
     <button class="tab" data-tab="mechanics">Полезные таблички</button>
     <button class="tab" data-tab="potions" data-auth-only>Рецепты</button>
     <button class="tab" data-tab="add-recipe" data-auth-only>Добавить рецепт</button>
@@ -118,14 +119,9 @@
         </div>
         <div id="moonStatus" class="moon-status" hidden aria-live="polite"></div>
       </div>
-      <div class="power-table panel catalog-reference-table">
-        <h2>Сила ингредиентов для примерного <button type="button" id="valueCalculatorToggle" class="inline-link discoverable-link" aria-expanded="false" aria-controls="valueCalculator">расчёта ценности зелья</button></h2>
-        <div class="table-wrap"><table>
-          <thead><tr><th>Уровень</th><th>Обычный</th><th>Сезонный</th><th>Особо редкий</th></tr></thead>
-          <tbody><tr><td>1</td><td>200</td><td>1 000</td><td>5 000</td></tr><tr><td>2</td><td>550</td><td>2 500</td><td>13 500</td></tr><tr><td>3</td><td>1 500</td><td>7 500</td><td>36 000</td></tr></tbody>
-        </table></div>
-        <div id="valueCalculator" class="value-calculator" hidden>
-          <div class="calculator-head"><h3>Калькулятор ценности</h3><span id="calculatorCount" class="count-pill">0 из 11</span></div>
+      <div class="power-table panel catalog-reference-table" id="valueCalculator">
+        <div class="calculator-head"><h2>Расчёт примерной ценности зелья</h2><span id="calculatorCount" class="count-pill">0 из 11</span></div>
+        <div class="value-calculator">
           <div id="calculatorIngredients" class="calculator-grid"></div>
           <label class="calculator-moon"><input id="calculatorMoon" type="checkbox"> Добавить Свет полной луны</label>
           <div id="calculatorResult" class="calculator-result" aria-live="polite"></div>
@@ -285,7 +281,7 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260910-18" defer></script>
+  <script src="app.js?v=20260910-19" defer></script>
   <script src="admin.js?v=20260910-2" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
