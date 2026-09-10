@@ -477,7 +477,7 @@ function initAdmin(){
   a$("guestLoginButton").addEventListener("click",()=>{
     adminState.password="";sessionStorage.removeItem("hpwf-editor-password");showHome("guest");
   });
-  ["homeAuthAction","functionalAuthAction"].forEach(id=>a$(id).addEventListener("click",()=>{
+  ["homeAuthAction","functionalAuthAction","footerAuthAction"].forEach(id=>a$(id).addEventListener("click",()=>{
     if(accessMode==="authenticated") adminLogout(); else showAccessScreen();
   }));
 
