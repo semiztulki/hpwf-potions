@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Справочник и база зельеварения HPWF">
   <title>HPWF Potions</title>
-  <link rel="stylesheet" href="style.css?v=20260910-9">
+  <link rel="stylesheet" href="style.css?v=20260910-10">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -70,22 +70,25 @@
           <span id="ingredientCount" class="count-pill">0</span>
         </div>
         <div class="filter-grid catalog-filter-grid">
-          <fieldset class="filter-check-group"><legend>Уровень</legend><div class="filter-check-options">
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-level" value="1" checked> 1 уровень</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-level" value="2" checked> 2 уровень</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-level" value="3" checked> 3 уровень</label>
-          </div></fieldset>
-          <fieldset class="filter-check-group"><legend>Категория</legend><div class="filter-check-options">
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="common" checked> Обычные</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="seasonal" checked> Сезонные редкие</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="very_rare" checked> Особо редкие</label>
-          </div></fieldset>
-          <fieldset class="filter-check-group"><legend>Сезон</legend><div class="filter-check-options">
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="winter" checked> Зима</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="spring" checked> Весна</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="summer" checked> Лето</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="autumn" checked> Осень</label>
-          </div></fieldset>
+          <div class="field"><span>Уровень</span><details class="check-select" data-filter-group="ingredient-level"><summary data-filter-summary>Все</summary><div class="check-select-menu">
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-level" value="" data-filter-all checked> Все</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-level" value="1"> 1 уровень</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-level" value="2"> 2 уровень</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-level" value="3"> 3 уровень</label>
+          </div></details></div>
+          <div class="field"><span>Категория</span><details class="check-select" data-filter-group="ingredient-rarity"><summary data-filter-summary>Все</summary><div class="check-select-menu">
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="" data-filter-all checked> Все</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="common"> Обычные</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="seasonal"> Сезонные редкие</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="very_rare"> Особо редкие</label>
+          </div></details></div>
+          <div class="field"><span>Сезон</span><details class="check-select" data-filter-group="ingredient-season"><summary data-filter-summary>Все</summary><div class="check-select-menu">
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="" data-filter-all checked> Все</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="winter"> Зима</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="spring"> Весна</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="summer"> Лето</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="autumn"> Осень</label>
+          </div></details></div>
         </div>
         <div id="ingredientCards" class="table-wrap catalog-table-wrap"></div>
       </div>
@@ -259,7 +262,7 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260910-10" defer></script>
+  <script src="app.js?v=20260910-11" defer></script>
   <script src="admin.js?v=20260910-2" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
