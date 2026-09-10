@@ -6,7 +6,7 @@
     "level": 1,
     "pauseSeconds": 15,
     "basePower": 0,
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingr_spoon.png",
+    "imageUrl": "assets/catalog/ingr_spoon.png",
     "rules": [
       "Можно ставить между элементами рецепта",
       "Не добавляет силы",
@@ -20,7 +20,7 @@
     "level": 2,
     "pauseSeconds": 15,
     "basePower": 0,
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/wand.png",
+    "imageUrl": "assets/catalog/wand.png",
     "rules": [
       "Можно ставить между элементами рецепта",
       "Не добавляет силы",
@@ -35,7 +35,7 @@
     "level": 3,
     "pauseSeconds": 15,
     "basePower": 0,
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/boil.png",
+    "imageUrl": "assets/catalog/boil.png",
     "rules": [
       "Можно ставить между элементами рецепта",
       "Не добавляет силы",
@@ -50,7 +50,7 @@
     "level": 2,
     "pauseSeconds": 60,
     "basePower": 0,
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/full-moon.png",
+    "imageUrl": "assets/catalog/full-moon.png",
     "availability": "Только во время полнолуния, около 72 часов в месяц",
     "valueBonusMin": 0,
     "valueBonusMax": 450,

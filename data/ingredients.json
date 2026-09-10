@@ -8,7 +8,7 @@
     "basePower": 200,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/ingr_aconite.png"
   },
   {
     "id": "ing-002",
@@ -19,7 +19,7 @@
     "basePower": 200,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/ingr_baneberry.png"
   },
   {
     "id": "ing-003",
@@ -30,7 +30,7 @@
     "basePower": 200,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/ingr_verbena.png"
   },
   {
     "id": "ing-004",
@@ -41,7 +41,7 @@
     "basePower": 200,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/ingr_fern.png"
   },
   {
     "id": "ing-005",
@@ -52,7 +52,7 @@
     "basePower": 200,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/ingr_caterpillar.png"
   },
   {
     "id": "ing-006",
@@ -63,7 +63,7 @@
     "basePower": 1000,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/maple-leaf.png"
+    "imageUrl": "assets/catalog/maple-leaf.png"
   },
   {
     "id": "ing-007",
@@ -74,7 +74,7 @@
     "basePower": 1000,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/giacint.png"
+    "imageUrl": "assets/catalog/giacint.png"
   },
   {
     "id": "ing-008",
@@ -85,7 +85,7 @@
     "basePower": 1000,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/snowflake.png"
+    "imageUrl": "assets/catalog/snowflake.png"
   },
   {
     "id": "ing-009",
@@ -96,7 +96,7 @@
     "basePower": 1000,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/egg.png"
+    "imageUrl": "assets/catalog/egg.png"
   },
   {
     "id": "ing-010",
@@ -107,7 +107,7 @@
     "basePower": 5000,
     "pauseSeconds": 45,
     "approxQuestDropRate": "1/2000",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/lilshroom.png"
+    "imageUrl": "assets/catalog/lilshroom.png"
   },
   {
     "id": "ing-011",
@@ -118,7 +118,7 @@
     "basePower": 5000,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/2000",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/hippogryf-pen.png"
+    "imageUrl": "assets/catalog/hippogryf-pen.png"
   },
   {
     "id": "ing-012",
@@ -129,7 +129,7 @@
     "basePower": 550,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/mint.gif"
   },
   {
     "id": "ing-013",
@@ -140,7 +140,7 @@
     "basePower": 550,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/juniper.gif"
   },
   {
     "id": "ing-014",
@@ -151,7 +151,7 @@
     "basePower": 550,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/bugs.png"
   },
   {
     "id": "ing-015",
@@ -162,7 +162,7 @@
     "basePower": 550,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/lavender.png"
   },
   {
     "id": "ing-016",
@@ -173,7 +173,7 @@
     "basePower": 550,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/garlic.gif"
   },
   {
     "id": "ing-017",
@@ -184,7 +184,7 @@
     "basePower": 2500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/acorn.png"
+    "imageUrl": "assets/catalog/acorn.png"
   },
   {
     "id": "ing-018",
@@ -195,7 +195,7 @@
     "basePower": 2500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/scorpion.png"
+    "imageUrl": "assets/catalog/scorpion.png"
   },
   {
     "id": "ing-019",
@@ -206,7 +206,7 @@
     "basePower": 2500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/dandelion.png"
+    "imageUrl": "assets/catalog/dandelion.png"
   },
   {
     "id": "ing-020",
@@ -217,7 +217,7 @@
     "basePower": 2500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/privet.png"
+    "imageUrl": "assets/catalog/privet.png"
   },
   {
     "id": "ing-021",
@@ -228,7 +228,7 @@
     "basePower": 13500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/2000",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/unicorn-hair.gif"
+    "imageUrl": "assets/catalog/unicorn-hair.gif"
   },
   {
     "id": "ing-022",
@@ -239,7 +239,7 @@
     "basePower": 13500,
     "pauseSeconds": 45,
     "approxQuestDropRate": "1/2000",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/leafy.png"
+    "imageUrl": "assets/catalog/leafy.png"
   },
   {
     "id": "ing-023",
@@ -250,7 +250,7 @@
     "basePower": 1500,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/beladonna.gif"
   },
   {
     "id": "ing-024",
@@ -261,7 +261,7 @@
     "basePower": 1500,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/snake-eye.gif"
   },
   {
     "id": "ing-025",
@@ -272,7 +272,7 @@
     "basePower": 1500,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/drop.gif"
   },
   {
     "id": "ing-026",
@@ -283,7 +283,7 @@
     "basePower": 1500,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/mimbulus.gif"
   },
   {
     "id": "ing-027",
@@ -294,7 +294,7 @@
     "basePower": 1500,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": null
+    "imageUrl": "assets/catalog/fir-inflorescence.png"
   },
   {
     "id": "ing-028",
@@ -305,7 +305,7 @@
     "basePower": 7500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/lighting.png"
+    "imageUrl": "assets/catalog/lighting.png"
   },
   {
     "id": "ing-029",
@@ -316,7 +316,7 @@
     "basePower": 7500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/north.png"
+    "imageUrl": "assets/catalog/north.png"
   },
   {
     "id": "ing-030",
@@ -327,7 +327,7 @@
     "basePower": 7500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/mavka-hair.png"
+    "imageUrl": "assets/catalog/mavka-hair.png"
   },
   {
     "id": "ing-031",
@@ -338,7 +338,7 @@
     "basePower": 7500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/sunny.png"
+    "imageUrl": "assets/catalog/sunny.png"
   },
   {
     "id": "ing-032",
@@ -349,7 +349,7 @@
     "basePower": 36000,
     "pauseSeconds": 45,
     "approxQuestDropRate": "1/2000",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/goldendust.png"
+    "imageUrl": "assets/catalog/goldendust.png"
   },
   {
     "id": "ing-033",
@@ -360,6 +360,6 @@
     "basePower": 36000,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/2000",
-    "imageUrl": "https://harrypotter.com.ua/html/shop_items/ingredients/phoenix-pen.png"
+    "imageUrl": "assets/catalog/phoenix-pen.png"
   }
 ]

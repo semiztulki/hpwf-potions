@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Справочник и база зельеварения HPWF">
   <title>HPWF Potions</title>
-  <link rel="stylesheet" href="style.css?v=20260910-2">
+  <link rel="stylesheet" href="style.css?v=20260910-3">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -31,8 +31,7 @@
       <h1>Зельеварение</h1>
       <div class="access-note"><span id="homeAccessText"></span><button type="button" id="homeAuthAction" class="text-action"></button></div>
       <div class="home-links" aria-label="Разделы сайта">
-        <button type="button" data-home-tab="ingredients">Ингредиенты</button>
-        <button type="button" data-home-tab="actions">Действия и Луна</button>
+        <button type="button" data-home-tab="ingredients">Каталог ингредиентов и действий</button>
         <button type="button" data-home-tab="mechanics">Механика</button>
         <button type="button" data-home-tab="potions" data-auth-only>Рецепты</button>
         <button type="button" data-home-tab="add-recipe" data-auth-only>Добавить рецепт</button>
@@ -57,8 +56,7 @@
     </div>
   </header>
   <nav class="wrap tabs" aria-label="Разделы">
-    <button class="tab active" data-tab="ingredients">Ингредиенты</button>
-    <button class="tab" data-tab="actions">Действия и Луна</button>
+    <button class="tab active" data-tab="ingredients">Каталог ингредиентов и действий</button>
     <button class="tab" data-tab="mechanics">Механика</button>
     <button class="tab" data-tab="potions" data-auth-only>Рецепты</button>
     <button class="tab" data-tab="add-recipe" data-auth-only>Добавить рецепт</button>
@@ -68,7 +66,7 @@
     <section id="ingredients" class="tab-panel active">
       <div class="panel controls">
         <div class="section-heading">
-          <div><p class="eyebrow">Справочник</p><h2>Ингредиенты</h2></div>
+          <div><p class="eyebrow">Справочник</p><h2>Каталог ингредиентов и действий</h2></div>
           <span id="ingredientCount" class="count-pill">0</span>
         </div>
         <div class="filter-grid">
@@ -86,10 +84,10 @@
         </table></div>
       </div>
       <div id="ingredientCards" class="cards"></div>
-    </section>
-    <section id="actions" class="tab-panel">
-      <div class="section-heading"><div><p class="eyebrow">Справочник</p><h2>Действия и Свет полной луны</h2></div></div>
-      <div id="actionCards" class="cards"></div>
+      <div class="catalog-actions">
+        <div class="section-heading"><div><p class="eyebrow">Действия</p><h2>Действия и Свет полной луны</h2></div></div>
+        <div id="actionCards" class="cards"></div>
+      </div>
     </section>
     <section id="mechanics" class="tab-panel">
       <div class="section-heading"><div><p class="eyebrow">Подтвержденные правила</p><h2>Механика</h2></div></div>
@@ -237,7 +235,7 @@
   </main>
   <footer class="wrap footer"><p>HPWF Potions · справочник основан на подтвержденной игровой механике и данных, внесенных вручную.</p></footer>
   </div>
-  <script src="app.js?v=20260910-3" defer></script>
+  <script src="app.js?v=20260910-4" defer></script>
   <script src="admin.js?v=20260910-1" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
