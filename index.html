@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Справочник и база зельеварения HPWF">
   <title>HPWF Potions</title>
-  <link rel="stylesheet" href="style.css?v=20260910-5">
+  <link rel="stylesheet" href="style.css?v=20260910-6">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -77,9 +77,13 @@
       </div>
       <div id="ingredientCards" class="table-wrap catalog-table-wrap"></div>
       <div class="catalog-actions">
-        <div class="section-heading"><div><p class="eyebrow">Действия</p><h2>Действия и Свет полной луны</h2></div></div>
-        <p class="meta catalog-actions-note">Действия не добавляют силы, но влияют на последовательность рецепта. Свет полной луны считается отдельным элементом.</p>
-        <div id="actionCards" class="compact-actions"></div>
+        <div id="actionCards" class="table-wrap catalog-table-wrap"></div>
+        <ul class="moon-footnotes">
+          <li>Добавляет случайный бонус 0–450 к ценности зелья</li>
+          <li>Работает как дополнительный ингредиент, а не как действие</li>
+          <li>Доступно только в <button type="button" id="moonInfoToggle" class="inline-link" aria-expanded="false" aria-controls="moonStatus">реальное полнолуние</button></li>
+        </ul>
+        <div id="moonStatus" class="moon-status" hidden aria-live="polite"></div>
       </div>
       <div class="power-table panel catalog-reference-table">
         <h2>Сила ингредиентов для примерного расчета ценности зелья</h2>
@@ -236,7 +240,7 @@
   </main>
   <footer class="wrap footer"><p>HPWF Potions · справочник основан на подтвержденной игровой механике и данных, внесенных вручную.</p></footer>
   </div>
-  <script src="app.js?v=20260910-6" defer></script>
+  <script src="app.js?v=20260910-7" defer></script>
   <script src="admin.js?v=20260910-1" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
