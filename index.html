@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Справочник и база зельеварения HPWF">
   <title>HPWF Potions</title>
-  <link rel="stylesheet" href="style.css?v=20260910-7">
+  <link rel="stylesheet" href="style.css?v=20260910-8">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -64,7 +64,7 @@
   </nav>
   <main class="wrap">
     <section id="ingredients" class="tab-panel active">
-      <div class="panel controls">
+      <div class="panel controls catalog-combined">
         <div class="section-heading">
           <div><p class="eyebrow">Справочник</p><h2>Каталог ингредиентов и действий</h2></div>
           <span id="ingredientCount" class="count-pill">0</span>
@@ -74,8 +74,8 @@
           <label class="field"><span>Категория</span><select id="ingredientRarity"><option value="">Все</option><option value="common">Обычные</option><option value="seasonal">Сезонные редкие</option><option value="very_rare">Особо редкие</option></select></label>
           <label class="field"><span>Сезон</span><select id="ingredientSeason"><option value="">Все</option><option value="winter">Зима</option><option value="spring">Весна</option><option value="summer">Лето</option><option value="autumn">Осень</option></select></label>
         </div>
+        <div id="ingredientCards" class="table-wrap catalog-table-wrap"></div>
       </div>
-      <div id="ingredientCards" class="table-wrap catalog-table-wrap"></div>
       <div class="catalog-actions">
         <div id="actionCards" class="table-wrap catalog-table-wrap"></div>
         <ul class="moon-footnotes">
@@ -242,12 +242,12 @@
     <span>HPWF Potions</span><span aria-hidden="true">·</span>
     <button type="button" id="footerTopAction">Наверх страницы</button><span aria-hidden="true">·</span>
     <button type="button" id="footerHomeAction">На главную</button><span aria-hidden="true">·</span>
-    <a href="https://harrypotter.com.ua/index.php?act=Msg&amp;CODE=4&amp;MID=207973" target="_blank" rel="noopener noreferrer" title="Написать мне в ПМ на форуме">Связаться со мной</a><span aria-hidden="true">·</span>
+    <a href="https://harrypotter.com.ua/index.php?act=Msg&amp;CODE=4&amp;MID=207973" target="_blank" rel="noopener noreferrer">Связаться со мной</a><span aria-hidden="true">·</span>
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260910-8" defer></script>
-  <script src="admin.js?v=20260910-1" defer></script>
+  <script src="app.js?v=20260910-9" defer></script>
+  <script src="admin.js?v=20260910-2" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
 </html>
