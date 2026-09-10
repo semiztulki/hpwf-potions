@@ -1,4 +1,4 @@
-const adminState={sequence:[],ready:false,password:sessionStorage.getItem("hpwf-editor-password")||"",confirmedPotionId:null,selectedPotionId:null};
+const adminState={sequence:[],ready:false,password:"",confirmedPotionId:null,selectedPotionId:null};
 const a$=id=>document.getElementById(id);
 const adminApi="https://hpwf-potions-editor-api-siidraen-3125.vercel.app/api";
 
@@ -368,6 +368,7 @@ function adminLogout(){
   if(typeof reviewState!=="undefined") reviewState.rows=[];
   sessionStorage.removeItem("hpwf-editor-password");
   adminRenderAuth();
+  showAccessScreen();
 }
 function adminRenderAuth(){
   const logged=!!adminState.password;
@@ -466,6 +467,20 @@ function initAdmin(){
     btn.setAttribute("title",show?"Скрыть пароль":"Показать пароль");
   }));
 
+  a$("entryLoginButton").addEventListener("click",async ()=>{
+    const st=a$("entryLoginStatus"),password=a$("entryPassword").value;
+    st.textContent="Проверяю пароль…";st.className="admin-status";
+    try{await adminAuthenticate(password);st.textContent="";showHome("authenticated");}
+    catch(err){adminState.password="";sessionStorage.removeItem("hpwf-editor-password");st.textContent=err.message||String(err);st.className="admin-status error";}
+  });
+  a$("entryPassword").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();a$("entryLoginButton").click();}});
+  a$("guestLoginButton").addEventListener("click",()=>{
+    adminState.password="";sessionStorage.removeItem("hpwf-editor-password");showHome("guest");
+  });
+  ["homeAuthAction","functionalAuthAction"].forEach(id=>a$(id).addEventListener("click",()=>{
+    if(accessMode==="authenticated") adminLogout(); else showAccessScreen();
+  }));
+
   a$("editorLoginButton").addEventListener("click",async ()=>{
     const st=a$("editorLoginStatus"); st.textContent="Проверяю пароль…"; st.className="admin-status";
     try{await adminLogin();st.textContent="";}catch(err){adminState.password="";sessionStorage.removeItem("hpwf-editor-password");st.textContent=err.message||String(err);st.className="admin-status error";}
@@ -497,7 +512,6 @@ function initAdmin(){
   adminRenderSequence();
   adminRenderPotionMatch();
   adminRenderAuth();
-  if(adminState.password) adminAuthenticate(adminState.password).catch(()=>adminLogout());
 }
 document.addEventListener("hpwf:data-ready",initAdmin);
 if(typeof state!=="undefined"&&state.ingredients?.length) initAdmin();
