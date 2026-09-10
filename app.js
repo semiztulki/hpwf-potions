@@ -103,19 +103,19 @@ function fullMoonCandidates(now){
 }
 function forumDate(date,withTime=false){
   const d=new Date(date.valueOf()+3600000),pad=n=>String(n).padStart(2,"0");
-  return pad(d.getUTCDate())+"."+pad(d.getUTCMonth()+1)+"."+d.getUTCFullYear()+(withTime?", "+pad(d.getUTCHours())+":"+pad(d.getUTCMinutes()):"");
+  return pad(d.getUTCDate())+"."+pad(d.getUTCMonth()+1)+(withTime?", "+pad(d.getUTCHours())+":"+pad(d.getUTCMinutes()):"");
 }
 function renderMoonStatus(){
   const now=new Date(),peaks=fullMoonCandidates(now),half=36*3600000;
   const active=peaks.find(p=>now>=p-half&&now<=p.valueOf()+half);
   let text;
-  if(active){const end=new Date(active.valueOf()+half),hours=Math.max(1,Math.ceil((end-now)/3600000));text='<strong>Полнолуние сейчас, скорее загружай котлы!</strong> Оно продлится до '+forumDate(end,true)+', осталось '+hours+' '+plural(hours,"час","часа","часов")+'.';}
+  if(active){const end=new Date(active.valueOf()+half),hours=Math.max(1,Math.ceil((end-now)/3600000));text='<strong>Полнолуние сейчас, скорее загружай котлы!</strong> Оно продлится до '+forumDate(end)+', осталось '+hours+' '+plural(hours,"час","часа","часов")+'.';}
   else{
     const next=peaks.find(p=>p.valueOf()-half>now)||peaks[peaks.length-1],start=new Date(next.valueOf()-half),end=new Date(next.valueOf()+half),days=Math.max(1,Math.ceil((start-now)/moonDay)),phase=moonIllumination(now).phase;
     const phaseText=phase<.035||phase>.965?"Сейчас новолуние.":phase<.5?"Сейчас Луна растёт.":"Сейчас Луна убывает.";
-    text=phaseText+' Ближайшее полнолуние будет с '+forumDate(start,true)+' по '+forumDate(end,true)+'. До начала осталось '+days+' '+plural(days,"день","дня","дней")+'.';
+    text=phaseText+' Ближайшее полнолуние будет с '+forumDate(start)+' по '+forumDate(end)+'. До начала осталось '+days+' '+plural(days,"день","дня","дней")+'.';
   }
-  $("moonStatus").innerHTML='<p>'+text+'</p><p class="meta">Расчётное игровое окно: 72 часа вокруг астрономического полнолуния. Время форума: UTC+1.</p>';
+  $("moonStatus").innerHTML='<p>'+text+'</p>';
 }
 function plural(n,one,few,many){const n10=n%10,n100=n%100;return n10===1&&n100!==11?one:n10>=2&&n10<=4&&(n100<12||n100>14)?few:many;}
 function renderMechanics(){
