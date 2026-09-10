@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Справочник и база зельеварения HPWF">
   <title>HPWF Potions</title>
-  <link rel="stylesheet" href="style.css?v=20260910-10">
+  <link rel="stylesheet" href="style.css?v=20260910-11">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -93,7 +93,18 @@
         <div id="ingredientCards" class="table-wrap catalog-table-wrap"></div>
       </div>
       <div class="catalog-actions">
-        <div id="actionCards" class="table-wrap catalog-table-wrap"></div>
+        <div class="action-reference-grid">
+          <div id="actionCards" class="table-wrap catalog-table-wrap"></div>
+          <aside class="action-tips" aria-labelledby="actionTipsTitle">
+            <h2 id="actionTipsTitle">Tips &amp; Tricks</h2>
+            <ul>
+              <li>Внутри одного фильтра варианты складываются по принципу «или», а разные фильтры — по принципу «и».</li>
+              <li>Уровень зелья определяется самым высоким уровнем ингредиента; действия его не повышают.</li>
+              <li>Заклинание или нагревание более высокого уровня меняет бросок длительности, сохраняя уровень самого зелья.</li>
+              <li>Порядок элементов и выбранное действие могут отличать один рецепт от другого даже при одинаковых ингредиентах.</li>
+            </ul>
+          </aside>
+        </div>
         <ul class="moon-footnotes">
           <li>Добавляет случайный бонус 0–450 к ценности зелья</li>
           <li>Работает как дополнительный ингредиент, а не как действие</li>
@@ -262,7 +273,7 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260910-11" defer></script>
+  <script src="app.js?v=20260910-12" defer></script>
   <script src="admin.js?v=20260910-2" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
