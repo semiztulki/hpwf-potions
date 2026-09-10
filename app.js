@@ -52,6 +52,7 @@ function initTabs(){
   document.querySelectorAll("[data-home-tab]").forEach(btn=>btn.addEventListener("click",()=>openFunctionalTab(btn.dataset.homeTab)));
   document.querySelectorAll("[data-home-anchor]").forEach(btn=>btn.addEventListener("click",()=>openCatalogTool(btn.dataset.homeAnchor)));
   $("functionalHomeButton").addEventListener("click",()=>showHome());
+  $("stickyHomeButton").addEventListener("click",()=>showHome());
   $("footerHomeAction").addEventListener("click",()=>showHome());
   $("footerTopAction").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
 }
@@ -128,7 +129,7 @@ function plural(n,one,few,many){const n10=n%10,n100=n%100;return n10===1&&n100!=
 const calculatorPowers={"1-common":200,"1-seasonal":1000,"1-very_rare":5000,"2-common":550,"2-seasonal":2500,"2-very_rare":13500,"3-common":1500,"3-seasonal":7500,"3-very_rare":36000};
 function initValueCalculator(){
   const rarityNames={common:"Обычный",seasonal:"Сезонный редкий",very_rare:"Особо редкий"};
-  $("calculatorIngredients").innerHTML=Object.entries(calculatorPowers).map(([key,power])=>{const [level,rarity]=key.split("-");return '<label class="calculator-field"><span>'+level+' уровень · '+rarityNames[rarity]+'<small>'+fmt(power)+' силы</small></span><input class="calculator-quantity" type="number" min="0" max="11" step="1" value="0" data-power="'+power+'" aria-label="Количество: '+level+' уровень, '+rarityNames[rarity].toLowerCase()+'"></label>';}).join("");
+  $("calculatorIngredients").innerHTML=Object.entries(calculatorPowers).map(([key,power])=>{const [level,rarity]=key.split("-");return '<label class="calculator-field"><span>'+level+' уровень · '+rarityNames[rarity]+'<small>'+fmt(power)+' силы</small></span><input class="calculator-quantity" type="text" inputmode="numeric" pattern="[0-9]*" value="0" data-power="'+power+'" aria-label="Количество: '+level+' уровень, '+rarityNames[rarity].toLowerCase()+'"></label>';}).join("");
   document.querySelectorAll(".calculator-quantity").forEach(input=>input.addEventListener("input",updateValueCalculator));
   $("calculatorMoon").addEventListener("change",()=>updateValueCalculator());
   $("valueCalculatorToggle").addEventListener("click",()=>{const panel=$("valueCalculator"),show=panel.hidden;panel.hidden=!show;$("valueCalculatorToggle").setAttribute("aria-expanded",String(show));if(show)updateValueCalculator();});
@@ -139,6 +140,7 @@ function updateValueCalculator(){
   inputs.forEach(input=>input.value=Math.max(0,Math.floor(Number(input.value)||0)));
   const total=inputs.reduce((sum,input)=>sum+Number(input.value),0);
   $("calculatorCount").textContent=total+" из 11";
+  $("calculatorCount").classList.toggle("error",total>11);
   if(total>11){
     $("calculatorResult").className="calculator-result error";
     $("calculatorResult").textContent="Вы добавили более 11 ингредиентов. Проверьте рецепт!";
