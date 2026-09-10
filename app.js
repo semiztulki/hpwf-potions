@@ -70,12 +70,11 @@ function renderIngredients(){
 function actionRow(x){
   const img=x.imageUrl?'<img class="catalog-icon" src="'+x.imageUrl+'" alt="">':'<span class="catalog-icon-placeholder">✦</span>';
   const moon=x.kind==="moon";
-  const influence={"action-stir":"Меняет идентичность рецепта","action-spell":"Бросок длительности как для 2 уровня","action-heat":"Бросок длительности как для 3 уровня"}[x.id]||"—";
   return '<tr><td><div class="catalog-name">'+img+'<span>'+esc(x.name)+(moon?'*':'')+'</span></div></td>'
-    +'<td>'+x.level+'</td><td class="numeric">'+x.pauseSeconds+' сек.</td><td class="numeric">'+fmt(x.basePower||0)+'</td><td>'+influence+'</td></tr>';
+    +'<td>'+x.level+'</td><td class="numeric">'+x.pauseSeconds+' сек.</td></tr>';
 }
 function renderActions(){
-  $("actionCards").innerHTML='<table class="catalog-table action-table"><thead><tr><th>Действие</th><th>Уровень</th><th>Усвоение</th><th>Сила</th><th>Влияние</th></tr></thead><tbody>'+state.actions.map(actionRow).join("")+'</tbody></table>';
+  $("actionCards").innerHTML='<table class="catalog-table action-table"><thead><tr><th>Действие</th><th>Уровень</th><th>Усвоение</th></tr></thead><tbody>'+state.actions.map(actionRow).join("")+'</tbody></table>';
 }
 
 // Астрономический расчёт по формулам SunCalc; сетевых запросов не требует.
