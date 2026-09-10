@@ -58,7 +58,7 @@ function initTabs(){
 }
 function openCatalogTool(id){
   openFunctionalTab("ingredients");
-  if(id==="valueCalculator"){$("valueCalculator").hidden=false;$("valueCalculatorToggle").setAttribute("aria-expanded","true");updateValueCalculator();}
+  if(id==="valueCalculator")updateValueCalculator();
   if(id==="moonStatus"){$("moonStatus").hidden=false;$("moonInfoToggle").setAttribute("aria-expanded","true");renderMoonStatus();}
   requestAnimationFrame(()=>$(id).scrollIntoView({behavior:"smooth",block:"center"}));
 }
@@ -132,7 +132,6 @@ function initValueCalculator(){
   $("calculatorIngredients").innerHTML=Object.entries(calculatorPowers).map(([key,power])=>{const [level,rarity]=key.split("-");return '<label class="calculator-field"><span>'+level+' уровень · '+rarityNames[rarity]+'<small>'+fmt(power)+' силы</small></span><input class="calculator-quantity" type="text" inputmode="numeric" pattern="[0-9]*" value="0" data-power="'+power+'" aria-label="Количество: '+level+' уровень, '+rarityNames[rarity].toLowerCase()+'"></label>';}).join("");
   document.querySelectorAll(".calculator-quantity").forEach(input=>input.addEventListener("input",updateValueCalculator));
   $("calculatorMoon").addEventListener("change",()=>updateValueCalculator());
-  $("valueCalculatorToggle").addEventListener("click",()=>{const panel=$("valueCalculator"),show=panel.hidden;panel.hidden=!show;$("valueCalculatorToggle").setAttribute("aria-expanded",String(show));if(show)updateValueCalculator();});
   updateValueCalculator();
 }
 function updateValueCalculator(){
