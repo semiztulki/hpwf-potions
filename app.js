@@ -58,10 +58,10 @@ function ingredientRow(x){
     +'<td class="numeric">'+fmt(x.basePower)+'</td><td class="numeric">'+x.pauseSeconds+' сек.</td><td class="numeric">'+(x.approxQuestDropRate||"—")+'</td></tr>';
 }
 function renderIngredients(){
-  const q=norm($("ingredientSearch").value),level=$("ingredientLevel").value,rarity=$("ingredientRarity").value,season=$("ingredientSeason").value;
-  const list=state.ingredients.filter(x=>(!q||norm(x.name).includes(q))&&(!level||String(x.level)===level)&&(!rarity||x.rarity===rarity)&&(!season||x.season===season));
+  const level=$("ingredientLevel").value,rarity=$("ingredientRarity").value,season=$("ingredientSeason").value;
+  const list=state.ingredients.filter(x=>(!level||String(x.level)===level)&&(!rarity||x.rarity===rarity)&&(!season||x.season===season));
   $("ingredientCount").textContent=list.length+" из "+state.ingredients.length;
-  $("ingredientCards").innerHTML=list.length?'<table class="catalog-table"><thead><tr><th>Ингредиент</th><th>Уровень</th><th>Категория</th><th>Сезон</th><th>Сила</th><th>Пауза</th><th>Выпадение</th></tr></thead><tbody>'+list.map(ingredientRow).join("")+'</tbody></table>':'<div class="panel empty-state">По этим фильтрам ингредиентов нет.</div>';
+  $("ingredientCards").innerHTML=list.length?'<table class="catalog-table"><thead><tr><th>Ингредиент</th><th>Уровень</th><th>Категория</th><th>Сезон</th><th>Сила</th><th>Усвоение</th><th>Шанс выпадения</th></tr></thead><tbody>'+list.map(ingredientRow).join("")+'</tbody></table>':'<div class="panel empty-state">По этим фильтрам ингредиентов нет.</div>';
 }
 function actionCard(x){
   const img=x.imageUrl?'<img class="icon" src="'+x.imageUrl+'" alt="">':'';
@@ -78,26 +78,29 @@ function renderMechanics(){
     const show=v=>v==null?"—":v;
     return '<tr><td>'+d[k]+'</td><td>'+show(v1)+'</td><td>'+show(v2)+'</td><td>'+show(v3)+'</td></tr>';
   }).join("");
-  const limitRows=[];
-  ["1","2","3"].forEach(level=>{
-    const durations=state.limits.durationOrderByLevel[level];
-    ["efficiency","resistance","concentration"].forEach(effect=>{
-      const e=state.limits.effects[effect],vals=e.byLevel[level];
-      const cells=vals.map((v,i)=>'<td>'+v+(e.unit==="percent"?"%":"")+'<br><span class="meta">'+d[durations[i]]+'</span></td>').join("");
-      limitRows.push('<tr><td>'+level+'</td><td>'+e.label+'</td>'+cells+'</tr>');
-    });
-  });
   $("mechanicsContent").innerHTML=
     '<article class="mechanic-card"><p class="eyebrow">Рецепт</p><h3>Структура</h3><ul class="rules"><li>До '+m.recipe.maxIngredients+' ингредиентов.</li><li>До '+m.recipe.maxMoonElements+' Света полной луны.</li><li>Максимум '+m.recipe.maxSequenceElements+' элементов последовательности.</li><li>'+m.recipe.levelRule+'</li></ul></article>'
     +'<article class="mechanic-card"><p class="eyebrow">Ценность</p><h3>Рабочая модель</h3><ul class="rules"><li>У каждого ингредиента есть базовая сила.</li><li>К каждому экземпляру применяется случайный модификатор.</li><li>Разброс наибольший у обычных, меньше у сезонных и еще меньше у особо редких.</li><li>Сумма базовых сил без наблюдаемой ценности — расчетная оценка, а не точный результат.</li><li>Луна добавляет отдельные 0–450.</li></ul></article>'
     +'<article class="mechanic-card wide"><p class="eyebrow">Токсикация</p><h3>Токсикация по уровню и длительности</h3><p>Суммарный предел активных зелий: '+m.toxicity.maxTotal+'.</p><div class="table-wrap"><table><thead><tr><th>Длительность</th><th>1 уровень</th><th>2 уровень</th><th>3 уровень</th></tr></thead><tbody>'+toxRows+'</tbody></table></div></article>'
-    +'<article class="mechanic-card wide"><p class="eyebrow">Расчеты игроков</p><h3>Пределы эффектов без редких ингредиентов</h3><p class="callout">'+state.limits.note+'</p><div class="table-wrap"><table><thead><tr><th>Уровень</th><th>Эффект</th><th>Длительность 1</th><th>Длительность 2</th><th>Длительность 3</th><th>Длительность 4</th></tr></thead><tbody>'+limitRows.join("")+'</tbody></table></div></article>'
     +'<article class="mechanic-card wide"><p class="eyebrow">Последовательность</p><h3>Правила рецепта</h3><ul class="rules">'+m.recipe.sequenceRules.map(r=>'<li>'+r+'</li>').join("")+'</ul></article>'
     +'<article class="mechanic-card wide"><p class="eyebrow">Опыт</p><h3>Опыт зельеварения</h3><p class="callout">'+m.brewingExperienceNote+'</p><div class="table-wrap"><table><thead><tr><th>Уровень зельевара</th><th>Порог опыта</th><th>Ингредиент 1 уровня</th><th>Ингредиент 2 уровня</th><th>Ингредиент 3 уровня</th></tr></thead><tbody>'
       +m.brewingExperience.map(x=>'<tr><td>'+x.brewerLevel+'</td><td>'+x.thresholdXp+'</td><td>'+(x.xpPerIngredient["1"]==null?"—":formatXp(x.xpPerIngredient["1"]))+'</td><td>'+(x.xpPerIngredient["2"]==null?"—":formatXp(x.xpPerIngredient["2"]))+'</td><td>'+(x.xpPerIngredient["3"]==null?"—":formatXp(x.xpPerIngredient["3"]))+'</td></tr>').join("")
       +'</tbody></table></div></article>'
     +'<article class="mechanic-card"><p class="eyebrow">Сбор</p><h3>Уровни сбора</h3><ul class="rules">'+m.gatheringLevels.map(x=>'<li>Уровень '+x.level+': '+x.thresholdXp+' опыта'+(x.questDifficulty?', сложность ВП '+x.questDifficulty:'')+'.</li>').join("")+'</ul></article>'
     +'<article class="mechanic-card wide"><p class="eyebrow">Наборы</p><h3>Набор алхимика</h3><p>'+m.ingredientSets.rule+'</p><ul class="rules">'+m.ingredientSets.extraItem.map(r=>'<li>'+r+'</li>').join("")+'</ul></article>';
+}
+
+function renderCatalogLimits(){
+  const d=state.mechanics.toxicity.durationLabels,rows=[];
+  ["1","2","3"].forEach(level=>{
+    const durations=state.limits.durationOrderByLevel[level],observed=state.limits.observedDurationsByLevel[level]||[];
+    ["efficiency","resistance","concentration"].forEach(effect=>{
+      const e=state.limits.effects[effect],vals=e.byLevel[level];
+      const cells=vals.map((v,i)=>observed.includes(durations[i])?'<td>'+v+(e.unit==="percent"?"%":"")+'<br><span class="meta">'+d[durations[i]]+'</span></td>':'<td class="limit-missing">—</td>').join("");
+      rows.push('<tr><td>'+level+'</td><td>'+e.label+'</td>'+cells+'</tr>');
+    });
+  });
+  $("catalogLimits").innerHTML='<h2>Пределы эффектов зелий на обычных инграх</h2><p class="callout">'+state.limits.note+'</p><div class="table-wrap"><table><thead><tr><th>Уровень</th><th>Эффект</th><th>Длительность 1</th><th>Длительность 2</th><th>Длительность 3</th><th>Длительность 4</th></tr></thead><tbody>'+rows.join("")+'</tbody></table></div>';
 }
 
 function potionTitle(p){
@@ -283,14 +286,14 @@ async function loadPrivateData(password){
 
 async function load(){
   try{
-    const [i,a,m,l]=await Promise.all([fetch("data/ingredients.json?v=20260910-1"),fetch("data/actions.json?v=20260910-1"),fetch("data/mechanics.json"),fetch("data/calculated-limits.json")]);
+    const [i,a,m,l]=await Promise.all([fetch("data/ingredients.json?v=20260910-1"),fetch("data/actions.json?v=20260910-1"),fetch("data/mechanics.json"),fetch("data/calculated-limits.json?v=20260910-1")]);
     if(![i,a,m,l].every(r=>r.ok)) throw new Error("load");
     state.ingredients=await i.json(); state.actions=await a.json(); state.mechanics=await m.json(); state.limits=await l.json();
-    renderIngredients();$("actionCards").innerHTML=state.actions.map(actionCard).join("");renderMechanics();document.dispatchEvent(new CustomEvent("hpwf:data-ready"));
+    renderIngredients();$("actionCards").innerHTML=state.actions.map(actionCard).join("");renderCatalogLimits();renderMechanics();document.dispatchEvent(new CustomEvent("hpwf:data-ready"));
   }catch(e){$("dataStatus").title="Не удалось загрузить справочник";}
 }
 ["dataStatus"].forEach(id=>$(id).addEventListener("click",showHome));
-["ingredientSearch","ingredientLevel","ingredientRarity","ingredientSeason"].forEach(id=>$(id).addEventListener("input",renderIngredients));
+["ingredientLevel","ingredientRarity","ingredientSeason"].forEach(id=>$(id).addEventListener("input",renderIngredients));
 $("recipeSearch").addEventListener("input",renderRecipeBrowser);
 document.querySelectorAll(".recipe-view-btn").forEach(btn=>btn.addEventListener("click",()=>{
   document.querySelectorAll(".recipe-view-btn").forEach(x=>x.classList.remove("active"));

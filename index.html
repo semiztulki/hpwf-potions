@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Справочник и база зельеварения HPWF">
   <title>HPWF Potions</title>
-  <link rel="stylesheet" href="style.css?v=20260910-4">
+  <link rel="stylesheet" href="style.css?v=20260910-5">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -70,18 +70,10 @@
           <span id="ingredientCount" class="count-pill">0</span>
         </div>
         <div class="filter-grid">
-          <label class="field field-wide"><span>Поиск</span><input id="ingredientSearch" type="search" placeholder="Например: аконит, мавка, феникс"></label>
           <label class="field"><span>Уровень</span><select id="ingredientLevel"><option value="">Все</option><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3">3 уровень</option></select></label>
           <label class="field"><span>Категория</span><select id="ingredientRarity"><option value="">Все</option><option value="common">Обычные</option><option value="seasonal">Сезонные редкие</option><option value="very_rare">Особо редкие</option></select></label>
           <label class="field"><span>Сезон</span><select id="ingredientSeason"><option value="">Все</option><option value="winter">Зима</option><option value="spring">Весна</option><option value="summer">Лето</option><option value="autumn">Осень</option></select></label>
         </div>
-      </div>
-      <div class="power-table panel">
-        <p class="eyebrow">Сила ингредиентов</p>
-        <div class="table-wrap"><table>
-          <thead><tr><th>Уровень</th><th>Обычный</th><th>Сезонный</th><th>Особо редкий</th></tr></thead>
-          <tbody><tr><td>1</td><td>200</td><td>1 000</td><td>5 000</td></tr><tr><td>2</td><td>550</td><td>2 500</td><td>13 500</td></tr><tr><td>3</td><td>1 500</td><td>7 500</td><td>36 000</td></tr></tbody>
-        </table></div>
       </div>
       <div id="ingredientCards" class="table-wrap catalog-table-wrap"></div>
       <div class="catalog-actions">
@@ -89,6 +81,14 @@
         <p class="meta catalog-actions-note">Действия не добавляют силы, но влияют на последовательность рецепта. Свет полной луны считается отдельным элементом.</p>
         <div id="actionCards" class="compact-actions"></div>
       </div>
+      <div class="power-table panel catalog-reference-table">
+        <h2>Сила ингредиентов для примерного расчета ценности зелья</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Уровень</th><th>Обычный</th><th>Сезонный</th><th>Особо редкий</th></tr></thead>
+          <tbody><tr><td>1</td><td>200</td><td>1 000</td><td>5 000</td></tr><tr><td>2</td><td>550</td><td>2 500</td><td>13 500</td></tr><tr><td>3</td><td>1 500</td><td>7 500</td><td>36 000</td></tr></tbody>
+        </table></div>
+      </div>
+      <div id="catalogLimits" class="panel catalog-reference-table"></div>
     </section>
     <section id="mechanics" class="tab-panel">
       <div class="section-heading"><div><p class="eyebrow">Подтвержденные правила</p><h2>Механика</h2></div></div>
@@ -236,7 +236,7 @@
   </main>
   <footer class="wrap footer"><p>HPWF Potions · справочник основан на подтвержденной игровой механике и данных, внесенных вручную.</p></footer>
   </div>
-  <script src="app.js?v=20260910-5" defer></script>
+  <script src="app.js?v=20260910-6" defer></script>
   <script src="admin.js?v=20260910-1" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>

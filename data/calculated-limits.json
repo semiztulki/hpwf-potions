@@ -22,6 +22,11 @@
       "2mo"
     ]
   },
+  "observedDurationsByLevel": {
+    "1": ["5m", "1h", "5h", "1w"],
+    "2": ["5m", "1h", "5h", "1w", "1mo"],
+    "3": ["1w", "1mo", "2mo"]
+  },
   "effects": {
     "efficiency": {
       "unit": "percent",
