@@ -371,7 +371,7 @@ async function load(){
     renderIngredients();renderActions();renderCatalogLimits();renderMechanics();document.dispatchEvent(new CustomEvent("hpwf:data-ready"));
   }catch(e){$("dataStatus").title="Не удалось загрузить справочник";}
 }
-["dataStatus"].forEach(id=>$(id).addEventListener("click",showHome));
+$("dataStatus").addEventListener("click",()=>showHome());
 function updateCheckSelect(input){
   const root=input.closest(".check-select"),all=root.querySelector("[data-filter-all]"),specific=[...root.querySelectorAll(".ingredient-filter:not([data-filter-all])")];
   if(input===all&&all.checked) specific.forEach(x=>x.checked=false);
