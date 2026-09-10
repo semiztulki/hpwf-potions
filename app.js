@@ -10,6 +10,41 @@ const effectLabels={concentration:"Концентрация",resistance:"Уст�
 const effectWords={concentration:"концентрации",resistance:"устойчивости",efficiency:"эффективности",mana:"маны"};
 let recipeView="special";
 const potionCollator=new Intl.Collator("ru",{numeric:true,sensitivity:"base"});
+let accessMode="locked";
+
+function showPortalScreen(id){
+  for(const screenId of ["accessScreen","homeScreen","functionalScreen"]) $(screenId).hidden=screenId!==id;
+}
+function updateAccessChrome(){
+  const authenticated=accessMode==="authenticated";
+  const text=authenticated?"Вы открыли магический замок":"Вы в гостевой каморке";
+  $("homeAccessText").textContent=text;
+  $("functionalAccessText").textContent=text;
+  $("homeAuthAction").textContent=authenticated?"Выйти":"Войти";
+  $("functionalAuthAction").textContent=authenticated?"Выйти":"Войти";
+  document.querySelectorAll("[data-auth-only]").forEach(x=>x.hidden=!authenticated);
+}
+function showHome(mode=accessMode){
+  accessMode=mode;
+  updateAccessChrome();
+  showPortalScreen("homeScreen");
+}
+function showAccessScreen(){
+  accessMode="locked";
+  showPortalScreen("accessScreen");
+  $("entryPassword").value="";
+  $("entryLoginStatus").textContent="";
+}
+function openFunctionalTab(id){
+  if(["potions","add-recipe","review"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
+  document.querySelectorAll(".tab,.tab-panel").forEach(x=>x.classList.remove("active"));
+  const navButton=document.querySelector('.tab[data-tab="'+id+'"]');
+  if(navButton) navButton.classList.add("active");
+  $(id).classList.add("active");
+  updateAccessChrome();
+  showPortalScreen("functionalScreen");
+  window.scrollTo({top:0,behavior:"instant"});
+}
 
 function initTabs(){
   document.querySelectorAll(".tab").forEach(btn=>btn.addEventListener("click",()=>{
@@ -17,6 +52,8 @@ function initTabs(){
     btn.classList.add("active");
     $(btn.dataset.tab).classList.add("active");
   }));
+  document.querySelectorAll("[data-home-tab]").forEach(btn=>btn.addEventListener("click",()=>openFunctionalTab(btn.dataset.homeTab)));
+  $("functionalHomeButton").addEventListener("click",()=>showHome());
 }
 function ingredientCard(x){
   const img=x.imageUrl?'<img class="icon" src="'+x.imageUrl+'" alt="">':'<div class="icon-placeholder">✦</div>';
