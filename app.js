@@ -63,7 +63,7 @@ function ingredientRow(x){
 function renderIngredients(){
   const selected=name=>{const all=document.querySelector('input[name="'+name+'"][data-filter-all]');return all.checked?null:[...document.querySelectorAll('input[name="'+name+'"]:checked')].map(x=>x.value).filter(Boolean);};
   const levels=selected("ingredient-level"),rarities=selected("ingredient-rarity"),seasons=selected("ingredient-season");
-  const list=state.ingredients.filter(x=>(levels===null||levels.includes(String(x.level)))&&(rarities===null||rarities.includes(x.rarity))&&(seasons===null||seasons.includes(x.season)));
+  const list=state.ingredients.filter(x=>(levels===null||levels.includes(String(x.level)))&&(rarities===null||rarities.includes(x.rarity))&&(x.rarity!=="seasonal"||seasons===null||seasons.includes(x.season)));
   $("ingredientCount").textContent=list.length+" из "+state.ingredients.length;
   $("ingredientCards").innerHTML=list.length?'<table class="catalog-table"><thead><tr><th>Ингредиент</th><th>Уровень</th><th>Категория</th><th>Сезон</th><th>Сила</th><th>Усвоение</th><th>Шанс выпадения</th></tr></thead><tbody>'+list.map(ingredientRow).join("")+'</tbody></table>':'<div class="panel empty-state">По этим фильтрам ингредиентов нет.</div>';
 }
@@ -349,8 +349,21 @@ function updateCheckSelect(input){
   if(!chosen.length) all.checked=true;
   root.querySelector("[data-filter-summary]").textContent=all.checked?"Все":chosen.length===1?chosen[0].parentElement.textContent.trim():"Выбрано: "+chosen.length;
 }
-document.querySelectorAll(".ingredient-filter").forEach(input=>input.addEventListener("change",()=>{updateCheckSelect(input);renderIngredients();}));
+function updateSeasonFilterAvailability(){
+  const root=document.querySelector('[data-filter-group="ingredient-season"]'),rarityAll=document.querySelector('input[name="ingredient-rarity"][data-filter-all]'),seasonal=document.querySelector('input[name="ingredient-rarity"][value="seasonal"]');
+  const enabled=!rarityAll.checked&&seasonal.checked;
+  root.classList.toggle("is-disabled",!enabled);
+  root.setAttribute("aria-disabled",String(!enabled));
+  root.querySelectorAll("input").forEach(input=>input.disabled=!enabled);
+  if(!enabled){
+    root.open=false;
+    root.querySelectorAll("input").forEach(input=>input.checked=input.hasAttribute("data-filter-all"));
+    root.querySelector("[data-filter-summary]").textContent="Все";
+  }
+}
+document.querySelectorAll(".ingredient-filter").forEach(input=>input.addEventListener("change",()=>{updateCheckSelect(input);if(input.name==="ingredient-rarity")updateSeasonFilterAvailability();renderIngredients();}));
 document.querySelectorAll(".check-select").forEach(select=>select.addEventListener("toggle",()=>{if(select.open)document.querySelectorAll(".check-select[open]").forEach(other=>{if(other!==select)other.open=false;});}));
+document.querySelector('[data-filter-group="ingredient-season"] summary').addEventListener("click",e=>{if(e.currentTarget.parentElement.classList.contains("is-disabled"))e.preventDefault();});
 document.addEventListener("click",e=>{if(!e.target.closest(".check-select"))document.querySelectorAll(".check-select[open]").forEach(select=>select.open=false);});
 $("moonInfoToggle").addEventListener("click",()=>{const panel=$("moonStatus"),show=panel.hidden;panel.hidden=!show;$("moonInfoToggle").setAttribute("aria-expanded",String(show));if(show)renderMoonStatus();});
 $("recipeSearch").addEventListener("input",renderRecipeBrowser);
