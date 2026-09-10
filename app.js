@@ -61,7 +61,7 @@ function ingredientRow(x){
     +'<td class="numeric">'+fmt(x.basePower)+'</td><td class="numeric">'+x.pauseSeconds+' сек.</td><td class="numeric">'+(x.approxQuestDropRate||"—")+'</td></tr>';
 }
 function renderIngredients(){
-  const selected=name=>{const all=[...document.querySelectorAll('input[name="'+name+'"]')],checked=all.filter(x=>x.checked);return checked.length===all.length?null:checked.map(x=>x.value);};
+  const selected=name=>{const all=document.querySelector('input[name="'+name+'"][data-filter-all]');return all.checked?null:[...document.querySelectorAll('input[name="'+name+'"]:checked')].map(x=>x.value).filter(Boolean);};
   const levels=selected("ingredient-level"),rarities=selected("ingredient-rarity"),seasons=selected("ingredient-season");
   const list=state.ingredients.filter(x=>(levels===null||levels.includes(String(x.level)))&&(rarities===null||rarities.includes(x.rarity))&&(seasons===null||seasons.includes(x.season)));
   $("ingredientCount").textContent=list.length+" из "+state.ingredients.length;
@@ -342,7 +342,17 @@ async function load(){
   }catch(e){$("dataStatus").title="Не удалось загрузить справочник";}
 }
 ["dataStatus"].forEach(id=>$(id).addEventListener("click",showHome));
-document.querySelectorAll(".ingredient-filter").forEach(input=>input.addEventListener("change",renderIngredients));
+function updateCheckSelect(input){
+  const root=input.closest(".check-select"),all=root.querySelector("[data-filter-all]"),specific=[...root.querySelectorAll(".ingredient-filter:not([data-filter-all])")];
+  if(input===all&&all.checked) specific.forEach(x=>x.checked=false);
+  if(input!==all&&input.checked) all.checked=false;
+  const chosen=specific.filter(x=>x.checked);
+  if(!chosen.length) all.checked=true;
+  root.querySelector("[data-filter-summary]").textContent=all.checked?"Все":chosen.length===1?chosen[0].parentElement.textContent.trim():"Выбрано: "+chosen.length;
+}
+document.querySelectorAll(".ingredient-filter").forEach(input=>input.addEventListener("change",()=>{updateCheckSelect(input);renderIngredients();}));
+document.querySelectorAll(".check-select").forEach(select=>select.addEventListener("toggle",()=>{if(select.open)document.querySelectorAll(".check-select[open]").forEach(other=>{if(other!==select)other.open=false;});}));
+document.addEventListener("click",e=>{if(!e.target.closest(".check-select"))document.querySelectorAll(".check-select[open]").forEach(select=>select.open=false);});
 $("moonInfoToggle").addEventListener("click",()=>{const panel=$("moonStatus"),show=panel.hidden;panel.hidden=!show;$("moonInfoToggle").setAttribute("aria-expanded",String(show));if(show)renderMoonStatus();});
 $("recipeSearch").addEventListener("input",renderRecipeBrowser);
 document.querySelectorAll(".recipe-view-btn").forEach(btn=>btn.addEventListener("click",()=>{
