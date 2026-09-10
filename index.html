@@ -8,6 +8,44 @@
   <link rel="stylesheet" href="style.css?v=20260909-3">
 </head>
 <body>
+  <section id="accessScreen" class="portal-screen">
+    <div class="portal-card panel">
+      <p class="eyebrow">HPWF Potions</p>
+      <h1>Эта дверь магически запечатана. Произнести пароль:</h1>
+      <div class="portal-login-row">
+        <div class="password-field">
+          <input id="entryPassword" type="password" autocomplete="current-password" placeholder="Введите пароль для доступа к базе и добавления рецептов" aria-label="Пароль для доступа к базе и добавления рецептов">
+          <button type="button" class="password-toggle" data-password-toggle="entryPassword" aria-label="Показать пароль" title="Показать пароль"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg></button>
+        </div>
+        <button type="button" id="entryLoginButton" class="admin-primary-btn">Открыть замок</button>
+      </div>
+      <div id="entryLoginStatus" class="admin-status"></div>
+      <div class="portal-divider"><span>или</span></div>
+      <button type="button" id="guestLoginButton" class="admin-secondary-btn portal-guest-btn">Зайти через гостевой вход</button>
+    </div>
+  </section>
+
+  <section id="homeScreen" class="portal-screen" hidden>
+    <div class="home-card panel">
+      <p class="eyebrow">HPWF Potions</p>
+      <h1>Зельеварение</h1>
+      <div class="access-note"><span id="homeAccessText"></span><button type="button" id="homeAuthAction" class="text-action"></button></div>
+      <div class="home-links" aria-label="Разделы сайта">
+        <button type="button" data-home-tab="ingredients">Ингредиенты</button>
+        <button type="button" data-home-tab="actions">Действия и Луна</button>
+        <button type="button" data-home-tab="mechanics">Механика</button>
+        <button type="button" data-home-tab="potions" data-auth-only>Рецепты</button>
+        <button type="button" data-home-tab="add-recipe" data-auth-only>Добавить рецепт</button>
+        <button type="button" data-home-tab="review" data-auth-only>На проверку</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="functionalScreen" hidden>
+  <div class="functional-access-bar wrap">
+    <span id="functionalAccessText"></span>
+    <div><button type="button" id="functionalHomeButton" class="text-action">На главную</button><button type="button" id="functionalAuthAction" class="text-action"></button></div>
+  </div>
   <header class="site-header">
     <div class="wrap header-inner">
       <div>
@@ -18,7 +56,7 @@
       <div class="status-badge" id="dataStatus">Загрузка данных…</div>
     </div>
   </header>
-  <nav class="wrap tabs" aria-label="Разделы">
+  <nav class="wrap tabs" aria-label="Разделы" hidden>
     <button class="tab active" data-tab="ingredients">Ингредиенты</button>
     <button class="tab" data-tab="actions">Действия и Луна</button>
     <button class="tab" data-tab="mechanics">Механика</button>
@@ -198,8 +236,9 @@
     </section>
   </main>
   <footer class="wrap footer"><p>HPWF Potions · справочник основан на подтвержденной игровой механике и данных, внесенных вручную.</p></footer>
-  <script src="app.js?v=20260909-2" defer></script>
-  <script src="admin.js?v=20260909-5" defer></script>
+  </div>
+  <script src="app.js?v=20260910-1" defer></script>
+  <script src="admin.js?v=20260910-1" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
 </html>
