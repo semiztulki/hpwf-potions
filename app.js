@@ -61,8 +61,9 @@ function ingredientRow(x){
     +'<td class="numeric">'+fmt(x.basePower)+'</td><td class="numeric">'+x.pauseSeconds+' сек.</td><td class="numeric">'+(x.approxQuestDropRate||"—")+'</td></tr>';
 }
 function renderIngredients(){
-  const level=$("ingredientLevel").value,rarity=$("ingredientRarity").value,season=$("ingredientSeason").value;
-  const list=state.ingredients.filter(x=>(!level||String(x.level)===level)&&(!rarity||x.rarity===rarity)&&(!season||x.season===season));
+  const selected=name=>{const all=[...document.querySelectorAll('input[name="'+name+'"]')],checked=all.filter(x=>x.checked);return checked.length===all.length?null:checked.map(x=>x.value);};
+  const levels=selected("ingredient-level"),rarities=selected("ingredient-rarity"),seasons=selected("ingredient-season");
+  const list=state.ingredients.filter(x=>(levels===null||levels.includes(String(x.level)))&&(rarities===null||rarities.includes(x.rarity))&&(seasons===null||seasons.includes(x.season)));
   $("ingredientCount").textContent=list.length+" из "+state.ingredients.length;
   $("ingredientCards").innerHTML=list.length?'<table class="catalog-table"><thead><tr><th>Ингредиент</th><th>Уровень</th><th>Категория</th><th>Сезон</th><th>Сила</th><th>Усвоение</th><th>Шанс выпадения</th></tr></thead><tbody>'+list.map(ingredientRow).join("")+'</tbody></table>':'<div class="panel empty-state">По этим фильтрам ингредиентов нет.</div>';
 }
@@ -341,7 +342,7 @@ async function load(){
   }catch(e){$("dataStatus").title="Не удалось загрузить справочник";}
 }
 ["dataStatus"].forEach(id=>$(id).addEventListener("click",showHome));
-["ingredientLevel","ingredientRarity","ingredientSeason"].forEach(id=>$(id).addEventListener("input",renderIngredients));
+document.querySelectorAll(".ingredient-filter").forEach(input=>input.addEventListener("change",renderIngredients));
 $("moonInfoToggle").addEventListener("click",()=>{const panel=$("moonStatus"),show=panel.hidden;panel.hidden=!show;$("moonInfoToggle").setAttribute("aria-expanded",String(show));if(show)renderMoonStatus();});
 $("recipeSearch").addEventListener("input",renderRecipeBrowser);
 document.querySelectorAll(".recipe-view-btn").forEach(btn=>btn.addEventListener("click",()=>{
