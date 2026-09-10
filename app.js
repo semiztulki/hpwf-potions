@@ -63,13 +63,58 @@ function renderIngredients(){
   $("ingredientCount").textContent=list.length+" из "+state.ingredients.length;
   $("ingredientCards").innerHTML=list.length?'<table class="catalog-table"><thead><tr><th>Ингредиент</th><th>Уровень</th><th>Категория</th><th>Сезон</th><th>Сила</th><th>Усвоение</th><th>Шанс выпадения</th></tr></thead><tbody>'+list.map(ingredientRow).join("")+'</tbody></table>':'<div class="panel empty-state">По этим фильтрам ингредиентов нет.</div>';
 }
-function actionCard(x){
-  const img=x.imageUrl?'<img class="icon" src="'+x.imageUrl+'" alt="">':'';
+function actionRow(x){
+  const img=x.imageUrl?'<img class="catalog-icon" src="'+x.imageUrl+'" alt="">':'<span class="catalog-icon-placeholder">✦</span>';
   const moon=x.kind==="moon";
-  return '<article class="action-card compact-action-card"><div class="card-head"><div><p class="eyebrow">'+(moon?"Особый элемент":"Действие")+'</p><h3 class="card-title">'+x.name+'</h3></div>'+img+'</div>'
-    +'<p class="action-summary">Уровень '+x.level+' · пауза '+x.pauseSeconds+' сек.'+(moon?' · бонус 0–450':'')+'</p>'
-    +(x.availability?'<p class="callout">'+x.availability+'</p>':'')+'<ul class="rules">'+(x.rules||[]).map(r=>'<li>'+r+'</li>').join("")+'</ul></article>';
+  const influence={"action-stir":"Меняет идентичность рецепта","action-spell":"Бросок длительности как для 2 уровня","action-heat":"Бросок длительности как для 3 уровня"}[x.id]||"—";
+  return '<tr><td><div class="catalog-name">'+img+'<span>'+esc(x.name)+(moon?'*':'')+'</span></div></td>'
+    +'<td>'+x.level+'</td><td class="numeric">'+x.pauseSeconds+' сек.</td><td class="numeric">'+fmt(x.basePower||0)+'</td><td>'+influence+'</td></tr>';
 }
+function renderActions(){
+  $("actionCards").innerHTML='<table class="catalog-table action-table"><thead><tr><th>Действие</th><th>Уровень</th><th>Усвоение</th><th>Сила</th><th>Влияние</th></tr></thead><tbody>'+state.actions.map(actionRow).join("")+'</tbody></table>';
+}
+
+// Астрономический расчёт по формулам SunCalc; сетевых запросов не требует.
+const moonRad=Math.PI/180,moonDay=86400000,moonJ1970=2440588,moonJ2000=2451545,moonEarthObliquity=moonRad*23.4397;
+const moonRightAscension=(l,b)=>Math.atan2(Math.sin(l)*Math.cos(moonEarthObliquity)-Math.tan(b)*Math.sin(moonEarthObliquity),Math.cos(l));
+const moonDeclination=(l,b)=>Math.asin(Math.sin(b)*Math.cos(moonEarthObliquity)+Math.cos(b)*Math.sin(moonEarthObliquity)*Math.sin(l));
+function moonSunCoords(d){const M=moonRad*(357.5291+0.98560028*d),C=moonRad*(1.9148*Math.sin(M)+.02*Math.sin(2*M)+.0003*Math.sin(3*M)),L=M+C+moonRad*102.9372+Math.PI;return {dec:moonDeclination(L,0),ra:moonRightAscension(L,0)};}
+function moonCoords(d){const L=moonRad*(218.316+13.176396*d),M=moonRad*(134.963+13.064993*d),F=moonRad*(93.272+13.22935*d),l=L+moonRad*6.289*Math.sin(M),b=moonRad*5.128*Math.sin(F);return {ra:moonRightAscension(l,b),dec:moonDeclination(l,b),dist:385001-20905*Math.cos(M)};}
+function moonIllumination(date){
+  const d=date.valueOf()/moonDay-.5+moonJ1970-moonJ2000,s=moonSunCoords(d),m=moonCoords(d);
+  const phi=Math.acos(Math.sin(s.dec)*Math.sin(m.dec)+Math.cos(s.dec)*Math.cos(m.dec)*Math.cos(s.ra-m.ra));
+  const inc=Math.atan2(149598000*Math.sin(phi),m.dist-149598000*Math.cos(phi));
+  const angle=Math.atan2(Math.cos(s.dec)*Math.sin(s.ra-m.ra),Math.sin(s.dec)*Math.cos(m.dec)-Math.cos(s.dec)*Math.sin(m.dec)*Math.cos(s.ra-m.ra));
+  return {fraction:(1+Math.cos(inc))/2,phase:.5+.5*inc*(angle<0?-1:1)/Math.PI};
+}
+function fullMoonCandidates(now){
+  const step=3*3600000,start=now.valueOf()-35*moonDay,end=now.valueOf()+40*moonDay,samples=[];
+  for(let t=start;t<=end;t+=step)samples.push({t,f:moonIllumination(new Date(t)).fraction});
+  const peaks=[];
+  for(let i=1;i<samples.length-1;i++)if(samples[i].f>=samples[i-1].f&&samples[i].f>=samples[i+1].f){
+    let left=samples[i].t-step,right=samples[i].t+step;
+    for(let n=0;n<35;n++){const a=left+(right-left)/3,b=right-(right-left)/3;if(moonIllumination(new Date(a)).fraction<moonIllumination(new Date(b)).fraction)left=a;else right=b;}
+    peaks.push(new Date((left+right)/2));
+  }
+  return peaks;
+}
+function forumDate(date,withTime=false){
+  const d=new Date(date.valueOf()+3600000),pad=n=>String(n).padStart(2,"0");
+  return pad(d.getUTCDate())+"."+pad(d.getUTCMonth()+1)+"."+d.getUTCFullYear()+(withTime?", "+pad(d.getUTCHours())+":"+pad(d.getUTCMinutes()):"");
+}
+function renderMoonStatus(){
+  const now=new Date(),peaks=fullMoonCandidates(now),half=36*3600000;
+  const active=peaks.find(p=>now>=p-half&&now<=p.valueOf()+half);
+  let text;
+  if(active){const end=new Date(active.valueOf()+half),hours=Math.max(1,Math.ceil((end-now)/3600000));text='<strong>Полнолуние сейчас, скорее загружай котлы!</strong> Оно продлится до '+forumDate(end,true)+', осталось '+hours+' '+plural(hours,"час","часа","часов")+'.';}
+  else{
+    const next=peaks.find(p=>p.valueOf()-half>now)||peaks[peaks.length-1],start=new Date(next.valueOf()-half),end=new Date(next.valueOf()+half),days=Math.max(1,Math.ceil((start-now)/moonDay)),phase=moonIllumination(now).phase;
+    const phaseText=phase<.035||phase>.965?"Сейчас новолуние.":phase<.5?"Сейчас Луна растёт.":"Сейчас Луна убывает.";
+    text=phaseText+' Ближайшее полнолуние будет с '+forumDate(start,true)+' по '+forumDate(end,true)+'. До начала осталось '+days+' '+plural(days,"день","дня","дней")+'.';
+  }
+  $("moonStatus").innerHTML='<p>'+text+'</p><p class="meta">Расчётное игровое окно: 72 часа вокруг астрономического полнолуния. Время форума: UTC+1.</p>';
+}
+function plural(n,one,few,many){const n10=n%10,n100=n%100;return n10===1&&n100!==11?one:n10>=2&&n10<=4&&(n100<12||n100>14)?few:many;}
 function renderMechanics(){
   const m=state.mechanics;
   const d=m.toxicity.durationLabels;
@@ -100,7 +145,7 @@ function renderCatalogLimits(){
       rows.push('<tr><td>'+level+'</td><td>'+e.label+'</td>'+cells+'</tr>');
     });
   });
-  $("catalogLimits").innerHTML='<h2>Пределы эффектов зелий на обычных инграх</h2><p class="callout">'+state.limits.note+'</p><div class="table-wrap"><table><thead><tr><th>Уровень</th><th>Эффект</th><th>Длительность 1</th><th>Длительность 2</th><th>Длительность 3</th><th>Длительность 4</th></tr></thead><tbody>'+rows.join("")+'</tbody></table></div>';
+  $("catalogLimits").innerHTML='<h2>Пределы эффектов зелий на обычных инграх</h2><div class="table-wrap"><table><thead><tr><th>Уровень</th><th>Эффект</th><th>Длительность 1</th><th>Длительность 2</th><th>Длительность 3</th><th>Длительность 4</th></tr></thead><tbody>'+rows.join("")+'</tbody></table></div>';
 }
 
 function potionTitle(p){
@@ -289,11 +334,12 @@ async function load(){
     const [i,a,m,l]=await Promise.all([fetch("data/ingredients.json?v=20260910-1"),fetch("data/actions.json?v=20260910-1"),fetch("data/mechanics.json"),fetch("data/calculated-limits.json?v=20260910-1")]);
     if(![i,a,m,l].every(r=>r.ok)) throw new Error("load");
     state.ingredients=await i.json(); state.actions=await a.json(); state.mechanics=await m.json(); state.limits=await l.json();
-    renderIngredients();$("actionCards").innerHTML=state.actions.map(actionCard).join("");renderCatalogLimits();renderMechanics();document.dispatchEvent(new CustomEvent("hpwf:data-ready"));
+    renderIngredients();renderActions();renderCatalogLimits();renderMechanics();document.dispatchEvent(new CustomEvent("hpwf:data-ready"));
   }catch(e){$("dataStatus").title="Не удалось загрузить справочник";}
 }
 ["dataStatus"].forEach(id=>$(id).addEventListener("click",showHome));
 ["ingredientLevel","ingredientRarity","ingredientSeason"].forEach(id=>$(id).addEventListener("input",renderIngredients));
+$("moonInfoToggle").addEventListener("click",()=>{const panel=$("moonStatus"),show=panel.hidden;panel.hidden=!show;$("moonInfoToggle").setAttribute("aria-expanded",String(show));if(show)renderMoonStatus();});
 $("recipeSearch").addEventListener("input",renderRecipeBrowser);
 document.querySelectorAll(".recipe-view-btn").forEach(btn=>btn.addEventListener("click",()=>{
   document.querySelectorAll(".recipe-view-btn").forEach(x=>x.classList.remove("active"));
