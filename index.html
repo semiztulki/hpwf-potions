@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Справочник и база зельеварения HPWF">
   <title>HPWF Potions</title>
-  <link rel="stylesheet" href="style.css?v=20260910-12">
+  <link rel="stylesheet" href="style.css?v=20260910-13">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -82,12 +82,12 @@
             <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="seasonal"> Сезонные редкие</label>
             <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="very_rare"> Особо редкие</label>
           </div></details></div>
-          <div class="field"><span>Сезон</span><details class="check-select" data-filter-group="ingredient-season"><summary data-filter-summary>Все</summary><div class="check-select-menu">
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="" data-filter-all checked> Все</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="winter"> Зима</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="spring"> Весна</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="summer"> Лето</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="autumn"> Осень</label>
+          <div class="field"><span>Сезон</span><details class="check-select is-disabled" data-filter-group="ingredient-season" aria-disabled="true"><summary data-filter-summary>Все</summary><div class="check-select-menu">
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="" data-filter-all checked disabled> Все</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="winter" disabled> Зима</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="spring" disabled> Весна</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="summer" disabled> Лето</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="autumn" disabled> Осень</label>
           </div></details></div>
         </div>
         <div id="ingredientCards" class="table-wrap catalog-table-wrap"></div>
@@ -274,7 +274,7 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260910-12" defer></script>
+  <script src="app.js?v=20260910-13" defer></script>
   <script src="admin.js?v=20260910-2" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
