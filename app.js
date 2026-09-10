@@ -292,9 +292,10 @@ async function load(){
     const [i,a,m,l]=await Promise.all([fetch("data/ingredients.json"),fetch("data/actions.json"),fetch("data/mechanics.json"),fetch("data/calculated-limits.json")]);
     if(![i,a,m,l].every(r=>r.ok)) throw new Error("load");
     state.ingredients=await i.json(); state.actions=await a.json(); state.mechanics=await m.json(); state.limits=await l.json();
-    $("dataStatus").textContent="Справочник загружен";renderIngredients();$("actionCards").innerHTML=state.actions.map(actionCard).join("");renderMechanics();document.dispatchEvent(new CustomEvent("hpwf:data-ready"));
-  }catch(e){$("dataStatus").textContent="Ошибка загрузки";}
+    renderIngredients();$("actionCards").innerHTML=state.actions.map(actionCard).join("");renderMechanics();document.dispatchEvent(new CustomEvent("hpwf:data-ready"));
+  }catch(e){$("dataStatus").title="Не удалось загрузить справочник";}
 }
+["dataStatus"].forEach(id=>$(id).addEventListener("click",showHome));
 ["ingredientSearch","ingredientLevel","ingredientRarity","ingredientSeason"].forEach(id=>$(id).addEventListener("input",renderIngredients));
 $("recipeSearch").addEventListener("input",renderRecipeBrowser);
 document.querySelectorAll(".recipe-view-btn").forEach(btn=>btn.addEventListener("click",()=>{
