@@ -22,6 +22,7 @@ function updateAccessChrome(){
   $("functionalAccessText").textContent=text;
   $("homeAuthAction").textContent=authenticated?"Выйти":"Войти";
   $("functionalAuthAction").textContent=authenticated?"Выйти":"Войти";
+  $("footerAuthAction").textContent=authenticated?"Выйти":"Войти";
   document.querySelectorAll("[data-auth-only]").forEach(x=>x.hidden=!authenticated);
 }
 function showHome(mode=accessMode){
@@ -50,6 +51,8 @@ function initTabs(){
   document.querySelectorAll(".tab").forEach(btn=>btn.addEventListener("click",()=>openFunctionalTab(btn.dataset.tab)));
   document.querySelectorAll("[data-home-tab]").forEach(btn=>btn.addEventListener("click",()=>openFunctionalTab(btn.dataset.homeTab)));
   $("functionalHomeButton").addEventListener("click",()=>showHome());
+  $("footerHomeAction").addEventListener("click",()=>showHome());
+  $("footerTopAction").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
 }
 function ingredientRow(x){
   const img=x.imageUrl?'<img class="catalog-icon" src="'+x.imageUrl+'" alt="">':'<span class="catalog-icon-placeholder">✦</span>';
