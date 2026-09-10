@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Справочник и база зельеварения HPWF">
   <title>HPWF Potions</title>
-  <link rel="stylesheet" href="style.css?v=20260910-15">
+  <link rel="stylesheet" href="style.css?v=20260910-16">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -104,13 +104,15 @@
             </ul>
           </aside>
         </div>
-        <p class="moon-footnote-marker" aria-hidden="true">*</p>
-        <ul class="moon-footnotes">
-          <li>Свет полной луны добавляет случайный бонус 0–450 к ценности зелья</li>
-          <li>Работает как дополнительный ингредиент, а не как действие</li>
-          <li>Доступно только в <button type="button" id="moonInfoToggle" class="inline-link" aria-expanded="false" aria-controls="moonStatus">реальное полнолуние</button></li>
-          <li>Несмотря на то, что это действие второго уровня, оно доступно на первом — в составе зелья маны «Слеза дриады».</li>
-        </ul>
+        <div class="moon-footnote-block">
+          <span class="moon-footnote-marker" aria-hidden="true">*</span>
+          <ul class="moon-footnotes">
+            <li>Свет полной луны добавляет случайный бонус 0–450 к ценности зелья</li>
+            <li>Работает как дополнительный ингредиент, а не как действие</li>
+            <li>Доступно только в <button type="button" id="moonInfoToggle" class="inline-link" aria-expanded="false" aria-controls="moonStatus">реальное полнолуние</button></li>
+            <li>Несмотря на то, что это действие второго уровня, оно доступно на первом — в составе зелья маны «Слеза дриады».</li>
+          </ul>
+        </div>
         <div id="moonStatus" class="moon-status" hidden aria-live="polite"></div>
       </div>
       <div class="power-table panel catalog-reference-table">
