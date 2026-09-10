@@ -343,7 +343,6 @@ async function adminAuthenticate(password){
   if(!password) throw new Error("Введите пароль.");
   adminState.password=password;
   try{
-    await adminApiCall("/auth",{});
     await loadPrivateData(password);
   }catch(err){
     adminState.password="";
@@ -512,6 +511,18 @@ function initAdmin(){
   adminRenderSequence();
   adminRenderPotionMatch();
   adminRenderAuth();
+  const savedPassword=sessionStorage.getItem("hpwf-editor-password");
+  if(savedPassword){
+    adminState.password=savedPassword;
+    adminRenderAuth();
+    showHome("authenticated");
+    loadPrivateData(savedPassword).catch(()=>{
+      adminState.password="";
+      sessionStorage.removeItem("hpwf-editor-password");
+      adminRenderAuth();
+      showAccessScreen();
+    });
+  }
 }
 document.addEventListener("hpwf:data-ready",initAdmin);
 if(typeof state!=="undefined"&&state.ingredients?.length) initAdmin();
