@@ -51,25 +51,23 @@ function initTabs(){
   document.querySelectorAll("[data-home-tab]").forEach(btn=>btn.addEventListener("click",()=>openFunctionalTab(btn.dataset.homeTab)));
   $("functionalHomeButton").addEventListener("click",()=>showHome());
 }
-function ingredientCard(x){
-  const img=x.imageUrl?'<img class="icon" src="'+x.imageUrl+'" alt="">':'<div class="icon-placeholder">✦</div>';
-  const rarityNote=x.rarity==="common"?"Случайный модификатор имеет наибольший разброс.":x.rarity==="seasonal"?"Случайный модификатор имеет меньший разброс, чем у обычных ингредиентов.":"Случайный модификатор имеет наименьший предполагаемый разброс.";
-  return '<article class="ingredient-card"><div class="card-head"><div><p class="eyebrow">Уровень '+x.level+'</p><h3 class="card-title">'+x.name+'</h3></div>'+img+'</div>'
-    +'<div class="badges"><span class="badge">'+labels.rarity[x.rarity]+'</span>'+(x.season?'<span class="badge">'+labels.season[x.season]+'</span>':'')+'</div>'
-    +'<div class="power">'+fmt(x.basePower)+' силы</div><div class="meta"><p>Пауза при добавлении: '+x.pauseSeconds+' сек.</p>'
-    +(x.approxQuestDropRate?'<p>Ориентировочная вероятность выпадения из квестов: '+x.approxQuestDropRate+'.</p>':'')+'<p>'+rarityNote+'</p></div></article>';
+function ingredientRow(x){
+  const img=x.imageUrl?'<img class="catalog-icon" src="'+x.imageUrl+'" alt="">':'<span class="catalog-icon-placeholder">✦</span>';
+  return '<tr><td><div class="catalog-name">'+img+'<span>'+esc(x.name)+'</span></div></td>'
+    +'<td>'+x.level+'</td><td>'+labels.rarity[x.rarity]+'</td><td>'+(x.season?labels.season[x.season]:"—")+'</td>'
+    +'<td class="numeric">'+fmt(x.basePower)+'</td><td class="numeric">'+x.pauseSeconds+' сек.</td><td class="numeric">'+(x.approxQuestDropRate||"—")+'</td></tr>';
 }
 function renderIngredients(){
   const q=norm($("ingredientSearch").value),level=$("ingredientLevel").value,rarity=$("ingredientRarity").value,season=$("ingredientSeason").value;
   const list=state.ingredients.filter(x=>(!q||norm(x.name).includes(q))&&(!level||String(x.level)===level)&&(!rarity||x.rarity===rarity)&&(!season||x.season===season));
   $("ingredientCount").textContent=list.length+" из "+state.ingredients.length;
-  $("ingredientCards").innerHTML=list.map(ingredientCard).join("");
+  $("ingredientCards").innerHTML=list.length?'<table class="catalog-table"><thead><tr><th>Ингредиент</th><th>Уровень</th><th>Категория</th><th>Сезон</th><th>Сила</th><th>Пауза</th><th>Выпадение</th></tr></thead><tbody>'+list.map(ingredientRow).join("")+'</tbody></table>':'<div class="panel empty-state">По этим фильтрам ингредиентов нет.</div>';
 }
 function actionCard(x){
   const img=x.imageUrl?'<img class="icon" src="'+x.imageUrl+'" alt="">':'';
   const moon=x.kind==="moon";
-  return '<article class="action-card"><div class="card-head"><div><p class="eyebrow">'+(moon?"Особый элемент":"Действие")+' · уровень '+x.level+'</p><h3 class="card-title">'+x.name+'</h3></div>'+img+'</div>'
-    +'<div class="badges"><span class="badge">'+x.pauseSeconds+' сек.</span><span class="badge">Сила: 0</span>'+(moon?'<span class="badge">Бонус 0–450</span>':'')+'</div>'
+  return '<article class="action-card compact-action-card"><div class="card-head"><div><p class="eyebrow">'+(moon?"Особый элемент":"Действие")+'</p><h3 class="card-title">'+x.name+'</h3></div>'+img+'</div>'
+    +'<p class="action-summary">Уровень '+x.level+' · пауза '+x.pauseSeconds+' сек.'+(moon?' · бонус 0–450':'')+'</p>'
     +(x.availability?'<p class="callout">'+x.availability+'</p>':'')+'<ul class="rules">'+(x.rules||[]).map(r=>'<li>'+r+'</li>').join("")+'</ul></article>';
 }
 function renderMechanics(){
