@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Справочник и база зельеварения HPWF">
   <title>HPWF Potions</title>
-  <link rel="stylesheet" href="style.css?v=20260910-6">
+  <link rel="stylesheet" href="style.css?v=20260910-7">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -50,7 +50,7 @@
       <div>
         <p class="eyebrow">HPWF tools</p>
         <h1>Зельеварение</h1>
-        <p class="subtitle">Справочник по ингредиентам, действиям и механике, база рецептов и отдельная очередь записей, требующих сверки.</p>
+        <p class="subtitle">Основы зельеварения, инструменты и компиляции от <a href="https://harrypotter.com.ua/index.php?showuser=207973" target="_blank" rel="noopener noreferrer">Alcyone</a></p>
       </div>
       <button type="button" class="status-badge home-banner-button" id="dataStatus">На главную</button>
     </div>
@@ -238,9 +238,15 @@
       </div>
     </section>
   </main>
-  <footer class="wrap footer"><p>HPWF Potions · справочник основан на подтвержденной игровой механике и данных, внесенных вручную.</p></footer>
+  <footer class="wrap footer" aria-label="Служебные ссылки">
+    <span>HPWF Potions</span><span aria-hidden="true">·</span>
+    <button type="button" id="footerTopAction">Наверх страницы</button><span aria-hidden="true">·</span>
+    <button type="button" id="footerHomeAction">На главную</button><span aria-hidden="true">·</span>
+    <a href="https://harrypotter.com.ua/index.php?act=Msg&amp;CODE=4&amp;MID=207973" target="_blank" rel="noopener noreferrer" title="Написать мне в ПМ на форуме">Связаться со мной</a><span aria-hidden="true">·</span>
+    <button type="button" id="footerAuthAction"></button>
+  </footer>
   </div>
-  <script src="app.js?v=20260910-7" defer></script>
+  <script src="app.js?v=20260910-8" defer></script>
   <script src="admin.js?v=20260910-1" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
