@@ -56,13 +56,13 @@
       <button type="button" class="status-badge home-banner-button" id="dataStatus">На главную</button>
     </div>
   </header>
-  <nav class="wrap tabs" aria-label="Разделы" hidden>
+  <nav class="wrap tabs" aria-label="Разделы">
     <button class="tab active" data-tab="ingredients">Ингредиенты</button>
     <button class="tab" data-tab="actions">Действия и Луна</button>
     <button class="tab" data-tab="mechanics">Механика</button>
-    <button class="tab" data-tab="potions">Рецепты</button>
-    <button class="tab" data-tab="add-recipe">Добавить рецепт</button>
-    <button class="tab" data-tab="review">На проверку</button>
+    <button class="tab" data-tab="potions" data-auth-only>Рецепты</button>
+    <button class="tab" data-tab="add-recipe" data-auth-only>Добавить рецепт</button>
+    <button class="tab" data-tab="review" data-auth-only>На проверку</button>
   </nav>
   <main class="wrap">
     <section id="ingredients" class="tab-panel active">
@@ -237,7 +237,7 @@
   </main>
   <footer class="wrap footer"><p>HPWF Potions · справочник основан на подтвержденной игровой механике и данных, внесенных вручную.</p></footer>
   </div>
-  <script src="app.js?v=20260910-2" defer></script>
+  <script src="app.js?v=20260910-3" defer></script>
   <script src="admin.js?v=20260910-1" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
