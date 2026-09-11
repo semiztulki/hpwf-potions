@@ -1,4 +1,4 @@
-const state={ingredients:[],actions:[],mechanics:null,limits:null,potions:{},recipes:{}};
+const state={ingredients:[],actions:[],mechanics:null,potions:{},recipes:{}};
 const $=id=>document.getElementById(id);
 const labels={rarity:{common:"Обычный",seasonal:"Сезонный редкий",very_rare:"Особо редкий"},season:{winter:"Зима",spring:"Весна",summer:"Лето",autumn:"Осень"}};
 const fmt=n=>new Intl.NumberFormat("ru-RU").format(n);
@@ -209,19 +209,6 @@ function renderMechanics(){
     +'<article class="mechanic-card wide"><p class="eyebrow">Наборы</p><h3>Набор алхимика</h3><p>'+m.ingredientSets.rule+'</p><ul class="rules">'+m.ingredientSets.extraItem.map(r=>'<li>'+r+'</li>').join("")+'</ul></article>';
 }
 
-function renderCatalogLimits(){
-  const d=state.mechanics.toxicity.durationLabels,rows=[];
-  ["1","2","3"].forEach(level=>{
-    const durations=state.limits.durationOrderByLevel[level],observed=state.limits.observedDurationsByLevel[level]||[];
-    ["efficiency","resistance","concentration"].forEach(effect=>{
-      const e=state.limits.effects[effect],vals=e.byLevel[level];
-      const cells=vals.map((v,i)=>observed.includes(durations[i])?'<td>'+v+(e.unit==="percent"?"%":"")+'<br><span class="meta">'+d[durations[i]]+'</span></td>':'<td class="limit-missing">—</td>').join("");
-      rows.push('<tr><td>'+level+'</td><td>'+e.label+'</td>'+cells+'</tr>');
-    });
-  });
-  $("catalogLimits").innerHTML='<h2>Пределы эффектов зелий на обычных инграх</h2><div class="table-wrap"><table><thead><tr><th>Уровень</th><th>Эффект</th><th>Длительность 1</th><th>Длительность 2</th><th>Длительность 3</th><th>Длительность 4</th></tr></thead><tbody>'+rows.join("")+'</tbody></table></div>';
-}
-
 function potionTitle(p){
   if(p.name) return p.name;
   if(p.category==="standard_old") return "Зелье старого образца №"+(p.number??"—");
@@ -405,10 +392,10 @@ async function loadPrivateData(password){
 
 async function load(){
   try{
-    const [i,a,m,l]=await Promise.all([fetch("data/ingredients.json?v=20260910-1"),fetch("data/actions.json?v=20260910-1"),fetch("data/mechanics.json"),fetch("data/calculated-limits.json?v=20260910-1")]);
-    if(![i,a,m,l].every(r=>r.ok)) throw new Error("load");
-    state.ingredients=await i.json(); state.actions=await a.json(); state.mechanics=await m.json(); state.limits=await l.json();
-    renderIngredients();renderActions();renderCatalogLimits();renderMechanics();document.dispatchEvent(new CustomEvent("hpwf:data-ready"));
+    const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20260910-1"),fetch("data/actions.json?v=20260910-1"),fetch("data/mechanics.json")]);
+    if(![i,a,m].every(r=>r.ok)) throw new Error("load");
+    state.ingredients=await i.json(); state.actions=await a.json(); state.mechanics=await m.json();
+    renderIngredients();renderActions();renderMechanics();document.dispatchEvent(new CustomEvent("hpwf:data-ready"));
   }catch(e){$("dataStatus").title="Не удалось загрузить справочник";}
 }
 $("dataStatus").addEventListener("click",()=>showHome());
