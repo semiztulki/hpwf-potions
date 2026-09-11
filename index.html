@@ -125,6 +125,17 @@
           <div id="calculatorIngredients" class="calculator-grid"></div>
           <label class="calculator-moon"><input id="calculatorMoon" type="checkbox"> Добавить Свет полной луны</label>
           <div id="calculatorResult" class="calculator-result" aria-live="polite"></div>
+          <div class="calculator-forecast-controls">
+            <label class="field calculator-duration-field">
+              <span>Посмотреть возможные статы для разной длительности</span>
+              <select id="calculatorDuration" disabled>
+                <option value="">Сначала добавьте ингредиенты</option>
+              </select>
+            </label>
+            <p id="calculatorDetectedLevel" class="calculator-detected-level">Уровень зелья определится по ингредиентам</p>
+          </div>
+          <div id="calculatorEffects" class="calculator-effects" hidden aria-live="polite"></div>
+          <p class="calculator-disclaimer">Калькулятор не применим к зельям старого образца.</p>
         </div>
       </div>
       <div id="catalogLimits" class="panel catalog-reference-table"></div>
