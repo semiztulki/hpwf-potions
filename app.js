@@ -129,6 +129,7 @@ function plural(n,one,few,many){const n10=n%10,n100=n%100;return n10===1&&n100!=
 const calculatorPowers={"1-common":200,"1-seasonal":1000,"1-very_rare":5000,"2-common":550,"2-seasonal":2500,"2-very_rare":13500,"3-common":1500,"3-seasonal":7500,"3-very_rare":36000};
 const calculatorDurations={1:["5m","1h","5h","1w"],2:["1h","5h","1w","1mo"],3:["5h","1w","1mo","2mo"]};
 const calculatorDurationLabels={"5m":"5 минут","1h":"1 час","5h":"5 часов","1w":"1 неделя","1mo":"1 месяц","2mo":"2 месяца"};
+const calculatorLevelWords={1:"первого",2:"второго",3:"третьего"};
 const calculatorEffectDivisors={
   1:{"1h":{concentration:25,efficiency:35,resistance:8},"5h":{concentration:40,efficiency:50,resistance:10},"1w":{concentration:130,efficiency:150,resistance:130}},
   2:{"1h":{concentration:40,efficiency:50,resistance:10},"5h":{concentration:40,efficiency:50,resistance:10},"1w":{concentration:130,efficiency:150,resistance:130},"1mo":{concentration:400,efficiency:450,resistance:350}},
@@ -172,7 +173,7 @@ function updateValueCalculator(){
   const activeLevels=inputs.filter(input=>Number(input.value)>0).map(input=>Number(input.dataset.level));
   const level=activeLevels.length?Math.max(...activeLevels):null;
   updateCalculatorDurations(level);
-  $("calculatorDetectedLevel").textContent=level?"Расчётный уровень зелья: "+level:"Уровень зелья определится по ингредиентам";
+  $("calculatorDetectedLevel").innerHTML=level?'Получится зелье <strong>'+calculatorLevelWords[level]+'</strong> уровня':"Уровень зелья определится по ингредиентам";
   $("calculatorCount").textContent=total+" из 11";
   $("calculatorCount").classList.toggle("error",total>11);
   if(total>11){
