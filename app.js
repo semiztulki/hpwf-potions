@@ -127,28 +127,66 @@ function renderMoonStatus(){
 }
 function plural(n,one,few,many){const n10=n%10,n100=n%100;return n10===1&&n100!==11?one:n10>=2&&n10<=4&&(n100<12||n100>14)?few:many;}
 const calculatorPowers={"1-common":200,"1-seasonal":1000,"1-very_rare":5000,"2-common":550,"2-seasonal":2500,"2-very_rare":13500,"3-common":1500,"3-seasonal":7500,"3-very_rare":36000};
+const calculatorDurations={1:["5m","1h","5h","1w"],2:["1h","5h","1w","1mo"],3:["5h","1w","1mo","2mo"]};
+const calculatorDurationLabels={"5m":"5 минут","1h":"1 час","5h":"5 часов","1w":"1 неделя","1mo":"1 месяц","2mo":"2 месяца"};
+const calculatorEffectDivisors={
+  1:{"1h":{concentration:25,efficiency:35,resistance:8},"5h":{concentration:40,efficiency:50,resistance:10},"1w":{concentration:130,efficiency:150,resistance:130}},
+  2:{"1h":{concentration:40,efficiency:50,resistance:10},"5h":{concentration:40,efficiency:50,resistance:10},"1w":{concentration:130,efficiency:150,resistance:130},"1mo":{concentration:400,efficiency:450,resistance:350}},
+  3:{"5h":{concentration:40,efficiency:50,resistance:10},"1w":{concentration:130,efficiency:150,resistance:130},"1mo":{concentration:400,efficiency:450,resistance:350},"2mo":{concentration:800,efficiency:800,resistance:800}}
+};
+let calculatorLevel=null;
 function initValueCalculator(){
   const rarityNames={common:"Обычный",seasonal:"Сезонный редкий",very_rare:"Особо редкий"};
-  $("calculatorIngredients").innerHTML=Object.entries(calculatorPowers).map(([key,power])=>{const [level,rarity]=key.split("-");return '<label class="calculator-field"><span>'+level+' уровень · '+rarityNames[rarity]+'<small>'+fmt(power)+' силы</small></span><input class="calculator-quantity" type="text" inputmode="numeric" pattern="[0-9]*" value="0" data-power="'+power+'" aria-label="Количество: '+level+' уровень, '+rarityNames[rarity].toLowerCase()+'"></label>';}).join("");
+  $("calculatorIngredients").innerHTML=Object.entries(calculatorPowers).map(([key,power])=>{const [level,rarity]=key.split("-");return '<label class="calculator-field"><span>'+level+' уровень · '+rarityNames[rarity]+'<small>'+fmt(power)+' силы</small></span><input class="calculator-quantity" type="text" inputmode="numeric" pattern="[0-9]*" value="0" data-power="'+power+'" data-level="'+level+'" aria-label="Количество: '+level+' уровень, '+rarityNames[rarity].toLowerCase()+'"></label>';}).join("");
   document.querySelectorAll(".calculator-quantity").forEach(input=>input.addEventListener("input",updateValueCalculator));
   $("calculatorMoon").addEventListener("change",()=>updateValueCalculator());
+  $("calculatorDuration").addEventListener("change",updateValueCalculator);
   updateValueCalculator();
+}
+function updateCalculatorDurations(level){
+  if(calculatorLevel===level)return;
+  const select=$("calculatorDuration"),previous=select.value,durations=calculatorDurations[level]||[];
+  calculatorLevel=level;
+  select.disabled=!level;
+  select.innerHTML='<option value="">'+(level?"Выберите длительность":"Сначала добавьте ингредиенты")+'</option>'+durations.map(duration=>'<option value="'+duration+'">'+calculatorDurationLabels[duration]+'</option>').join("");
+  if(durations.includes(previous))select.value=previous;
+}
+function renderCalculatorEffects(level,duration,nominal,minimum,maximum){
+  const root=$("calculatorEffects"),divisors=calculatorEffectDivisors[level]?.[duration];
+  if(!duration||!level){root.hidden=true;root.innerHTML="";return;}
+  root.hidden=false;
+  if(!divisors){
+    root.innerHTML='<p class="calculator-effects-unavailable">Для зелий длительностью '+calculatorDurationLabels[duration].toLowerCase()+' пока недостаточно данных для надёжного прогноза.</p>';
+    return;
+  }
+  const cards=[["concentration","Концентрация",""] ,["efficiency","Эффективность","%"],["resistance","Устойчивость",""]].map(([key,label,unit])=>{
+    const value=Math.ceil(nominal/divisors[key]),from=Math.ceil(minimum/divisors[key]),to=Math.ceil(maximum/divisors[key]);
+    return '<div class="calculator-effect-card"><span>'+label+'</span><strong>'+fmt(value)+unit+'</strong><small>'+fmt(from)+unit+'–'+fmt(to)+unit+'</small></div>';
+  }).join("");
+  root.innerHTML='<div class="calculator-effects-head"><span>Зелье '+level+' уровня · '+calculatorDurationLabels[duration]+'</span><small>возможный диапазон указан под значением</small></div><div class="calculator-effects-grid">'+cards+'</div>';
 }
 function updateValueCalculator(){
   const inputs=[...document.querySelectorAll(".calculator-quantity")];
   inputs.forEach(input=>input.value=Math.max(0,Math.floor(Number(input.value)||0)));
   const total=inputs.reduce((sum,input)=>sum+Number(input.value),0);
+  const activeLevels=inputs.filter(input=>Number(input.value)>0).map(input=>Number(input.dataset.level));
+  const level=activeLevels.length?Math.max(...activeLevels):null;
+  updateCalculatorDurations(level);
+  $("calculatorDetectedLevel").textContent=level?"Расчётный уровень зелья: "+level:"Уровень зелья определится по ингредиентам";
   $("calculatorCount").textContent=total+" из 11";
   $("calculatorCount").classList.toggle("error",total>11);
   if(total>11){
     $("calculatorResult").className="calculator-result error";
     $("calculatorResult").textContent="Вы добавили более 11 ингредиентов. Проверьте рецепт!";
+    $("calculatorEffects").hidden=true;
+    $("calculatorEffects").innerHTML="";
     return;
   }
   const base=inputs.reduce((sum,input)=>sum+Number(input.value)*Number(input.dataset.power),0),moon=$("calculatorMoon").checked;
   const nominal=base+(moon?225:0),minimum=Math.round(base*.85),maximum=Math.round(base*1.15)+(moon?450:0);
   $("calculatorResult").className="calculator-result";
   $("calculatorResult").innerHTML=total?'<span>Примерная ценность</span><strong>'+fmt(nominal)+'</strong><span> ('+fmt(minimum)+'–'+fmt(maximum)+')</span>':'<span>Добавьте ингредиенты, чтобы увидеть расчёт.</span>';
+  renderCalculatorEffects(level,$("calculatorDuration").value,nominal,minimum,maximum);
 }
 function renderMechanics(){
   const m=state.mechanics;
