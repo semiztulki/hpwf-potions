@@ -162,8 +162,8 @@ function renderCalculatorEffects(level,duration,nominal,minimum,maximum){
   const cards=[["concentration","Концентрация",""] ,["efficiency","Эффективность","%"],["resistance","Устойчивость",""]].map(([key,label,unit])=>{
     const value=Math.ceil(nominal/divisors[key]),from=Math.ceil(minimum/divisors[key]),to=Math.ceil(maximum/divisors[key]);
     return '<div class="calculator-effect-card"><span>'+label+'</span><strong>'+fmt(value)+unit+'</strong><small>'+fmt(from)+unit+'–'+fmt(to)+unit+'</small></div>';
-  }).join("");
-  root.innerHTML='<div class="calculator-effects-head"><span>Зелье '+level+' уровня · '+calculatorDurationLabels[duration]+'</span><small>возможный диапазон указан под значением</small></div><div class="calculator-effects-grid">'+cards+'</div>';
+  }).join('<span class="calculator-effect-or">или</span>');
+  root.innerHTML='<div class="calculator-effects-head"><span>Зелье '+level+' уровня · '+calculatorDurationLabels[duration]+'</span><small>один из возможных эффектов; диапазон указан под значением</small></div><div class="calculator-effects-grid">'+cards+'</div>';
 }
 function updateValueCalculator(){
   const inputs=[...document.querySelectorAll(".calculator-quantity")];
