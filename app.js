@@ -60,7 +60,16 @@ function openCatalogTool(id){
   openFunctionalTab("ingredients");
   if(id==="valueCalculator")updateValueCalculator();
   if(id==="moonStatus"){$("moonStatus").hidden=false;$("moonInfoToggle").setAttribute("aria-expanded","true");renderMoonStatus();}
-  requestAnimationFrame(()=>$(id).scrollIntoView({behavior:"smooth",block:"center"}));
+  requestAnimationFrame(()=>{
+    const target=$(id);
+    target.scrollIntoView({behavior:"smooth",block:"center"});
+    if(id==="moonStatus"){
+      target.classList.remove("anchor-highlight");
+      void target.offsetWidth;
+      target.classList.add("anchor-highlight");
+      window.setTimeout(()=>target.classList.remove("anchor-highlight"),1800);
+    }
+  });
 }
 function ingredientRow(x){
   const img=x.imageUrl?'<img class="catalog-icon" src="'+x.imageUrl+'" alt="">':'<span class="catalog-icon-placeholder">✦</span>';
