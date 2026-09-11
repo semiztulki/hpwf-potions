@@ -162,9 +162,9 @@ function renderCalculatorEffects(level,duration,nominal,minimum,maximum){
   }
   const cards=[["concentration","Концентрация",""] ,["efficiency","Эффективность","%"],["resistance","Устойчивость",""]].map(([key,label,unit])=>{
     const value=Math.ceil(nominal/divisors[key]),from=Math.ceil(minimum/divisors[key]),to=Math.ceil(maximum/divisors[key]);
-    return '<div class="calculator-effect-card"><span>'+label+'</span><strong>'+fmt(value)+unit+'</strong><small>'+fmt(from)+unit+'–'+fmt(to)+unit+'</small></div>';
+    return '<div class="calculator-effect-card"><span>'+label+'</span><strong>'+fmt(value)+unit+'</strong><small>Возможный диапазон: '+fmt(from)+unit+'–'+fmt(to)+unit+'</small></div>';
   }).join('<span class="calculator-effect-or">или</span>');
-  root.innerHTML='<div class="calculator-effects-head"><span>Зелье '+level+' уровня · '+calculatorDurationLabels[duration]+'</span><small>один из возможных эффектов; диапазон указан под значением</small></div><div class="calculator-effects-grid">'+cards+'</div>';
+  root.innerHTML='<div class="calculator-effects-head"><span>Зелье '+level+' уровня · '+calculatorDurationLabels[duration]+'</span><strong>Один из трёх возможных эффектов</strong></div><div class="calculator-effects-grid">'+cards+'</div>';
 }
 function updateValueCalculator(){
   const inputs=[...document.querySelectorAll(".calculator-quantity")];
@@ -173,7 +173,7 @@ function updateValueCalculator(){
   const activeLevels=inputs.filter(input=>Number(input.value)>0).map(input=>Number(input.dataset.level));
   const level=activeLevels.length?Math.max(...activeLevels):null;
   updateCalculatorDurations(level);
-  $("calculatorDetectedLevel").innerHTML=level?'Получится зелье <strong>'+calculatorLevelWords[level]+'</strong> уровня':"Уровень зелья определится по ингредиентам";
+  $("calculatorDetectedLevel").innerHTML=level?'<span>Уровень зелья</span><span class="calculator-level-value">Получится зелье <strong>'+calculatorLevelWords[level]+'</strong> уровня</span><small>Определён по ингредиенту самого высокого уровня</small>':'<span>Уровень зелья</span><span class="calculator-level-value">Пока не определён</span><small>Добавьте хотя бы один ингредиент</small>';
   $("calculatorCount").textContent=total+" из 11";
   $("calculatorCount").classList.toggle("error",total>11);
   if(total>11){
@@ -186,7 +186,7 @@ function updateValueCalculator(){
   const base=inputs.reduce((sum,input)=>sum+Number(input.value)*Number(input.dataset.power),0),moon=$("calculatorMoon").checked;
   const nominal=base+(moon?225:0),minimum=Math.round(base*.85),maximum=Math.round(base*1.15)+(moon?450:0);
   $("calculatorResult").className="calculator-result";
-  $("calculatorResult").innerHTML=total?'<span>Примерная ценность</span><strong>'+fmt(nominal)+'</strong><span> ('+fmt(minimum)+'–'+fmt(maximum)+')</span>':'<span>Добавьте ингредиенты, чтобы увидеть расчёт.</span>';
+  $("calculatorResult").innerHTML=total?'<span>Примерная ценность</span><strong>'+fmt(nominal)+'</strong><small>Возможный диапазон: '+fmt(minimum)+'–'+fmt(maximum)+'</small>':'<span>Примерная ценность</span><strong>—</strong><small>Добавьте ингредиенты, чтобы увидеть расчёт</small>';
   renderCalculatorEffects(level,$("calculatorDuration").value,nominal,minimum,maximum);
 }
 function renderMechanics(){
