@@ -287,6 +287,11 @@ function selectedRecipeRarities(){
 function selectedRecipeMoonModes(){
   return new Set([...document.querySelectorAll('input[name="recipe-moon"]:checked')].map(x=>x.value));
 }
+function updateRecipeMoonSummary(){
+  const selected=selectedRecipeMoonModes(),summary=document.querySelector("[data-recipe-moon-summary]");
+  if(!summary)return;
+  summary.textContent=selected.size===2?"Все варианты":selected.has("with")?"С луной":"Без луны";
+}
 function recipeMatchesRarities(r,allowed){
   if(allowed.size===3)return true;
   const items=(r.sequence||[]).filter(item=>item.type==="ingredient");
@@ -571,6 +576,7 @@ for(const group of ["recipe-rarity","recipe-moon"]){
   document.querySelectorAll('input[name="'+group+'"]').forEach(input=>input.addEventListener("change",()=>{
     const checked=document.querySelectorAll('input[name="'+group+'"]:checked');
     if(!checked.length)input.checked=true;
+    if(group==="recipe-moon")updateRecipeMoonSummary();
     recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();
   }));
 }
