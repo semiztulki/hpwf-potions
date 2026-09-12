@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260911-5">
+  <link rel="stylesheet" href="style.css?v=20260912-1">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -187,6 +187,39 @@
             <button class="recipe-view-btn" data-recipe-view="level2">2 уровень</button>
             <button class="recipe-view-btn" data-recipe-view="level3">3 уровень</button>
           </div>
+          <div id="recipeAdvancedFilters" class="recipe-filter-panel" hidden>
+            <div class="recipe-filter-row">
+              <fieldset class="recipe-filter-group recipe-era-filter">
+                <legend>Образец зелья</legend>
+                <div class="recipe-segmented">
+                  <label><input type="radio" name="recipe-era" value="all" checked><span>Все</span></label>
+                  <label><input type="radio" name="recipe-era" value="new"><span>Новый</span></label>
+                  <label><input type="radio" name="recipe-era" value="old"><span>Старый</span></label>
+                </div>
+              </fieldset>
+              <fieldset class="recipe-filter-group recipe-rarity-filter">
+                <legend>Какие ингредиенты доступны</legend>
+                <div class="recipe-rarity-options">
+                  <label><input type="checkbox" name="recipe-rarity" value="common" checked> Обычные</label>
+                  <label><input type="checkbox" name="recipe-rarity" value="seasonal" checked> Сезонные</label>
+                  <label><input type="checkbox" name="recipe-rarity" value="very_rare" checked> Особо редкие</label>
+                </div>
+              </fieldset>
+            </div>
+            <div id="newPotionFilters" class="recipe-new-filter-row" hidden>
+              <label class="field"><span>Длительность</span><select id="recipeDurationFilter"><option value="">Все длительности</option></select></label>
+              <label class="field"><span>Эффект</span><select id="recipeEffectFilter"><option value="">Все эффекты</option></select></label>
+              <div id="recipeEffectRange" class="recipe-range-filter" hidden>
+                <div class="recipe-range-head"><span>Значение эффекта</span><output id="recipeRangeOutput"></output></div>
+                <div id="recipeDualRange" class="recipe-dual-range">
+                  <div class="recipe-range-track" aria-hidden="true"></div>
+                  <input id="recipeRangeMin" type="range" aria-label="Минимальное значение эффекта">
+                  <input id="recipeRangeMax" type="range" aria-label="Максимальное значение эффекта">
+                </div>
+                <div class="recipe-range-limits"><span id="recipeRangeFloor"></span><span id="recipeRangeCeiling"></span></div>
+              </div>
+            </div>
+          </div>
           <p class="meta recipe-help">Структура повторяет факультетскую базу: эффект → длительность → зелья. Раздел длительности раскрывается по нажатию.</p>
         </div>
         <div id="recipeBrowser" class="recipe-browser"></div>
@@ -306,7 +339,7 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260911-4" defer></script>
+  <script src="app.js?v=20260912-1" defer></script>
   <script src="admin.js?v=20260910-2" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
