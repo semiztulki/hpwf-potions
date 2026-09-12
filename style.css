@@ -277,6 +277,8 @@ tbody tr:hover{background:#f5f0fa}
 .recipe-rarity-options{display:flex;align-items:center;gap:10px 22px;min-height:43px;flex-wrap:wrap}
 .recipe-rarity-options label{display:flex;align-items:center;gap:8px;color:var(--ink);font-size:.9rem;font-weight:600;cursor:pointer}
 .recipe-rarity-options input{width:18px;height:18px;min-height:0;margin:0;accent-color:var(--accent)}
+.recipe-moon-filter{align-self:start;min-width:0;padding:0 4px}
+.recipe-moon-select .check-select-menu{min-width:100%;white-space:nowrap}
 .recipe-new-filter-row{display:grid;grid-template-columns:minmax(190px,.6fr) minmax(190px,.6fr) minmax(300px,1.4fr);gap:12px;align-items:end;padding:16px;border-radius:12px;background:var(--lavender)}
 .recipe-new-filter-row .field>span{color:var(--ink)}
 .recipe-range-filter{min-width:0;padding:1px 4px 0}
