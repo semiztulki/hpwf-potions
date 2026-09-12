@@ -284,6 +284,9 @@ function selectedRecipeEra(){
 function selectedRecipeRarities(){
   return new Set([...document.querySelectorAll('input[name="recipe-rarity"]:checked')].map(x=>x.value));
 }
+function selectedRecipeMoonModes(){
+  return new Set([...document.querySelectorAll('input[name="recipe-moon"]:checked')].map(x=>x.value));
+}
 function recipeMatchesRarities(r,allowed){
   if(allowed.size===3)return true;
   const items=(r.sequence||[]).filter(item=>item.type==="ingredient");
@@ -294,17 +297,26 @@ function recipeMatchesRarities(r,allowed){
     return rarity&&allowed.has(rarity);
   });
 }
+function recipeHasMoon(r){
+  return (r.sequence||[]).some(item=>item.type==="moon");
+}
+function recipeMatchesMoon(r,allowed){
+  return allowed.has(recipeHasMoon(r)?"with":"without");
+}
+function recipeAvailabilityIsDefault(){
+  return selectedRecipeRarities().size===3&&selectedRecipeMoonModes().size===2;
+}
+function recipeMatchesAvailability(r){
+  return recipeMatchesRarities(r,selectedRecipeRarities())&&recipeMatchesMoon(r,selectedRecipeMoonModes());
+}
 function recipesVisibleForPotion(p){
   const recipes=recipesForPotion(p.id);
-  if(!currentRecipeLevel())return recipes;
-  const allowed=selectedRecipeRarities();
-  return recipes.filter(r=>recipeMatchesRarities(r,allowed));
+  if(recipeAvailabilityIsDefault())return recipes;
+  return recipes.filter(recipeMatchesAvailability);
 }
-function potionMatchesRarities(p){
-  const recipes=recipesForPotion(p.id);
-  const allowed=selectedRecipeRarities();
-  if(allowed.size===3)return true;
-  return recipes.some(r=>recipeMatchesRarities(r,allowed));
+function potionMatchesAvailability(p){
+  if(recipeAvailabilityIsDefault())return true;
+  return recipesVisibleForPotion(p).length>0;
 }
 function recipeEffectNumber(p,type){
   const e=(p.effects||[]).find(x=>x.type===type&&x.value!=null&&x.value!==""&&Number.isFinite(Number(x.value)));
@@ -336,8 +348,13 @@ function setRecipeFilterOptions(select,items,emptyLabel){
 }
 function updateRecipeFilterControls(){
   const level=currentRecipeLevel(),panel=$("recipeAdvancedFilters");
-  panel.hidden=!level;
-  if(!level)return;
+  panel.hidden=false;
+  document.querySelector(".recipe-era-filter").hidden=!level;
+  if(!level){
+    $("newPotionFilters").hidden=true;
+    $("recipeEffectRange").hidden=true;
+    return;
+  }
   const allNew=(state.potions["standard-new"]||[]).filter(p=>Number(p.level)===level);
   const durationValues=[...new Set(allNew.map(p=>p.duration).filter(Boolean))].sort((a,b)=>durationOrder.indexOf(a)-durationOrder.indexOf(b));
   setRecipeFilterOptions($("recipeDurationFilter"),durationValues.map(value=>[value,state.mechanics?.toxicity?.durationLabels?.[value]||value]),"Все длительности");
@@ -351,10 +368,10 @@ function updateRecipeFilterControls(){
   const effect=$("recipeEffectFilter").value;
   if(!duration||!effect){$("recipeEffectRange").hidden=true;return;}
   const values=allNew
-    .filter(p=>p.duration===duration&&potionMatchesRarities(p))
+    .filter(p=>p.duration===duration&&potionMatchesAvailability(p))
     .map(p=>recipeEffectNumber(p,effect)).filter(v=>v!=null);
   if(!values.length){$("recipeEffectRange").hidden=true;return;}
-  const floor=Math.min(...values),ceiling=Math.max(...values),key=[level,duration,effect,[...selectedRecipeRarities()].sort().join(","),floor,ceiling].join("|");
+  const floor=Math.min(...values),ceiling=Math.max(...values),key=[level,duration,effect,[...selectedRecipeRarities()].sort().join(","),[...selectedRecipeMoonModes()].sort().join(","),floor,ceiling].join("|");
   const low=$("recipeRangeMin"),high=$("recipeRangeMax");
   low.min=high.min=String(floor);low.max=high.max=String(ceiling);low.step=high.step="1";
   if(recipeFilterState.rangeKey!==key){low.value=String(floor);high.value=String(ceiling);recipeFilterState.rangeKey=key;}
@@ -400,14 +417,18 @@ function durationBlock(title,potions,sorter){
 }
 function filterPotions(list){
   const q=norm($("recipeSearch").value);
-  if(!currentRecipeLevel())return q?list.filter(p=>potionSearchText(p,recipesForPotion(p.id)).includes(q)):list;
+  if(!currentRecipeLevel())return list.filter(p=>{
+    if(!potionMatchesAvailability(p))return false;
+    const recipes=recipesVisibleForPotion(p);
+    return !q||potionSearchText(p,recipes).includes(q);
+  });
   const era=selectedRecipeEra(),duration=$("recipeDurationFilter").value,effect=$("recipeEffectFilter").value;
   const rangeActive=era==="new"&&duration&&effect&&!$("recipeEffectRange").hidden;
   const from=rangeActive?Number($("recipeRangeMin").value):null,to=rangeActive?Number($("recipeRangeMax").value):null;
   return list.filter(p=>{
     if(era==="new"&&p.category!=="standard_new")return false;
     if(era==="old"&&p.category!=="standard_old")return false;
-    if(!potionMatchesRarities(p))return false;
+    if(!potionMatchesAvailability(p))return false;
     if(era==="new"){
       if(duration&&p.duration!==duration)return false;
       if(effect&&recipeEffectNumber(p,effect)==null)return false;
@@ -546,11 +567,13 @@ document.addEventListener("click",e=>{if(!e.target.closest(".check-select"))docu
 $("moonInfoToggle").addEventListener("click",()=>{const panel=$("moonStatus"),show=panel.hidden;panel.hidden=!show;$("moonInfoToggle").setAttribute("aria-expanded",String(show));if(show)renderMoonStatus();});
 $("recipeSearch").addEventListener("input",renderRecipeBrowser);
 document.querySelectorAll('input[name="recipe-era"]').forEach(input=>input.addEventListener("change",()=>{recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();}));
-document.querySelectorAll('input[name="recipe-rarity"]').forEach(input=>input.addEventListener("change",()=>{
-  const checked=document.querySelectorAll('input[name="recipe-rarity"]:checked');
-  if(!checked.length)input.checked=true;
-  recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();
-}));
+for(const group of ["recipe-rarity","recipe-moon"]){
+  document.querySelectorAll('input[name="'+group+'"]').forEach(input=>input.addEventListener("change",()=>{
+    const checked=document.querySelectorAll('input[name="'+group+'"]:checked');
+    if(!checked.length)input.checked=true;
+    recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();
+  }));
+}
 for(const id of ["recipeDurationFilter","recipeEffectFilter"])$(id).addEventListener("change",()=>{recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();});
 for(const id of ["recipeRangeMin","recipeRangeMax"])$(id).addEventListener("input",e=>{syncRecipeRange(e.currentTarget);renderRecipeBrowser();});
 document.querySelectorAll(".recipe-view-btn").forEach(btn=>btn.addEventListener("click",()=>{
