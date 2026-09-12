@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260912-2">
+  <link rel="stylesheet" href="style.css?v=20260912-3">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -205,13 +205,16 @@
                   <label><input type="checkbox" name="recipe-rarity" value="very_rare" checked> Особо редкие</label>
                 </div>
               </fieldset>
-              <fieldset class="recipe-filter-group recipe-moon-filter">
-                <legend>Свет полной луны</legend>
-                <div class="recipe-rarity-options">
-                  <label><input type="checkbox" name="recipe-moon" value="without" checked> Без луны</label>
-                  <label><input type="checkbox" name="recipe-moon" value="with" checked> С луной</label>
-                </div>
-              </fieldset>
+              <div class="field recipe-moon-filter">
+                <span>Полнолуние</span>
+                <details class="check-select recipe-moon-select">
+                  <summary data-recipe-moon-summary>Все варианты</summary>
+                  <div class="check-select-menu">
+                    <label><input type="checkbox" name="recipe-moon" value="without" checked> Без луны</label>
+                    <label><input type="checkbox" name="recipe-moon" value="with" checked> С луной</label>
+                  </div>
+                </details>
+              </div>
             </div>
             <div id="newPotionFilters" class="recipe-new-filter-row" hidden>
               <label class="field"><span>Длительность</span><select id="recipeDurationFilter"><option value="">Все длительности</option></select></label>
@@ -346,7 +349,7 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260912-2" defer></script>
+  <script src="app.js?v=20260912-3" defer></script>
   <script src="admin.js?v=20260910-2" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
