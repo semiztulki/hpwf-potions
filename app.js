@@ -9,6 +9,8 @@ const durationOrder=["5m","1h","5h","1w","1mo","2mo"];
 const effectLabels={concentration:"Концентрация",resistance:"Устойчивость",efficiency:"Эффективность",mana:"Мана"};
 const effectWords={concentration:"концентрации",resistance:"устойчивости",efficiency:"эффективности",mana:"маны"};
 let recipeView="special";
+const recipeFilterState={rangeKey:""};
+const recipeEffectOrder=["concentration","efficiency","resistance"];
 const potionCollator=new Intl.Collator("ru",{numeric:true,sensitivity:"base"});
 let accessMode="locked";
 
@@ -273,6 +275,95 @@ function nominalRecipeValue(r){
 function recipesForPotion(potionId){
   return Object.values(state.recipes).flat().filter(r=>r.potionId===potionId);
 }
+function currentRecipeLevel(){
+  return recipeView.startsWith("level")?Number(recipeView.replace("level","")):null;
+}
+function selectedRecipeEra(){
+  return document.querySelector('input[name="recipe-era"]:checked')?.value||"all";
+}
+function selectedRecipeRarities(){
+  return new Set([...document.querySelectorAll('input[name="recipe-rarity"]:checked')].map(x=>x.value));
+}
+function recipeMatchesRarities(r,allowed){
+  if(allowed.size===3)return true;
+  const items=(r.sequence||[]).filter(item=>item.type==="ingredient");
+  if(!items.length)return false;
+  const im=Object.fromEntries(state.ingredients.map(x=>[x.id,x]));
+  return items.every(item=>{
+    const rarity=im[item.ref]?.rarity;
+    return rarity&&allowed.has(rarity);
+  });
+}
+function recipesVisibleForPotion(p){
+  const recipes=recipesForPotion(p.id);
+  if(!currentRecipeLevel())return recipes;
+  const allowed=selectedRecipeRarities();
+  return recipes.filter(r=>recipeMatchesRarities(r,allowed));
+}
+function potionMatchesRarities(p){
+  const recipes=recipesForPotion(p.id);
+  const allowed=selectedRecipeRarities();
+  if(allowed.size===3)return true;
+  return recipes.some(r=>recipeMatchesRarities(r,allowed));
+}
+function recipeEffectNumber(p,type){
+  const e=(p.effects||[]).find(x=>x.type===type&&x.value!=null&&x.value!==""&&Number.isFinite(Number(x.value)));
+  return e?Number(e.value):null;
+}
+function recipeRangeText(from,to,type){
+  return type==="efficiency"?"от "+fmt(from)+" до "+fmt(to)+"%":"от +"+fmt(from)+" до +"+fmt(to);
+}
+function updateRecipeRangeVisual(){
+  const low=$("recipeRangeMin"),high=$("recipeRangeMax"),track=$("recipeDualRange");
+  const floor=Number(low.min),ceiling=Number(low.max),span=Math.max(1,ceiling-floor);
+  const from=ceiling===floor?0:(Number(low.value)-floor)/span*100,to=ceiling===floor?100:(Number(high.value)-floor)/span*100;
+  track.style.setProperty("--range-from",from+"%");
+  track.style.setProperty("--range-to",to+"%");
+  $("recipeRangeOutput").textContent=recipeRangeText(Number(low.value),Number(high.value),$("recipeEffectFilter").value);
+}
+function syncRecipeRange(changed){
+  const low=$("recipeRangeMin"),high=$("recipeRangeMax");
+  if(Number(low.value)>Number(high.value)){
+    if(changed===low)low.value=high.value;
+    else high.value=low.value;
+  }
+  updateRecipeRangeVisual();
+}
+function setRecipeFilterOptions(select,items,emptyLabel){
+  const previous=select.value;
+  select.innerHTML='<option value="">'+emptyLabel+'</option>'+items.map(([value,label])=>'<option value="'+esc(value)+'">'+esc(label)+'</option>').join("");
+  if(items.some(([value])=>value===previous))select.value=previous;
+}
+function updateRecipeFilterControls(){
+  const level=currentRecipeLevel(),panel=$("recipeAdvancedFilters");
+  panel.hidden=!level;
+  if(!level)return;
+  const allNew=(state.potions["standard-new"]||[]).filter(p=>Number(p.level)===level);
+  const durationValues=[...new Set(allNew.map(p=>p.duration).filter(Boolean))].sort((a,b)=>durationOrder.indexOf(a)-durationOrder.indexOf(b));
+  setRecipeFilterOptions($("recipeDurationFilter"),durationValues.map(value=>[value,state.mechanics?.toxicity?.durationLabels?.[value]||value]),"Все длительности");
+  const duration=$("recipeDurationFilter").value;
+  const availableForEffects=duration?allNew.filter(p=>p.duration===duration):allNew;
+  const effectValues=recipeEffectOrder.filter(type=>availableForEffects.some(p=>recipeEffectNumber(p,type)!=null));
+  setRecipeFilterOptions($("recipeEffectFilter"),effectValues.map(type=>[type,effectLabels[type]]),"Все эффекты");
+  const era=selectedRecipeEra(),newFilters=$("newPotionFilters");
+  newFilters.hidden=era!=="new";
+  if(era!=="new"){$("recipeEffectRange").hidden=true;return;}
+  const effect=$("recipeEffectFilter").value;
+  if(!duration||!effect){$("recipeEffectRange").hidden=true;return;}
+  const values=allNew
+    .filter(p=>p.duration===duration&&potionMatchesRarities(p))
+    .map(p=>recipeEffectNumber(p,effect)).filter(v=>v!=null);
+  if(!values.length){$("recipeEffectRange").hidden=true;return;}
+  const floor=Math.min(...values),ceiling=Math.max(...values),key=[level,duration,effect,[...selectedRecipeRarities()].sort().join(","),floor,ceiling].join("|");
+  const low=$("recipeRangeMin"),high=$("recipeRangeMax");
+  low.min=high.min=String(floor);low.max=high.max=String(ceiling);low.step=high.step="1";
+  if(recipeFilterState.rangeKey!==key){low.value=String(floor);high.value=String(ceiling);recipeFilterState.rangeKey=key;}
+  else{low.value=String(Math.max(floor,Math.min(ceiling,Number(low.value))));high.value=String(Math.max(floor,Math.min(ceiling,Number(high.value))));}
+  $("recipeRangeFloor").textContent=effect==="efficiency"?fmt(floor)+"%":"+"+fmt(floor);
+  $("recipeRangeCeiling").textContent=effect==="efficiency"?fmt(ceiling)+"%":"+"+fmt(ceiling);
+  $("recipeEffectRange").hidden=false;
+  syncRecipeRange();
+}
 function potionSearchText(p,recipes){
   const im=Object.fromEntries(state.ingredients.map(x=>[x.id,x]));
   const am=Object.fromEntries(state.actions.map(x=>[x.id,x]));
@@ -286,7 +377,7 @@ function potionSearchText(p,recipes){
   return norm(bits.join(" "));
 }
 function renderPotionCard(p){
-  const rs=recipesForPotion(p.id);
+  const rs=recipesVisibleForPotion(p);
   const observed=p.value!=null;
   const recipeHtml=rs.map((r,i)=>{
     const est=nominalRecipeValue(r);
@@ -309,8 +400,22 @@ function durationBlock(title,potions,sorter){
 }
 function filterPotions(list){
   const q=norm($("recipeSearch").value);
-  if(!q) return list;
-  return list.filter(p=>potionSearchText(p,recipesForPotion(p.id)).includes(q));
+  if(!currentRecipeLevel())return q?list.filter(p=>potionSearchText(p,recipesForPotion(p.id)).includes(q)):list;
+  const era=selectedRecipeEra(),duration=$("recipeDurationFilter").value,effect=$("recipeEffectFilter").value;
+  const rangeActive=era==="new"&&duration&&effect&&!$("recipeEffectRange").hidden;
+  const from=rangeActive?Number($("recipeRangeMin").value):null,to=rangeActive?Number($("recipeRangeMax").value):null;
+  return list.filter(p=>{
+    if(era==="new"&&p.category!=="standard_new")return false;
+    if(era==="old"&&p.category!=="standard_old")return false;
+    if(!potionMatchesRarities(p))return false;
+    if(era==="new"){
+      if(duration&&p.duration!==duration)return false;
+      if(effect&&recipeEffectNumber(p,effect)==null)return false;
+      if(rangeActive){const value=recipeEffectNumber(p,effect);if(value<from||value>to)return false;}
+    }
+    const recipes=recipesVisibleForPotion(p);
+    return !q||potionSearchText(p,recipes).includes(q);
+  });
 }
 function effectSection(title,type,potions){
   const filtered=filterPotions(potions.filter(p=>(p.effects||[]).some(e=>e.type===type)));
@@ -359,11 +464,10 @@ function renderSpecialView(){
     +specialSection("Прочие","other",list);
 }
 function visiblePotionCount(){
-  const q=norm($("recipeSearch").value);
   let list=recipeView==="special"?[...(state.potions.special||[]),...(state.potions.mana||[])]:[
     ...(state.potions["standard-new"]||[]),...(state.potions["standard-old"]||[])
   ].filter(p=>p.level===Number(recipeView.replace("level","")));
-  return q?list.filter(p=>potionSearchText(p,recipesForPotion(p.id)).includes(q)).length:list.length;
+  return filterPotions(list).length;
 }
 function renderRecipeSearchResults(){
   const level=Number(recipeView.replace("level",""));
@@ -399,6 +503,7 @@ async function loadPrivateData(password){
     recipes[key]=await loadMany(catalog.recipes[key]||[]);
   }
   state.potions=potions;state.recipes=recipes;
+  updateRecipeFilterControls();
   renderRecipeBrowser();
   document.dispatchEvent(new CustomEvent("hpwf:private-data-ready"));
 }
@@ -408,7 +513,9 @@ async function load(){
     const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20260910-1"),fetch("data/actions.json?v=20260910-1"),fetch("data/mechanics.json?v=20260911-1")]);
     if(![i,a,m].every(r=>r.ok)) throw new Error("load");
     state.ingredients=await i.json(); state.actions=await a.json(); state.mechanics=await m.json();
-    renderIngredients();renderActions();renderMechanics();document.dispatchEvent(new CustomEvent("hpwf:data-ready"));
+    renderIngredients();renderActions();renderMechanics();
+    if(Object.values(state.potions).some(list=>list.length)){updateRecipeFilterControls();renderRecipeBrowser();}
+    document.dispatchEvent(new CustomEvent("hpwf:data-ready"));
   }catch(e){$("dataStatus").title="Не удалось загрузить справочник";}
 }
 $("dataStatus").addEventListener("click",()=>showHome());
@@ -438,10 +545,20 @@ document.querySelector('[data-filter-group="ingredient-season"] summary').addEve
 document.addEventListener("click",e=>{if(!e.target.closest(".check-select"))document.querySelectorAll(".check-select[open]").forEach(select=>select.open=false);});
 $("moonInfoToggle").addEventListener("click",()=>{const panel=$("moonStatus"),show=panel.hidden;panel.hidden=!show;$("moonInfoToggle").setAttribute("aria-expanded",String(show));if(show)renderMoonStatus();});
 $("recipeSearch").addEventListener("input",renderRecipeBrowser);
+document.querySelectorAll('input[name="recipe-era"]').forEach(input=>input.addEventListener("change",()=>{recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();}));
+document.querySelectorAll('input[name="recipe-rarity"]').forEach(input=>input.addEventListener("change",()=>{
+  const checked=document.querySelectorAll('input[name="recipe-rarity"]:checked');
+  if(!checked.length)input.checked=true;
+  recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();
+}));
+for(const id of ["recipeDurationFilter","recipeEffectFilter"])$(id).addEventListener("change",()=>{recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();});
+for(const id of ["recipeRangeMin","recipeRangeMax"])$(id).addEventListener("input",e=>{syncRecipeRange(e.currentTarget);renderRecipeBrowser();});
 document.querySelectorAll(".recipe-view-btn").forEach(btn=>btn.addEventListener("click",()=>{
   document.querySelectorAll(".recipe-view-btn").forEach(x=>x.classList.remove("active"));
   btn.classList.add("active");
   recipeView=btn.dataset.recipeView;
+  recipeFilterState.rangeKey="";
+  updateRecipeFilterControls();
   renderRecipeBrowser();
 }));
 initTabs();initValueCalculator();load();
