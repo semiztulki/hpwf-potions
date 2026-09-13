@@ -334,10 +334,8 @@ tbody tr:hover{background:#f5f0fa}
 .test-brew-sequence{display:grid;gap:7px;min-height:150px;margin:0 0 16px;padding:14px 14px 14px 42px;border-radius:12px;background:#fff}
 .test-brew-sequence li{padding-left:3px;color:var(--ink);font-weight:600}
 .test-brew-sequence li::marker{color:var(--accent);font-weight:800}
-.test-brew-sequence li:not(.test-brew-empty){display:list-item;position:relative;padding-right:28px}
+.test-brew-sequence li:not(.test-brew-empty){display:list-item}
 .test-brew-empty{margin-left:-25px;list-style:none;color:var(--muted);font-weight:500;line-height:1.5}
-.test-brew-remove{position:absolute;top:-2px;right:0;display:grid;width:24px;height:24px;min-height:0;place-items:center;padding:0;border:0;border-radius:50%;background:var(--lavender);color:var(--muted);font:700 1rem/1 var(--font-body);cursor:pointer}
-.test-brew-remove:hover,.test-brew-remove:focus-visible{background:var(--rose);color:#6b2c46}
 .test-brew-finish{width:100%;min-height:48px;padding:11px 14px}
 .test-brew-finish:disabled{cursor:not-allowed;filter:grayscale(.65);opacity:.48;transform:none;box-shadow:2px 2px 0 var(--line)}
 .test-brew-result{display:grid;gap:22px;margin:0}
