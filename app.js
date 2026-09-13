@@ -231,6 +231,19 @@ function testBrewEffectCards(level,duration,estimate,rollLevel=level){
       return '<div class="calculator-effect-card"><strong class="calculator-effect-label">'+label+'</strong><div class="calculator-effect-value"><span>'+prefix+'</span><strong>'+fmt(value)+'</strong><span class="calculator-effect-range"> ('+fmt(from)+'–'+fmt(to)+')</span><span>'+suffix+'</span></div></div>';
     }).join('<span class="calculator-effect-or">или</span>')+'</div>';
 }
+function testBrewExpandedRecipe(){
+  const ingredients=Object.fromEntries(state.ingredients.map(x=>[x.id,x])),actions=Object.fromEntries(state.actions.map(x=>[x.id,x]));
+  const ingredientCount=testBrewIngredientCount();
+  const steps=testBrewState.sequence.map((item,index)=>{
+    const source=item.type==="ingredient"?ingredients[item.ref]:actions[item.ref];
+    const kind=item.type==="ingredient"?"Ингредиент":item.type==="action"?"Действие":"Свет полной луны";
+    const className=item.type==="action"?" action":item.type==="moon"?" moon":" ingredient";
+    const pause=source?.pauseSeconds?'<span>'+fmt(source.pauseSeconds)+' сек.</span>':"";
+    const image=source?.imageUrl?'<img src="'+esc(source.imageUrl)+'" alt="">':'<span class="test-brew-result-step-placeholder">✦</span>';
+    return '<li class="test-brew-result-step'+className+'"><span class="test-brew-result-step-number">'+(index+1)+'</span>'+image+'<span class="test-brew-result-step-copy"><strong>'+esc(testBrewItemLabel(item))+'</strong><small>'+kind+pause+'</small></span></li>';
+  }).join("");
+  return '<section class="test-brew-expanded-recipe"><div class="test-brew-expanded-head"><div><p class="eyebrow">Последовательность варки</p><h3>Рецепт зелья</h3></div><span>'+ingredientCount+' '+(ingredientCount===1?'ингредиент':ingredientCount<5?'ингредиента':'ингредиентов')+'</span></div><ol class="test-brew-result-steps">'+steps+'</ol></section>';
+}
 function testBrewExistingResult(potions){
   const categoryLabels={standard_new:"Новый образец",standard_old:"Старый образец",special:"Именное / особое",mana:"Зелье маны"};
   const cards=potions.map(potion=>{
@@ -239,17 +252,17 @@ function testBrewExistingResult(potions){
       +(potionEffectSummary(potion)?'<p class="potion-effect">'+esc(potionEffectSummary(potion))+'</p>':"")
       +(potion.value!=null?'<p class="test-brew-observed-value">Ценность: '+fmt(potion.value)+'</p>':"")+'</article>';
   }).join("");
-  $("testBrewResult").innerHTML='<div class="test-brew-result-title found"><p class="eyebrow">Совпадение найдено</p><h3>'+(potions.length===1?'Этот рецепт уже есть в базе':'Этот рецепт соответствует нескольким зельям')+'</h3></div><div class="test-brew-matches">'+cards+'</div>';
+  $("testBrewResult").innerHTML=testBrewExpandedRecipe()+'<section class="test-brew-conclusion"><div class="test-brew-result-title found"><p class="eyebrow">Совпадение найдено</p><h3>'+(potions.length===1?'Этот рецепт уже есть в базе':'Этот рецепт соответствует нескольким зельям')+'</h3></div><div class="test-brew-matches">'+cards+'</div></section>';
 }
 function testBrewNewResult(){
   const estimate=testBrewValueEstimate(),levels=testBrewLevels(),durations=calculatorDurations[levels.rollLevel]||[];
   if(!durations.includes(testBrewState.duration))testBrewState.duration="";
   const options=durations.map(duration=>'<option value="'+duration+'"'+(duration===testBrewState.duration?' selected':'')+'>'+calculatorDurationLabels[duration]+'</option>').join("");
   const levelWord=calculatorLevelWords[levels.potionLevel]||String(levels.potionLevel);
-  $("testBrewResult").innerHTML='<div class="test-brew-result-title new"><p class="eyebrow">Новый рецепт</p><h3>Такого рецепта в базе пока нет</h3><p>После варки стоит добавить его в базу.</p></div>'
+  $("testBrewResult").innerHTML=testBrewExpandedRecipe()+'<section class="test-brew-conclusion"><div class="test-brew-result-title new"><p class="eyebrow">Новый рецепт</p><h3>Такого рецепта в базе пока нет</h3><p>После варки стоит добавить его в базу.</p></div>'
     +'<div class="test-brew-estimate"><h3>Предварительная оценка</h3><div class="test-brew-estimate-grid"><div><span>Уровень</span><strong>Зелье '+levelWord+' уровня</strong></div><div><span>Примерная ценность</span><strong>'+fmt(estimate.nominal)+'</strong><small>('+fmt(estimate.minimum)+'–'+fmt(estimate.maximum)+')</small></div></div>'
     +'<label class="field test-brew-duration"><span>Выбери длительность</span><select id="testBrewDuration"><option value="">Длительность не выбрана</option>'+options+'</select></label>'
-    +'<div class="calculator-effects test-brew-effects"'+(testBrewState.duration?'':' hidden')+'>'+testBrewEffectCards(levels.potionLevel,testBrewState.duration,estimate,levels.rollLevel)+'</div></div>';
+    +'<div class="calculator-effects test-brew-effects"'+(testBrewState.duration?'':' hidden')+'>'+testBrewEffectCards(levels.potionLevel,testBrewState.duration,estimate,levels.rollLevel)+'</div></div></section>';
 }
 function testBrewFinish(){
   if(!testBrewIngredientCount())return;
@@ -257,6 +270,9 @@ function testBrewFinish(){
   const matches=testBrewMatchingPotions();
   if(matches.length)testBrewExistingResult(matches);
   else testBrewNewResult();
+  $("testBrewChoices").hidden=true;
+  $("testBrewFull").hidden=true;
+  requestAnimationFrame(()=>$("testBrewResult").scrollIntoView({behavior:"smooth",block:"start"}));
 }
 function initTestBrew(){
   if(testBrewState.ready||!state.ingredients.length)return;
