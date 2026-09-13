@@ -39,7 +39,7 @@ function showAccessScreen(){
   $("entryLoginStatus").textContent="";
 }
 function openFunctionalTab(id){
-  if(["potions","add-recipe","review"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
+  if(["potions","test-brew","add-recipe","review"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
   document.querySelectorAll(".tab,.tab-panel").forEach(x=>x.classList.remove("active"));
   const navButton=document.querySelector('.tab[data-tab="'+id+'"]');
   if(navButton) navButton.classList.add("active");
@@ -146,6 +146,141 @@ const calculatorEffectDivisors={
   2:{"1h":{concentration:40,efficiency:50,resistance:10},"5h":{concentration:40,efficiency:50,resistance:10},"1w":{concentration:130,efficiency:150,resistance:130},"1mo":{concentration:400,efficiency:450,resistance:350}},
   3:{"5h":{concentration:40,efficiency:50,resistance:10},"1w":{concentration:130,efficiency:150,resistance:130},"1mo":{concentration:400,efficiency:450,resistance:350},"2mo":{concentration:800,efficiency:800,resistance:800}}
 };
+const testBrewState={sequence:[],duration:"",finished:false,ready:false};
+const testBrewRarityOrder={common:0,seasonal:1,very_rare:2};
+const testBrewRarityLabels={common:"обычный",seasonal:"сезонный",very_rare:"особо редкий"};
+
+function testBrewItemLabel(item){
+  if(item.type==="ingredient")return state.ingredients.find(x=>x.id===item.ref)?.name||item.ref;
+  if(item.type==="action")return state.actions.find(x=>x.id===item.ref)?.name||item.ref;
+  if(item.type==="moon")return "Свет полной луны";
+  return item.ref||item.type;
+}
+function testBrewChoice(item,type){
+  const isIngredient=type==="ingredient",isMoon=type==="moon";
+  const name=item.name||(isMoon?"Свет полной луны":"Элемент"),image=item.imageUrl;
+  const detail=isIngredient?testBrewRarityLabels[item.rarity]+", "+item.level+" уровень":isMoon?"дополнительный ингредиент":item.level+" уровень";
+  const disabled=isMoon&&testBrewState.sequence.some(x=>x.type==="moon");
+  return '<button type="button" class="test-brew-choice" data-test-brew-type="'+type+'" data-test-brew-ref="'+esc(item.id)+'" aria-label="Добавить: '+esc(name)+', '+esc(detail)+'" title="'+esc(name)+' · '+esc(detail)+'"'+(disabled?' disabled':'')+'>'
+    +(image?'<img src="'+esc(image)+'" alt="">':'<span class="test-brew-choice-placeholder">✦</span>')+'</button>';
+}
+function testBrewRenderPalette(){
+  $("testBrewIngredientRows").innerHTML=[1,2,3].map(level=>{
+    const items=state.ingredients.filter(x=>Number(x.level)===level).sort((a,b)=>testBrewRarityOrder[a.rarity]-testBrewRarityOrder[b.rarity]||potionCollator.compare(a.name,b.name));
+    return '<section class="test-brew-level"><h3>'+level+' уровень</h3><div class="test-brew-choice-row">'+items.map(item=>testBrewChoice(item,"ingredient")).join("")+'</div></section>';
+  }).join("");
+  const actions=state.actions.filter(x=>x.kind==="action").sort((a,b)=>a.level-b.level);
+  const moon=state.actions.find(x=>x.kind==="moon")||{id:"full-moon",name:"Свет полной луны",imageUrl:"assets/catalog/full-moon.png"};
+  $("testBrewActionRow").innerHTML=actions.map(item=>testBrewChoice(item,"action")).join("")+testBrewChoice(moon,"moon");
+}
+function testBrewIngredientCount(){
+  return testBrewState.sequence.filter(x=>x.type==="ingredient").length;
+}
+function testBrewResetResult(){
+  testBrewState.finished=false;
+  testBrewState.duration="";
+  $("testBrewResult").innerHTML="";
+}
+function testBrewRender(){
+  const count=testBrewIngredientCount(),full=count>=11;
+  $("testBrewIngredientCount").textContent=count+" из 11";
+  $("testBrewChoices").hidden=full;
+  $("testBrewFull").hidden=!full;
+  $("testBrewClear").disabled=!testBrewState.sequence.length;
+  $("testBrewFinish").disabled=!count;
+  $("testBrewSequence").innerHTML=testBrewState.sequence.length?testBrewState.sequence.map((item,index)=>
+    '<li><span>'+esc(testBrewItemLabel(item))+'</span><button type="button" class="test-brew-remove" data-test-brew-remove="'+index+'" aria-label="Убрать '+esc(testBrewItemLabel(item))+' из рецепта" title="Убрать">×</button></li>'
+  ).join(""):'<li class="test-brew-empty">Добавляй ингредиенты и действия в том же порядке, что и в настоящий котёл.</li>';
+  testBrewRenderPalette();
+}
+function testBrewAdd(type,ref){
+  if(type==="ingredient"&&testBrewIngredientCount()>=11)return;
+  if(type==="moon"&&testBrewState.sequence.some(x=>x.type==="moon"))return;
+  testBrewState.sequence.push({type,ref});
+  testBrewResetResult();
+  testBrewRender();
+}
+function testBrewSignature(sequence){
+  return JSON.stringify((sequence||[]).map(item=>({type:item.type,ref:item.ref})));
+}
+function testBrewMatchingPotions(){
+  const signature=testBrewSignature(testBrewState.sequence),recipes=Object.values(state.recipes).flat();
+  const potionIds=new Set(recipes.filter(recipe=>testBrewSignature(recipe.sequence)===signature).map(recipe=>recipe.potionId));
+  return Object.values(state.potions).flat().filter(potion=>potionIds.has(potion.id));
+}
+function testBrewValueEstimate(){
+  const ingredients=Object.fromEntries(state.ingredients.map(x=>[x.id,x]));
+  const base=testBrewState.sequence.reduce((sum,item)=>sum+(item.type==="ingredient"?Number(ingredients[item.ref]?.basePower||0):0),0);
+  const moon=testBrewState.sequence.some(item=>item.type==="moon");
+  return {base,moon,nominal:base+(moon?225:0),minimum:Math.round(base*.85),maximum:Math.round(base*1.15)+(moon?450:0)};
+}
+function testBrewLevels(){
+  const ingredients=Object.fromEntries(state.ingredients.map(x=>[x.id,x])),actions=Object.fromEntries(state.actions.map(x=>[x.id,x]));
+  const potionLevel=Math.max(0,...testBrewState.sequence.filter(x=>x.type==="ingredient").map(x=>Number(ingredients[x.ref]?.level||0)));
+  const actionLevel=Math.max(0,...testBrewState.sequence.filter(x=>x.type==="action").map(x=>Number(actions[x.ref]?.level||0)));
+  return {potionLevel,rollLevel:Math.max(potionLevel,actionLevel)};
+}
+function testBrewEffectCards(level,duration,estimate,rollLevel=level){
+  const divisors=calculatorEffectDivisors[rollLevel]?.[duration]||calculatorEffectDivisors[level]?.[duration];
+  if(!duration)return "";
+  if(!divisors)return '<p class="calculator-effects-unavailable">Для этой длительности пока недостаточно данных для надёжного прогноза.</p>';
+  return '<div class="calculator-effects-head"><span>Зелье '+level+' уровня · '+calculatorDurationLabels[duration]+'</span><strong>Один из трёх возможных эффектов</strong></div><div class="calculator-effects-grid">'
+    +[["concentration","Концентрация"],["efficiency","Эффективность"],["resistance","Устойчивость"]].map(([key,label])=>{
+      const value=Math.ceil(estimate.nominal/divisors[key]),from=Math.ceil(estimate.minimum/divisors[key]),to=Math.ceil(estimate.maximum/divisors[key]);
+      const prefix=key==="efficiency"?"":"+",suffix=key==="efficiency"?"%":"";
+      return '<div class="calculator-effect-card"><strong class="calculator-effect-label">'+label+'</strong><div class="calculator-effect-value"><span>'+prefix+'</span><strong>'+fmt(value)+'</strong><span class="calculator-effect-range"> ('+fmt(from)+'–'+fmt(to)+')</span><span>'+suffix+'</span></div></div>';
+    }).join('<span class="calculator-effect-or">или</span>')+'</div>';
+}
+function testBrewExistingResult(potions){
+  const categoryLabels={standard_new:"Новый образец",standard_old:"Старый образец",special:"Именное / особое",mana:"Зелье маны"};
+  const cards=potions.map(potion=>{
+    const meta=[categoryLabels[potion.category],potion.level?potion.level+" уровень":null,potion.duration?(state.mechanics?.toxicity?.durationLabels?.[potion.duration]||calculatorDurationLabels[potion.duration]):null].filter(Boolean).join(" · ");
+    return '<article class="test-brew-match"><h4>'+esc(potionTitle(potion))+'</h4><p class="meta">'+esc(meta)+'</p>'
+      +(potionEffectSummary(potion)?'<p class="potion-effect">'+esc(potionEffectSummary(potion))+'</p>':"")
+      +(potion.value!=null?'<p class="test-brew-observed-value">Ценность: '+fmt(potion.value)+'</p>':"")+'</article>';
+  }).join("");
+  $("testBrewResult").innerHTML='<div class="test-brew-result-title found"><p class="eyebrow">Совпадение найдено</p><h3>'+(potions.length===1?'Этот рецепт уже есть в базе':'Этот рецепт соответствует нескольким зельям')+'</h3></div><div class="test-brew-matches">'+cards+'</div>';
+}
+function testBrewNewResult(){
+  const estimate=testBrewValueEstimate(),levels=testBrewLevels(),durations=calculatorDurations[levels.rollLevel]||[];
+  if(!durations.includes(testBrewState.duration))testBrewState.duration="";
+  const options=durations.map(duration=>'<option value="'+duration+'"'+(duration===testBrewState.duration?' selected':'')+'>'+calculatorDurationLabels[duration]+'</option>').join("");
+  const levelWord=calculatorLevelWords[levels.potionLevel]||String(levels.potionLevel);
+  $("testBrewResult").innerHTML='<div class="test-brew-result-title new"><p class="eyebrow">Новый рецепт</p><h3>Такого рецепта в базе пока нет</h3><p>После варки стоит добавить его в базу.</p></div>'
+    +'<div class="test-brew-estimate"><h3>Предварительная оценка</h3><div class="test-brew-estimate-grid"><div><span>Уровень</span><strong>Зелье '+levelWord+' уровня</strong></div><div><span>Примерная ценность</span><strong>'+fmt(estimate.nominal)+'</strong><small>('+fmt(estimate.minimum)+'–'+fmt(estimate.maximum)+')</small></div></div>'
+    +'<label class="field test-brew-duration"><span>Выбери длительность</span><select id="testBrewDuration"><option value="">Длительность не выбрана</option>'+options+'</select></label>'
+    +'<div class="calculator-effects test-brew-effects"'+(testBrewState.duration?'':' hidden')+'>'+testBrewEffectCards(levels.potionLevel,testBrewState.duration,estimate,levels.rollLevel)+'</div></div>';
+}
+function testBrewFinish(){
+  if(!testBrewIngredientCount())return;
+  testBrewState.finished=true;
+  const matches=testBrewMatchingPotions();
+  if(matches.length)testBrewExistingResult(matches);
+  else testBrewNewResult();
+}
+function initTestBrew(){
+  if(testBrewState.ready||!state.ingredients.length)return;
+  testBrewState.ready=true;
+  $("testBrewChoices").addEventListener("click",event=>{
+    const button=event.target.closest("[data-test-brew-type]");
+    if(button&&!button.disabled)testBrewAdd(button.dataset.testBrewType,button.dataset.testBrewRef);
+  });
+  $("testBrewSequence").addEventListener("click",event=>{
+    const button=event.target.closest("[data-test-brew-remove]");
+    if(!button)return;
+    testBrewState.sequence.splice(Number(button.dataset.testBrewRemove),1);
+    testBrewResetResult();
+    testBrewRender();
+  });
+  $("testBrewClear").addEventListener("click",()=>{testBrewState.sequence=[];testBrewResetResult();testBrewRender();});
+  $("testBrewFinish").addEventListener("click",testBrewFinish);
+  $("testBrewResult").addEventListener("change",event=>{
+    if(event.target.id!=="testBrewDuration")return;
+    testBrewState.duration=event.target.value;
+    testBrewNewResult();
+  });
+  testBrewRender();
+}
 let calculatorLevel=null;
 function initValueCalculator(){
   const rarityNames={common:"Обычный",seasonal:"Сезонный редкий",very_rare:"Особо редкий"};
@@ -539,7 +674,7 @@ async function load(){
     const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20260910-1"),fetch("data/actions.json?v=20260910-1"),fetch("data/mechanics.json?v=20260911-1")]);
     if(![i,a,m].every(r=>r.ok)) throw new Error("load");
     state.ingredients=await i.json(); state.actions=await a.json(); state.mechanics=await m.json();
-    renderIngredients();renderActions();renderMechanics();
+    renderIngredients();renderActions();renderMechanics();initTestBrew();
     if(Object.values(state.potions).some(list=>list.length)){updateRecipeFilterControls();renderRecipeBrowser();}
     document.dispatchEvent(new CustomEvent("hpwf:data-ready"));
   }catch(e){$("dataStatus").title="Не удалось загрузить справочник";}
