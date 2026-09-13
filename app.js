@@ -237,7 +237,7 @@ function testBrewExpandedRecipe(){
   return '<section class="test-brew-expanded-recipe"><div class="test-brew-expanded-head"><div><p class="eyebrow">Последовательность варки</p><h3>Рецепт</h3></div><span>'+ingredientCount+' '+(ingredientCount===1?'ингредиент':ingredientCount<5?'ингредиента':'ингредиентов')+'</span></div><div class="recipe-sequence test-brew-inline-recipe">'+recipeItems({sequence:testBrewState.sequence})+'</div></section>';
 }
 function testBrewExistingResult(potions){
-  const categoryLabels={standard_new:"Новый образец",standard_old:"Старый образец",special:"Именное / особое",mana:"Зелье маны"};
+  const categoryLabels={standard_new:"Нового образца",standard_old:"Старого образца",special:"Именное / особое",mana:"Зелье маны"};
   const cards=potions.map(potion=>{
     const meta=[categoryLabels[potion.category],potion.level?potion.level+" уровень":null,potion.duration?(state.mechanics?.toxicity?.durationLabels?.[potion.duration]||calculatorDurationLabels[potion.duration]):null].filter(Boolean).join(" · ");
     const estimate=testBrewValueEstimate();
