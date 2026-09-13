@@ -239,9 +239,11 @@ function testBrewExistingResult(potions){
   const categoryLabels={standard_new:"Новый образец",standard_old:"Старый образец",special:"Именное / особое",mana:"Зелье маны"};
   const cards=potions.map(potion=>{
     const meta=[categoryLabels[potion.category],potion.level?potion.level+" уровень":null,potion.duration?(state.mechanics?.toxicity?.durationLabels?.[potion.duration]||calculatorDurationLabels[potion.duration]):null].filter(Boolean).join(" · ");
+    const estimate=testBrewValueEstimate();
+    const value=potion.value!=null?'<p class="test-brew-observed-value">Ценность: '+fmt(potion.value)+'</p>':'<p class="test-brew-observed-value calculated">Расчётная ценность: '+fmt(estimate.base)+(estimate.moon?' + Луна 0–450':'')+'</p>';
     return '<article class="test-brew-match"><h4>'+esc(potionTitle(potion))+'</h4><p class="meta">'+esc(meta)+'</p>'
       +(potionEffectSummary(potion)?'<p class="potion-effect">'+esc(potionEffectSummary(potion))+'</p>':"")
-      +(potion.value!=null?'<p class="test-brew-observed-value">Ценность: '+fmt(potion.value)+'</p>':"")+'</article>';
+      +(potion.author?'<p class="test-brew-author">Автор: '+esc(potion.author)+'</p>':"")+value+'</article>';
   }).join("");
   $("testBrewResult").innerHTML=testBrewExpandedRecipe()+'<section class="test-brew-conclusion"><div class="test-brew-result-title found"><p class="eyebrow">Совпадение найдено</p><h3>'+(potions.length===1?'Этот рецепт уже есть в базе':'Этот рецепт соответствует нескольким зельям')+'</h3></div><div class="test-brew-matches">'+cards+'</div></section>';
 }
