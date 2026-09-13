@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260912-3">
+  <link rel="stylesheet" href="style.css?v=20260913-1">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -39,6 +39,7 @@
         <button type="button" data-home-anchor="valueCalculator">Рассчитать ценность зелья</button>
         <button type="button" data-home-anchor="moonStatus">Узнать, когда полнолуние</button>
         <button type="button" data-home-tab="potions" data-auth-only>Рецепты</button>
+        <button type="button" data-home-tab="test-brew" data-auth-only>Тестовая варка зелья</button>
         <button type="button" data-home-tab="add-recipe" data-auth-only>Добавить рецепт</button>
         <button type="button" data-home-tab="review" data-auth-only>На проверку</button>
         <button type="button" data-home-tab="mechanics">Советы и секреты</button>
@@ -66,6 +67,7 @@
     <button class="tab active" data-tab="ingredients">Каталог ингредиентов</button>
     <button type="button" class="tab" data-home-anchor="valueCalculator">Калькулятор ценности</button>
     <button class="tab" data-tab="potions" data-auth-only>Рецепты</button>
+    <button class="tab" data-tab="test-brew" data-auth-only>Тестовая варка зелья</button>
     <button class="tab" data-tab="add-recipe" data-auth-only>Добавить рецепт</button>
     <button class="tab" data-tab="review" data-auth-only>На проверку</button>
     <button class="tab" data-tab="mechanics">Советы и секреты</button>
@@ -157,6 +159,33 @@
     </section>
     <section id="mechanics" class="tab-panel">
       <div id="mechanicsContent" class="mechanics-grid"></div>
+    </section>
+    <section id="test-brew" class="tab-panel">
+      <div class="section-heading test-brew-heading">
+        <div><p class="eyebrow">Закрытый инструмент</p><h2>Тестовая варка зелья</h2></div>
+        <span id="testBrewIngredientCount" class="count-pill">0 из 11</span>
+      </div>
+      <div class="test-brew-layout">
+        <div class="panel test-brew-palette">
+          <div id="testBrewChoices">
+            <div id="testBrewIngredientRows" class="test-brew-ingredient-rows"></div>
+            <div class="test-brew-action-section">
+              <h3>Действия и полнолуние</h3>
+              <div id="testBrewActionRow" class="test-brew-choice-row"></div>
+            </div>
+          </div>
+          <div id="testBrewFull" class="test-brew-full" hidden>Котёл переполнен, завершите приготовление зелья.</div>
+        </div>
+        <aside class="panel test-brew-cauldron">
+          <div class="test-brew-cauldron-head">
+            <h3>Рецепт в котле</h3>
+            <button type="button" id="testBrewClear" class="admin-secondary-btn" disabled>Очистить котёл</button>
+          </div>
+          <ol id="testBrewSequence" class="test-brew-sequence"></ol>
+          <button type="button" id="testBrewFinish" class="admin-primary-btn test-brew-finish" disabled>Завершить и посмотреть результат</button>
+          <div id="testBrewResult" class="test-brew-result" aria-live="polite"></div>
+        </aside>
+      </div>
     </section>
     <section id="potions" class="tab-panel">
       <div class="section-heading">
@@ -349,7 +378,7 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260912-3" defer></script>
+  <script src="app.js?v=20260913-1" defer></script>
   <script src="admin.js?v=20260910-2" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
