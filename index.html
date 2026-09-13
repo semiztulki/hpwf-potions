@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260913-1">
+  <link rel="stylesheet" href="style.css?v=20260913-2">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -175,6 +175,7 @@
             </div>
           </div>
           <div id="testBrewFull" class="test-brew-full" hidden>Котёл переполнен, завершите приготовление зелья.</div>
+          <div id="testBrewResult" class="test-brew-result" aria-live="polite"></div>
         </div>
         <aside class="panel test-brew-cauldron">
           <div class="test-brew-cauldron-head">
@@ -183,7 +184,6 @@
           </div>
           <ol id="testBrewSequence" class="test-brew-sequence"></ol>
           <button type="button" id="testBrewFinish" class="admin-primary-btn test-brew-finish" disabled>Завершить и посмотреть результат</button>
-          <div id="testBrewResult" class="test-brew-result" aria-live="polite"></div>
         </aside>
       </div>
     </section>
@@ -378,7 +378,7 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260913-1" defer></script>
+  <script src="app.js?v=20260913-2" defer></script>
   <script src="admin.js?v=20260910-2" defer></script>
   <script src="review.js?v=20260907-2" defer></script>
 </body>
