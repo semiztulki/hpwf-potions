@@ -113,6 +113,7 @@ h3{line-height:1.28}
 .home-links button:nth-child(5){background:var(--cream);color:#6b5a1e}.home-links button:nth-child(5):before{background:var(--yellow)}
 .home-links button:nth-child(6){background:var(--rose);color:#6b2c46}.home-links button:nth-child(6):before{background:var(--accent)}
 .home-links button:nth-child(7){background:#d9ccee}.home-links button:nth-child(7):before{background:#5a3e7a}
+.home-links button:nth-child(8){background:#eaf4ee;color:var(--sage-deep)}.home-links button:nth-child(8):before{background:#5a9b72}
 .home-links button:hover,.home-links button:focus-visible{transform:translate(-3px,-3px);box-shadow:5px 5px 0 rgba(61,43,82,.16)}
 
 .admin-primary-btn{border:0;border-radius:9px;background:var(--coral);color:var(--ink);font-weight:700;box-shadow:4px 4px 0 var(--gold-dark);transition:transform .15s ease,box-shadow .15s ease}
@@ -311,3 +312,58 @@ tbody tr:hover{background:#f5f0fa}
   .recipe-segmented span{padding-left:5px;padding-right:5px;font-size:.82rem}
   .recipe-range-head{align-items:flex-start;flex-direction:column;gap:2px}
 }
+
+/* Test brewing */
+.test-brew-heading{align-items:center}
+.test-brew-layout{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(330px,.8fr);gap:20px;align-items:start}
+.test-brew-palette{border-top-color:#5a9b72;background:#f2f9f5;min-width:0}
+.test-brew-ingredient-rows{display:grid;gap:20px}
+.test-brew-level h3,.test-brew-action-section h3{margin:0 0 10px;color:var(--muted);font:700 .88rem/1.3 var(--font-body);letter-spacing:.08em;text-transform:uppercase}
+.test-brew-choice-row{display:flex;gap:9px;min-width:0;padding:2px 2px 8px;overflow-x:auto;scrollbar-color:var(--lavender-deep) transparent}
+.test-brew-choice{position:relative;display:grid;flex:0 0 64px;width:64px;height:64px;place-items:center;padding:7px;border:0;border-radius:11px;background:#fff;box-shadow:3px 3px 0 var(--line);cursor:pointer;transition:transform .14s ease,box-shadow .14s ease,background-color .14s ease}
+.test-brew-choice:hover,.test-brew-choice:focus-visible{z-index:1;background:var(--cream);transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--peach)}
+.test-brew-choice:disabled{cursor:not-allowed;filter:grayscale(.65);opacity:.42;transform:none;box-shadow:2px 2px 0 var(--line)}
+.test-brew-choice img,.test-brew-choice-placeholder{display:block;width:48px;height:48px;object-fit:contain}
+.test-brew-choice-placeholder{display:grid;place-items:center;color:var(--accent);font-size:1.4rem}
+.test-brew-action-section{margin-top:24px;padding-top:18px;border-top:2px solid var(--sage)}
+.test-brew-full{display:grid;min-height:220px;place-items:center;padding:28px;border:2px dashed var(--coral);border-radius:14px;background:var(--cream);color:var(--gold-dark);font-family:var(--font-display);font-size:clamp(1.15rem,2.4vw,1.55rem);line-height:1.35;text-align:center}
+.test-brew-cauldron{position:sticky;top:78px;border-top-color:var(--accent);background:var(--accent-soft)}
+.test-brew-cauldron-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.test-brew-cauldron-head h3{margin:0;font-size:1.15rem}
+.test-brew-cauldron-head .admin-secondary-btn{padding:8px 10px;font-size:.8rem;white-space:nowrap}
+.test-brew-sequence{display:grid;gap:7px;min-height:150px;margin:0 0 16px;padding:14px 14px 14px 42px;border-radius:12px;background:#fff}
+.test-brew-sequence li{padding-left:3px;color:var(--ink);font-weight:600}
+.test-brew-sequence li::marker{color:var(--accent);font-weight:800}
+.test-brew-sequence li:not(.test-brew-empty){display:list-item;position:relative;padding-right:28px}
+.test-brew-empty{margin-left:-25px;list-style:none;color:var(--muted);font-weight:500;line-height:1.5}
+.test-brew-remove{position:absolute;top:-2px;right:0;display:grid;width:24px;height:24px;min-height:0;place-items:center;padding:0;border:0;border-radius:50%;background:var(--lavender);color:var(--muted);font:700 1rem/1 var(--font-body);cursor:pointer}
+.test-brew-remove:hover,.test-brew-remove:focus-visible{background:var(--rose);color:#6b2c46}
+.test-brew-finish{width:100%;min-height:48px;padding:11px 14px}
+.test-brew-finish:disabled{cursor:not-allowed;filter:grayscale(.65);opacity:.48;transform:none;box-shadow:2px 2px 0 var(--line)}
+.test-brew-result{display:grid;gap:14px;margin-top:20px}
+.test-brew-result:empty{display:none}
+.test-brew-result-title{padding:16px;border-radius:12px;background:#fff}
+.test-brew-result-title h3{margin:0;font-size:1.05rem}
+.test-brew-result-title p:last-child{margin:8px 0 0;color:var(--muted);font-size:.9rem}
+.test-brew-result-title.found{border-left:5px solid #5a9b72}
+.test-brew-result-title.new{border-left:5px solid var(--coral)}
+.test-brew-matches{display:grid;gap:10px}
+.test-brew-match{padding:15px;border-radius:12px;background:#fff;box-shadow:3px 3px 0 var(--line)}
+.test-brew-match h4{margin:0 0 6px;font-size:1rem}
+.test-brew-match p{margin:4px 0 0}
+.test-brew-observed-value{color:var(--muted);font-size:.88rem;font-weight:700}
+.test-brew-estimate{display:grid;gap:14px;padding:16px;border-radius:12px;background:var(--lavender)}
+.test-brew-estimate>h3{margin:0;font-size:1rem}
+.test-brew-estimate-grid{display:grid;grid-template-columns:1fr;gap:9px}
+.test-brew-estimate-grid>div{display:grid;gap:3px;padding:13px;border-radius:10px;background:#fff}
+.test-brew-estimate-grid span{color:var(--muted);font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.test-brew-estimate-grid strong{font-size:1.08rem}
+.test-brew-estimate-grid small{color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums}
+.test-brew-duration{margin-top:2px}
+.test-brew-effects{margin-top:2px;padding-top:14px}
+.test-brew-effects .calculator-effects-head{display:grid;gap:3px}
+.test-brew-effects .calculator-effects-grid{grid-template-columns:1fr}
+.test-brew-effects .calculator-effect-card{min-height:96px}
+.test-brew-effects .calculator-effect-or{text-align:center;line-height:1}
+@media(max-width:950px){.test-brew-layout{grid-template-columns:1fr}.test-brew-cauldron{position:static}.test-brew-sequence{min-height:100px}}
+@media(max-width:560px){.test-brew-choice{flex-basis:58px;width:58px;height:58px}.test-brew-choice img,.test-brew-choice-placeholder{width:43px;height:43px}.test-brew-cauldron-head{align-items:flex-start;flex-direction:column}.test-brew-cauldron-head .admin-secondary-btn{align-self:stretch}}
