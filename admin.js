@@ -12,7 +12,7 @@ function adminPaths(category,level){
   throw new Error("Неизвестный раздел базы.");
 }
 function adminCategoryLabel(category){
-  return {standard_new:"Новый образец",standard_old:"Старый образец",special:"Именное / особое"}[category]||category;
+  return {standard_new:"Нового образца",standard_old:"Старого образца",special:"Именное / особое"}[category]||category;
 }
 function adminRarityLabel(rarity){
   return {common:"обычный",seasonal:"сезонный",very_rare:"особо редкий"}[rarity]||rarity;
