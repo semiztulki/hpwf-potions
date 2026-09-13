@@ -232,17 +232,8 @@ function testBrewEffectCards(level,duration,estimate,rollLevel=level){
     }).join('<span class="calculator-effect-or">или</span>')+'</div>';
 }
 function testBrewExpandedRecipe(){
-  const ingredients=Object.fromEntries(state.ingredients.map(x=>[x.id,x])),actions=Object.fromEntries(state.actions.map(x=>[x.id,x]));
   const ingredientCount=testBrewIngredientCount();
-  const steps=testBrewState.sequence.map((item,index)=>{
-    const source=item.type==="ingredient"?ingredients[item.ref]:actions[item.ref];
-    const kind=item.type==="ingredient"?"Ингредиент":item.type==="action"?"Действие":"Свет полной луны";
-    const className=item.type==="action"?" action":item.type==="moon"?" moon":" ingredient";
-    const pause=source?.pauseSeconds?'<span>'+fmt(source.pauseSeconds)+' сек.</span>':"";
-    const image=source?.imageUrl?'<img src="'+esc(source.imageUrl)+'" alt="">':'<span class="test-brew-result-step-placeholder">✦</span>';
-    return '<li class="test-brew-result-step'+className+'"><span class="test-brew-result-step-number">'+(index+1)+'</span>'+image+'<span class="test-brew-result-step-copy"><strong>'+esc(testBrewItemLabel(item))+'</strong><small>'+kind+pause+'</small></span></li>';
-  }).join("");
-  return '<section class="test-brew-expanded-recipe"><div class="test-brew-expanded-head"><div><p class="eyebrow">Последовательность варки</p><h3>Рецепт зелья</h3></div><span>'+ingredientCount+' '+(ingredientCount===1?'ингредиент':ingredientCount<5?'ингредиента':'ингредиентов')+'</span></div><ol class="test-brew-result-steps">'+steps+'</ol></section>';
+  return '<section class="test-brew-expanded-recipe"><div class="test-brew-expanded-head"><div><p class="eyebrow">Последовательность варки</p><h3>Рецепт</h3></div><span>'+ingredientCount+' '+(ingredientCount===1?'ингредиент':ingredientCount<5?'ингредиента':'ингредиентов')+'</span></div><div class="recipe-sequence test-brew-inline-recipe">'+recipeItems({sequence:testBrewState.sequence})+'</div></section>';
 }
 function testBrewExistingResult(potions){
   const categoryLabels={standard_new:"Новый образец",standard_old:"Старый образец",special:"Именное / особое",mana:"Зелье маны"};
