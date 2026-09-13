@@ -188,8 +188,9 @@ function testBrewRender(){
   $("testBrewFull").hidden=!full;
   $("testBrewClear").disabled=!testBrewState.sequence.length;
   $("testBrewFinish").disabled=!count;
-  $("testBrewSequence").innerHTML=testBrewState.sequence.length?testBrewState.sequence.map((item,index)=>
-    '<li><span>'+esc(testBrewItemLabel(item))+'</span><button type="button" class="test-brew-remove" data-test-brew-remove="'+index+'" aria-label="Убрать '+esc(testBrewItemLabel(item))+' из рецепта" title="Убрать">×</button></li>'
+  $("testBrewFinish").hidden=testBrewState.finished;
+  $("testBrewSequence").innerHTML=testBrewState.sequence.length?testBrewState.sequence.map(item=>
+    '<li><span>'+esc(testBrewItemLabel(item))+'</span></li>'
   ).join(""):'<li class="test-brew-empty">Добавляй ингредиенты и действия в том же порядке, что и в настоящий котёл.</li>';
   testBrewRenderPalette();
 }
@@ -265,6 +266,7 @@ function testBrewFinish(){
   else testBrewNewResult();
   $("testBrewChoices").hidden=true;
   $("testBrewFull").hidden=true;
+  $("testBrewFinish").hidden=true;
   requestAnimationFrame(()=>$("testBrewResult").scrollIntoView({behavior:"smooth",block:"start"}));
 }
 function initTestBrew(){
@@ -273,13 +275,6 @@ function initTestBrew(){
   $("testBrewChoices").addEventListener("click",event=>{
     const button=event.target.closest("[data-test-brew-type]");
     if(button&&!button.disabled)testBrewAdd(button.dataset.testBrewType,button.dataset.testBrewRef);
-  });
-  $("testBrewSequence").addEventListener("click",event=>{
-    const button=event.target.closest("[data-test-brew-remove]");
-    if(!button)return;
-    testBrewState.sequence.splice(Number(button.dataset.testBrewRemove),1);
-    testBrewResetResult();
-    testBrewRender();
   });
   $("testBrewClear").addEventListener("click",()=>{testBrewState.sequence=[];testBrewResetResult();testBrewRender();});
   $("testBrewFinish").addEventListener("click",testBrewFinish);
