@@ -4,7 +4,7 @@ const reviewLabels={
   two_actions_in_row:"Два действия подряд",
   too_many_ingredients:"Слишком много ингредиентов",
   level_mismatch:"Ингредиент выше уровня зелья",
-  source_uncertain:"Поврежден источник"
+  source_uncertain:"Повреждён источник"
 };
 const escReview=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const normReview=v=>String(v??"").toLowerCase().replaceAll("ё","е").trim();
