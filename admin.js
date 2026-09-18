@@ -12,7 +12,7 @@ function adminPaths(category,level){
   throw new Error("Неизвестный раздел базы.");
 }
 function adminCategoryLabel(category){
-  return {standard_new:"Нового образца",standard_old:"Старого образца",special:"Именное / особое"}[category]||category;
+  return {standard_new:"Нового образца",standard_old:"Старого образца",special:"Именное или особое"}[category]||category;
 }
 function adminRarityLabel(rarity){
   return {common:"обычный",seasonal:"сезонный",very_rare:"особо редкий"}[rarity]||rarity;
@@ -102,7 +102,7 @@ function adminFindPotion(d,potions){
   const compatible=candidates.filter(p=>adminPotionConflicts(d,p).length===0);
   if(compatible.length===1) return {status:"existing",potion:compatible[0],candidates};
   if(compatible.length>1) return {status:"ambiguous",potion:null,candidates:compatible};
-  return {status:"conflict",potion:null,candidates,conflicts:["в базе есть несколько записей с тем же идентификатором, но их параметры не совпадают с введенными"]};
+  return {status:"conflict",potion:null,candidates,conflicts:["в базе есть несколько записей с тем же идентификатором, но их параметры не совпадают с введёнными"]};
 }
 function adminLocalMatch(){
   const d=adminDraft();
@@ -184,7 +184,7 @@ function adminRenderPotionMatch(){
   const box=a$("adminPotionMatch"),d=adminDraft();
   const enough=(["standard_new","standard_old"].includes(d.category)?d.level&&d.number!=null:!!d.name);
   if(!enough){
-    box.innerHTML='<div class="admin-message warning">Заполните основные данные зелья — форма сама проверит, есть ли оно уже в базе.</div>';
+    box.innerHTML='<div class="admin-message warning">Заполни основные данные зелья — форма сама проверит, есть ли оно уже в базе.</div>';
     return;
   }
   const m=adminLocalMatch();
@@ -192,13 +192,13 @@ function adminRenderPotionMatch(){
     const p=m.potion;
     const meta=[adminCategoryLabel(p.category),p.level?p.level+" уровень":null,p.duration?state.mechanics?.toxicity?.durationLabels?.[p.duration]:null,p.toxicity==null?null:"токсикация "+p.toxicity].filter(Boolean).join(" · ");
     const confirmed=adminState.confirmedPotionId===p.id;
-    box.innerHTML='<div class="admin-selected-card"><p class="eyebrow">Найдено в базе</p><h4>'+esc(potionTitle(p))+'</h4><div class="meta">'+esc(meta)+'</div>'+(potionEffectSummary(p)?'<div class="potion-effect">'+esc(potionEffectSummary(p))+'</div>':"")+(confirmed?'<p class="meta admin-match-note">Зелье подтверждено. Известные свойства подставлены; пустые поля можно дополнить.</p>':'<p class="meta admin-match-note">Вы хотите добавить новый рецепт к этому зелью?</p><button type="button" class="admin-secondary-btn" data-confirm-existing>Да, добавить рецепт</button>')+'</div>';
+    box.innerHTML='<div class="admin-selected-card"><p class="eyebrow">Найдено в базе</p><h4>'+esc(potionTitle(p))+'</h4><div class="meta">'+esc(meta)+'</div>'+(potionEffectSummary(p)?'<div class="potion-effect">'+esc(potionEffectSummary(p))+'</div>':"")+(confirmed?'<p class="meta admin-match-note">Зелье подтверждено. Известные свойства подставлены; пустые поля можно дополнить.</p>':'<p class="meta admin-match-note">Хочешь добавить новый рецепт к этому зелью?</p><button type="button" class="admin-secondary-btn" data-confirm-existing>Да, добавить рецепт</button>')+'</div>';
   }else if(m.status==="new"){
     box.innerHTML='<div class="admin-message ok">Такого зелья в базе не найдено. При сохранении оно будет создано автоматически.</div>';
   }else if(m.status==="ambiguous"){
-    box.innerHTML='<div class="admin-message error">Найдено несколько подходящих зелий. Уточните данные, чтобы совпадение стало однозначным.</div>';
+    box.innerHTML='<div class="admin-message error">Найдено несколько подходящих зелий. Уточни данные, чтобы выбрать одно из них.</div>';
   }else{
-    box.innerHTML='<div class="admin-message error">Зелье с таким номером или названием уже есть, но не совпадают: '+esc((m.conflicts||[]).join(", "))+'. Проверьте введенные данные.</div>';
+    box.innerHTML='<div class="admin-message error">Зелье с таким номером или названием уже есть, но расходятся следующие данные: '+esc((m.conflicts||[]).join(", "))+'. Проверь введённые значения.</div>';
   }
 }
 function adminItemLabel(item){
@@ -235,18 +235,18 @@ function adminSequenceSignature(sequence){
 function adminValidatePotionDraft(d){
   const errors=[];
   if(["standard_new","standard_old"].includes(d.category)){
-    if(!d.level) errors.push("Укажите уровень зелья.");
-    if(d.number==null) errors.push("Укажите номер зелья.");
-    if(!d.duration) errors.push("Укажите длительность.");
+    if(!d.level) errors.push("Укажи уровень зелья.");
+    if(d.number==null) errors.push("Укажи номер зелья.");
+    if(!d.duration) errors.push("Укажи длительность.");
   }
   if(d.category==="standard_new"){
     const normal=d.effects.filter(x=>["concentration","resistance","efficiency"].includes(x.type));
-    if(normal.length!==1||d.effects.some(x=>x.type==="mana")) errors.push("Для зелья нового образца укажите ровно один эффект: концентрацию, устойчивость или эффективность.");
+    if(normal.length!==1||d.effects.some(x=>x.type==="mana")) errors.push("Для зелья нового образца укажи ровно один эффект: концентрацию, устойчивость или эффективность.");
   }
-  if(d.category==="standard_old"&&!d.effects.length) errors.push("Для зелья старого образца укажите хотя бы один эффект.");
+  if(d.category==="standard_old"&&!d.effects.length) errors.push("Для зелья старого образца укажи хотя бы один эффект.");
   if(d.category==="special"){
-    if(!d.name) errors.push("Для именного / особого зелья укажите название.");
-    if(!d.duration) errors.push("Укажите длительность именного / особого зелья.");
+    if(!d.name) errors.push("Для именного или особого зелья укажи название.");
+    if(!d.duration) errors.push("Укажи длительность именного или особого зелья.");
   }
   return errors;
 }
@@ -255,13 +255,13 @@ function adminValidation(){
   errors.push(...adminValidatePotionDraft(d));
 
   const match=adminLocalMatch();
-  if(match.status==="existing"&&adminState.confirmedPotionId!==match.potion.id) errors.push("Подтвердите, что хотите добавить новый рецепт к найденному зелью.");
-  if(match.status==="conflict") errors.push("Введенные данные противоречат уже существующему зелью: "+(match.conflicts||[]).join(", ")+".");
-  if(match.status==="ambiguous") errors.push("По введенным данным найдено несколько зелий. Нужно уточнить параметры.");
+  if(match.status==="existing"&&adminState.confirmedPotionId!==match.potion.id) errors.push("Подтверди, что хочешь добавить новый рецепт к найденному зелью.");
+  if(match.status==="conflict") errors.push("Введённые данные не совпадают с записью в базе: "+(match.conflicts||[]).join(", ")+".");
+  if(match.status==="ambiguous") errors.push("По введённым данным найдено несколько зелий. Уточни параметры.");
 
   const ingredientCount=seq.filter(x=>x.type==="ingredient").length;
   const moonCount=seq.filter(x=>x.type==="moon").length;
-  if(!seq.length) errors.push("Добавьте хотя бы один элемент рецепта.");
+  if(!seq.length) errors.push("Добавь хотя бы один элемент рецепта.");
   if(ingredientCount>11) errors.push("В рецепте больше 11 ингредиентов.");
   if(moonCount>1) errors.push("Свет полной луны можно добавить только один раз.");
 
@@ -285,7 +285,7 @@ function adminValidation(){
 
   const nominal=seq.reduce((sum,x)=>sum+(x.type==="ingredient"?Number(im[x.ref]?.basePower||0):0),0);
   if(seq.length&&errors.length===0){
-    info.push("Расчетная базовая ценность: "+fmt(nominal)+(moonCount?" + Луна 0–450":"")+".");
+    info.push("Расчётная базовая ценность: "+fmt(nominal)+(moonCount?" + Луна 0–450":"")+".");
     if(targetLevel) info.push("Уровень зелья: "+targetLevel+".");
     info.push(match.status==="existing"?"Рецепт будет добавлен к существующему зелью.":"Будет создано новое зелье и добавлен его первый рецепт.");
   }
@@ -340,7 +340,7 @@ async function adminApiCall(path,body){
   return data;
 }
 async function adminAuthenticate(password){
-  if(!password) throw new Error("Введите пароль.");
+  if(!password) throw new Error("Введи пароль.");
   adminState.password=password;
   try{
     await loadPrivateData(password);
@@ -386,8 +386,8 @@ function adminRenderAuth(){
 }
 async function adminSubmitRecipe(){
   const validation=adminValidation();
-  if(validation.errors.length) throw new Error("Исправьте ошибки формы перед сохранением.");
-  if(!adminState.password) throw new Error("Сначала войдите с паролем редактора.");
+  if(validation.errors.length) throw new Error("Исправь ошибки формы перед сохранением.");
+  if(!adminState.password) throw new Error("Сначала войди с паролем редактора.");
   const d=adminDraft();
   const result=await adminApiCall("/add-recipe",{potion:d,sequence:adminState.sequence.map(x=>({...x}))});
   const key=adminStateKey(d.category);
