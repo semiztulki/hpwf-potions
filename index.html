@@ -18,7 +18,7 @@
       <h1>Эта дверь магически запечатана. Произнести пароль:</h1>
       <div class="portal-login-row">
         <div class="password-field">
-          <input id="entryPassword" type="password" autocomplete="current-password" placeholder="Введите пароль для доступа к базе и добавления рецептов" aria-label="Пароль для доступа к базе и добавления рецептов">
+          <input id="entryPassword" type="password" autocomplete="current-password" placeholder="Введи пароль для доступа к базе и добавления рецептов" aria-label="Пароль для доступа к базе и добавления рецептов">
           <button type="button" class="password-toggle" data-password-toggle="entryPassword" aria-label="Показать пароль" title="Показать пароль"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg></button>
         </div>
         <button type="button" id="entryLoginButton" class="admin-primary-btn">Открыть замок</button>
@@ -107,9 +107,9 @@
           <div id="actionCards" class="table-wrap catalog-table-wrap"></div>
           <aside class="action-tips" aria-label="Полезные советы">
             <ul>
-              <li>Даже с&nbsp;одинаковыми ингредиентами могут получиться разные рецепты, если их переставить в&nbsp;разном порядке или добавить те или иные действия</li>
-              <li>Ценность зелья — это общая сила всех ингредиентов с&nbsp;небольшим случайным разбросом примерно в&nbsp;пределах ±15%</li>
-              <li>Действия 2 и&nbsp;3 уровней изменяют бросок длительности: эффект распределяется на&nbsp;более долгий срок и&nbsp;становится слабее</li>
+              <li>Даже с&nbsp;одинаковыми ингредиентами могут получиться разные рецепты, если изменить их порядок или добавить разные действия.</li>
+              <li>Ценность зелья — это общая сила всех ингредиентов с&nbsp;небольшим случайным разбросом в&nbsp;пределах ±15%.</li>
+              <li>Действия второго и&nbsp;третьего уровней изменяют бросок длительности: эффект распределяется на&nbsp;более долгий срок и&nbsp;становится слабее.</li>
               <li>В&nbsp;котёл помещается не&nbsp;больше 11 ингредиентов. Свет полной луны можно добавить сверх этого количества.</li>
             </ul>
           </aside>
@@ -117,10 +117,10 @@
         <div class="moon-footnote-block">
           <span class="moon-footnote-marker" aria-hidden="true">*</span>
           <ul class="moon-footnotes">
-            <li>Свет полной луны добавляет случайный бонус 0–450 к ценности зелья</li>
-            <li>Работает как дополнительный ингредиент, а не как действие</li>
-            <li>Доступно только в <button type="button" id="moonInfoToggle" class="inline-link discoverable-link" aria-expanded="false" aria-controls="moonStatus">реальное полнолуние</button></li>
-            <li>Несмотря на то, что это действие второго уровня, оно доступно на первом — в составе зелья маны «Слеза дриады».</li>
+            <li>Свет полной луны добавляет случайный бонус 0–450 к ценности зелья.</li>
+            <li>Он работает как дополнительный ингредиент, а не как действие.</li>
+            <li>Он доступен только в <button type="button" id="moonInfoToggle" class="inline-link discoverable-link" aria-expanded="false" aria-controls="moonStatus">реальное полнолуние</button>.</li>
+            <li>Хотя Свет полной луны относится ко второму уровню, он доступен и на первом — в составе зелья маны «Слеза дриады».</li>
           </ul>
         </div>
         <div id="moonStatus" class="moon-status" hidden aria-live="polite"></div>
@@ -174,7 +174,7 @@
               <div id="testBrewActionRow" class="test-brew-choice-row"></div>
             </div>
           </div>
-          <div id="testBrewFull" class="test-brew-full" hidden>Котёл переполнен, завершите приготовление зелья.</div>
+          <div id="testBrewFull" class="test-brew-full" hidden>Котёл переполнен, заверши приготовление зелья.</div>
           <div id="testBrewResult" class="test-brew-result" aria-live="polite"></div>
         </div>
         <aside class="panel test-brew-cauldron">
@@ -196,7 +196,7 @@
         <h3>Этот раздел магически запечатан. Произнести пароль:</h3>
         <div class="admin-add-row">
           <div class="password-field">
-            <input id="databasePassword" type="password" autocomplete="current-password" placeholder="Введите пароль для доступа к базе и добавления рецептов" aria-label="Пароль для доступа к базе и добавления рецептов">
+            <input id="databasePassword" type="password" autocomplete="current-password" placeholder="Введи пароль для доступа к базе и добавления рецептов" aria-label="Пароль для доступа к базе и добавления рецептов">
             <button type="button" class="password-toggle" data-password-toggle="databasePassword" aria-label="Показать пароль" title="Показать пароль"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg></button>
           </div>
           <button type="button" id="databaseLoginButton" class="admin-primary-btn">Войти</button>
@@ -211,7 +211,7 @@
         <div class="panel recipe-controls">
           <label class="field"><span>Поиск по базе</span><input id="recipeSearch" type="search" placeholder="Номер зелья, ингредиент, действие, эффект"></label>
           <div class="recipe-view-tabs" aria-label="Разделы базы">
-            <button class="recipe-view-btn active" data-recipe-view="special">Именные / особые</button>
+            <button class="recipe-view-btn active" data-recipe-view="special">Именные и особые</button>
             <button class="recipe-view-btn" data-recipe-view="level1">1 уровень</button>
             <button class="recipe-view-btn" data-recipe-view="level2">2 уровень</button>
             <button class="recipe-view-btn" data-recipe-view="level3">3 уровень</button>
@@ -219,18 +219,18 @@
           <div id="recipeAdvancedFilters" class="recipe-filter-panel" hidden>
             <div class="recipe-filter-row">
               <fieldset class="recipe-filter-group recipe-era-filter">
-                <legend>Образец зелья</legend>
+                <legend>Механика</legend>
                 <div class="recipe-segmented">
                   <label><input type="radio" name="recipe-era" value="all" checked><span>Все</span></label>
-                  <label><input type="radio" name="recipe-era" value="new"><span>Новый</span></label>
-                  <label><input type="radio" name="recipe-era" value="old"><span>Старый</span></label>
+                  <label><input type="radio" name="recipe-era" value="new"><span>Нового образца</span></label>
+                  <label><input type="radio" name="recipe-era" value="old"><span>Старого образца</span></label>
                 </div>
               </fieldset>
               <fieldset class="recipe-filter-group recipe-rarity-filter">
                 <legend>Какие ингредиенты доступны</legend>
                 <div class="recipe-rarity-options">
                   <label><input type="checkbox" name="recipe-rarity" value="common" checked> Обычные</label>
-                  <label><input type="checkbox" name="recipe-rarity" value="seasonal" checked> Сезонные</label>
+                  <label><input type="checkbox" name="recipe-rarity" value="seasonal" checked> Сезонные редкие</label>
                   <label><input type="checkbox" name="recipe-rarity" value="very_rare" checked> Особо редкие</label>
                 </div>
               </fieldset>
@@ -273,7 +273,7 @@
         <h3>Этот раздел магически запечатан. Произнести пароль:</h3>
         <div class="admin-add-row">
           <div class="password-field">
-            <input id="editorPassword" type="password" autocomplete="current-password" placeholder="Введите пароль для доступа к базе и добавления рецептов" aria-label="Пароль для доступа к базе и добавления рецептов">
+            <input id="editorPassword" type="password" autocomplete="current-password" placeholder="Введи пароль для доступа к базе и добавления рецептов" aria-label="Пароль для доступа к базе и добавления рецептов">
             <button type="button" class="password-toggle" data-password-toggle="editorPassword" aria-label="Показать пароль" title="Показать пароль"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg></button>
           </div>
           <button type="button" id="editorLoginButton" class="admin-primary-btn">Войти</button>
@@ -286,12 +286,12 @@
             <div><p class="eyebrow">Шаг 1</p><h3>Данные зелья</h3></div>
             <button type="button" id="adminClearForm" class="admin-secondary-btn">Очистить форму</button>
           </div>
-          <p class="meta">Укажите номер или название. Если зелье уже есть в базе, подтвердите совпадение — форма подставит известные свойства, а пустые поля позволит дополнить.</p>
+          <p class="meta">Укажи номер или название. Если зелье уже есть в базе, подтверди совпадение: форма подставит известные свойства, а пустые поля можно будет заполнить.</p>
           <div class="admin-grid">
             <label class="field"><span>Раздел</span><select id="adminCategory">
               <option value="standard_new">Нового образца</option>
               <option value="standard_old">Старого образца</option>
-              <option value="special">Именное / особое</option>
+              <option value="special">Именное или особое</option>
             </select></label>
             <label class="field"><span>Уровень</span><select id="adminLevel"><option value="">Не указан</option><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3">3 уровень</option></select></label>
             <label class="field"><span>Номер</span><input id="adminNumber" type="number" min="0" step="1" placeholder="Например: 108"></label>
@@ -311,7 +311,7 @@
             </div>
           </div>
           <div class="admin-grid">
-            <label class="field field-wide"><span>Описание / примечание</span><input id="adminDescription" type="text" placeholder="Необязательно"></label>
+            <label class="field field-wide"><span>Описание или примечание</span><input id="adminDescription" type="text" placeholder="Необязательно"></label>
             <label class="field"><span>Автор</span><input id="adminAuthor" type="text" placeholder="Необязательно"></label>
           </div>
           <div id="adminPotionMatch" class="admin-selected-potion"></div>
@@ -361,7 +361,7 @@
         <p class="callout">Здесь остались только записи, которые не объясняются текущей механикой и действительно требуют ручной сверки. Действия более высокого уровня и Свет полной луны из ошибок уровня исключены.</p>
         <div class="filter-grid review-filters">
           <label class="field field-wide"><span>Поиск</span><input id="reviewSearch" type="search" placeholder="Название зелья, ингредиент, действие, причина"></label>
-          <label class="field"><span>Проблема</span><select id="reviewIssue"><option value="">Все</option><option value="unresolved_token">Компонент не описан</option><option value="two_actions_in_row">Два действия подряд</option><option value="too_many_ingredients">Слишком много ингредиентов</option><option value="level_mismatch">Ингредиент выше уровня зелья</option><option value="source_uncertain">Поврежден источник</option></select></label>
+          <label class="field"><span>Проблема</span><select id="reviewIssue"><option value="">Все</option><option value="unresolved_token">Компонент не описан</option><option value="two_actions_in_row">Два действия подряд</option><option value="too_many_ingredients">Слишком много ингредиентов</option><option value="level_mismatch">Ингредиент выше уровня зелья</option><option value="source_uncertain">Повреждён источник</option></select></label>
           <label class="field"><span>Уровень</span><select id="reviewLevel"><option value="">Все</option><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3">3 уровень</option><option value="none">Без уровня</option></select></label>
         </div>
       </div>
@@ -378,8 +378,8 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260913-6" defer></script>
-  <script src="admin.js?v=20260913-3" defer></script>
-  <script src="review.js?v=20260907-2" defer></script>
+  <script src="app.js?v=20260918-1" defer></script>
+  <script src="admin.js?v=20260918-1" defer></script>
+  <script src="review.js?v=20260918-1" defer></script>
 </body>
 </html>
