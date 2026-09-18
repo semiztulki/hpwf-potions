@@ -225,7 +225,7 @@ function testBrewEffectCards(level,duration,estimate,rollLevel=level){
   const divisors=calculatorEffectDivisors[rollLevel]?.[duration]||calculatorEffectDivisors[level]?.[duration];
   if(!duration)return "";
   if(!divisors)return '<p class="calculator-effects-unavailable">Для этой длительности пока недостаточно данных для надёжного прогноза.</p>';
-  return '<div class="calculator-effects-head"><span>Зелье '+level+' уровня · '+calculatorDurationLabels[duration]+'</span><strong>Один из трёх возможных эффектов</strong></div><div class="calculator-effects-grid">'
+  return '<div class="calculator-effects-head"><span>Зелье '+calculatorLevelWords[level]+' уровня · '+calculatorDurationLabels[duration]+'</span><strong>Один из трёх возможных эффектов</strong></div><div class="calculator-effects-grid">'
     +[["concentration","Концентрация"],["efficiency","Эффективность"],["resistance","Устойчивость"]].map(([key,label])=>{
       const value=Math.ceil(estimate.nominal/divisors[key]),from=Math.ceil(estimate.minimum/divisors[key]),to=Math.ceil(estimate.maximum/divisors[key]);
       const prefix=key==="efficiency"?"":"+",suffix=key==="efficiency"?"%":"";
@@ -234,10 +234,10 @@ function testBrewEffectCards(level,duration,estimate,rollLevel=level){
 }
 function testBrewExpandedRecipe(){
   const ingredientCount=testBrewIngredientCount();
-  return '<section class="test-brew-expanded-recipe"><div class="test-brew-expanded-head"><div><p class="eyebrow">Последовательность варки</p><h3>Рецепт</h3></div><span>'+ingredientCount+' '+(ingredientCount===1?'ингредиент':ingredientCount<5?'ингредиента':'ингредиентов')+'</span></div><div class="recipe-sequence test-brew-inline-recipe">'+recipeItems({sequence:testBrewState.sequence})+'</div></section>';
+  return '<section class="test-brew-expanded-recipe"><div class="test-brew-expanded-head"><div><p class="eyebrow">Последовательность варки</p><h3>Рецепт</h3></div><span>'+ingredientCount+' '+plural(ingredientCount,'ингредиент','ингредиента','ингредиентов')+'</span></div><div class="recipe-sequence test-brew-inline-recipe">'+recipeItems({sequence:testBrewState.sequence})+'</div></section>';
 }
 function testBrewExistingResult(potions){
-  const categoryLabels={standard_new:"Нового образца",standard_old:"Старого образца",special:"Именное / особое",mana:"Зелье маны"};
+  const categoryLabels={standard_new:"Нового образца",standard_old:"Старого образца",special:"Именное или особое",mana:"Зелье маны"};
   const cards=potions.map(potion=>{
     const meta=[categoryLabels[potion.category],potion.level?potion.level+" уровень":null,potion.duration?(state.mechanics?.toxicity?.durationLabels?.[potion.duration]||calculatorDurationLabels[potion.duration]):null].filter(Boolean).join(" · ");
     const estimate=testBrewValueEstimate();
@@ -315,7 +315,7 @@ function renderCalculatorEffects(level,duration,nominal,minimum,maximum){
     const prefix=key==="efficiency"?"":"+",suffix=key==="efficiency"?"%":"";
     return '<div class="calculator-effect-card"><strong class="calculator-effect-label">'+label+'</strong><div class="calculator-effect-value"><span>'+prefix+'</span><strong>'+fmt(value)+'</strong><span class="calculator-effect-range"> ('+fmt(from)+'–'+fmt(to)+')</span><span>'+suffix+'</span></div></div>';
   }).join('<span class="calculator-effect-or">или</span>');
-  root.innerHTML='<div class="calculator-effects-head"><span>Зелье '+level+' уровня · '+calculatorDurationLabels[duration]+'</span><strong>Один из трёх возможных эффектов</strong></div><div class="calculator-effects-grid">'+cards+'</div>';
+  root.innerHTML='<div class="calculator-effects-head"><span>Зелье '+calculatorLevelWords[level]+' уровня · '+calculatorDurationLabels[duration]+'</span><strong>Один из трёх возможных эффектов</strong></div><div class="calculator-effects-grid">'+cards+'</div>';
 }
 function updateValueCalculator(){
   const inputs=[...document.querySelectorAll(".calculator-quantity")];
@@ -367,7 +367,7 @@ function potionTitle(p){
   if(p.name) return p.name;
   if(p.category==="standard_old") return "Зелье старого образца №"+(p.number??"—");
   const e=(p.effects||[])[0];
-  if(e&&p.number!=null) return "Зелье "+(effectLabels[e.type]||e.type).toLowerCase()+" №"+p.number;
+  if(e&&p.number!=null) return "Зелье "+(effectWords[e.type]||e.type)+" №"+p.number;
   return p.number!=null?"Зелье №"+p.number:"Зелье без названия";
 }
 function comparePotions(a,b){
@@ -542,7 +542,7 @@ function renderPotionCard(p){
   const observed=p.value!=null;
   const recipeHtml=rs.map((r,i)=>{
     const est=nominalRecipeValue(r);
-    const estimate=!observed?'<div class="recipe-estimate">Расчетная ценность: '+fmt(est.total)+(est.moon?' + Луна 0–450':'')+'</div>':"";
+    const estimate=!observed?'<div class="recipe-estimate">Расчётная ценность: '+fmt(est.total)+(est.moon?' + Луна 0–450':'')+'</div>':"";
     return '<div class="recipe-line"><span class="recipe-number">'+(rs.length>1?(i+1)+".":"")+'</span><div><div class="recipe-sequence">'+recipeItems(r)+'</div>'+estimate+'</div></div>';
   }).join("");
   const valueHtml=observed?'<p class="potion-value">Ценность: '+fmt(p.value)+'</p>':"";
@@ -557,7 +557,7 @@ function durationBlock(title,potions,sorter){
   if(!potions.length) return "";
   const q=norm($("recipeSearch").value);
   const sorted=[...potions].sort(sorter);
-  return '<details class="duration-block"'+(q?' open':'')+'><summary><span>'+esc(title)+'</span><span class="duration-count">'+sorted.length+' '+(sorted.length===1?"зелье":"зелий")+'</span></summary><div class="duration-content">'+sorted.map(renderPotionCard).join("")+'</div></details>';
+  return '<details class="duration-block"'+(q?' open':'')+'><summary><span>'+esc(title)+'</span><span class="duration-count">'+sorted.length+' '+plural(sorted.length,"зелье","зелья","зелий")+'</span></summary><div class="duration-content">'+sorted.map(renderPotionCard).join("")+'</div></details>';
 }
 function filterPotions(list){
   const q=norm($("recipeSearch").value);
@@ -596,7 +596,7 @@ function oldSection(level){
 }
 function renderLevelView(level){
   const list=(state.potions["standard-new"]||[]).filter(p=>p.level===level);
-  return '<div class="recipe-page-title"><p class="eyebrow">Рецепты</p><h2>Рецепты зелий '+level+' уровня</h2></div>'
+  return '<div class="recipe-page-title"><p class="eyebrow">Рецепты</p><h2>Рецепты зелий '+calculatorLevelWords[level]+' уровня</h2></div>'
     +effectSection("Концентрация","concentration",list)
     +effectSection("Устойчивость","resistance",list)
     +effectSection("Эффективность","efficiency",list)
@@ -646,7 +646,8 @@ function renderRecipeSearchResults(){
 function renderRecipeBrowser(){
   const searching=norm($("recipeSearch").value)!=="";
   $("recipeBrowser").innerHTML=searching?renderRecipeSearchResults():(recipeView==="special"?renderSpecialView():renderLevelView(Number(recipeView.replace("level",""))));
-  $("recipeCount").textContent=visiblePotionCount()+" зелий";
+  const count=visiblePotionCount();
+  $("recipeCount").textContent=count+" "+plural(count,"зелье","зелья","зелий");
   if(!$("recipeBrowser").innerHTML.trim()) $("recipeBrowser").innerHTML='<div class="panel empty-state">По этому запросу ничего не найдено.</div>';
 }
 
@@ -675,7 +676,7 @@ async function loadPrivateData(password){
 
 async function load(){
   try{
-    const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20260910-1"),fetch("data/actions.json?v=20260910-1"),fetch("data/mechanics.json?v=20260911-1")]);
+    const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20260910-1"),fetch("data/actions.json?v=20260918-1"),fetch("data/mechanics.json?v=20260918-1")]);
     if(![i,a,m].every(r=>r.ok)) throw new Error("load");
     state.ingredients=await i.json(); state.actions=await a.json(); state.mechanics=await m.json();
     renderIngredients();renderActions();renderMechanics();initTestBrew();
