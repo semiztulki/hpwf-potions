@@ -621,11 +621,15 @@ function renderLevelView(level){
     +oldSection(level);
 }
 function specialGroupKey(p){
-  if(p.category==="mana"||(p.effects||[]).some(e=>e.type==="mana")) return "other";
+  if(p.category==="mana"||(p.effects||[]).some(e=>e.type==="mana")) return "mana";
   const types=[...new Set((p.effects||[]).map(e=>e.type))];
   if(types.length===0) return "other";
   if(types.length>1) return "mixed";
   return ["concentration","resistance","efficiency"].includes(types[0])?types[0]:"other";
+}
+function flatSpecialSection(title,key,list){
+  const filtered=filterPotions(list.filter(p=>specialGroupKey(p)===key)).sort((a,b)=>String(potionTitle(a)).localeCompare(potionTitle(b),"ru"));
+  return filtered.length?'<section class="recipe-effect-section"><h3>'+esc(title)+'</h3><div class="duration-content">'+filtered.map(renderPotionCard).join("")+'</div></section>':"";
 }
 function specialSection(title,key,list){
   const filtered=filterPotions(list.filter(p=>specialGroupKey(p)===key));
@@ -645,7 +649,8 @@ function renderSpecialView(){
     +specialSection("Устойчивость","resistance",list)
     +specialSection("Эффективность","efficiency",list)
     +specialSection("Несколько эффектов","mixed",list)
-    +specialSection("Прочие","other",list);
+    +flatSpecialSection("Зелья маны","mana",list)
+    +flatSpecialSection("Зелья с уникальными эффектами","other",list);
 }
 function visiblePotionCount(){
   let list=recipeView==="special"?[...(state.potions.special||[]),...(state.potions.mana||[])]:[
