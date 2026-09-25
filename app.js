@@ -717,6 +717,7 @@ document.querySelectorAll(".check-select").forEach(select=>select.addEventListen
 document.querySelector('[data-filter-group="ingredient-season"] summary').addEventListener("click",e=>{if(e.currentTarget.parentElement.classList.contains("is-disabled"))e.preventDefault();});
 document.addEventListener("click",e=>{if(!e.target.closest(".check-select"))document.querySelectorAll(".check-select[open]").forEach(select=>select.open=false);});
 $("moonInfoToggle").addEventListener("click",()=>{const panel=$("moonStatus"),show=panel.hidden;panel.hidden=!show;$("moonInfoToggle").setAttribute("aria-expanded",String(show));if(show)renderMoonStatus();});
+window.setInterval(()=>{if(!$("moonStatus").hidden)renderMoonStatus();},60000);
 $("recipeSearch").addEventListener("input",renderRecipeBrowser);
 document.querySelectorAll('input[name="recipe-era"]').forEach(input=>input.addEventListener("change",()=>{recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();}));
 for(const group of ["recipe-rarity","recipe-moon"]){
