@@ -124,15 +124,22 @@ function forumDate(date,withTime=false){
   const d=new Date(date.valueOf()+3600000),pad=n=>String(n).padStart(2,"0");
   return pad(d.getUTCDate())+"."+pad(d.getUTCMonth()+1)+(withTime?", "+pad(d.getUTCHours())+":"+pad(d.getUTCMinutes()):"");
 }
+function moonHoursMinutes(ms){
+  const totalMinutes=Math.max(1,Math.ceil(ms/60000)),hours=Math.floor(totalMinutes/60),minutes=totalMinutes%60,parts=[];
+  if(hours)parts.push(hours+" "+plural(hours,"час","часа","часов"));
+  if(minutes)parts.push(minutes+" "+plural(minutes,"минута","минуты","минут"));
+  return parts.join(" ");
+}
 function renderMoonStatus(){
   const now=new Date(),peaks=fullMoonCandidates(now),half=36*3600000;
   const active=peaks.find(p=>now>=p-half&&now<=p.valueOf()+half);
   let text;
-  if(active){const end=new Date(active.valueOf()+half),hours=Math.max(1,Math.ceil((end-now)/3600000));text='<strong>Полнолуние сейчас, скорее загружай котлы!</strong> Оно продлится до '+forumDate(end)+', осталось '+hours+' '+plural(hours,"час","часа","часов")+'.';}
+  if(active){const end=new Date(active.valueOf()+half);text='<strong>Полнолуние сейчас, скорее загружай котлы!</strong> Оно продлится до '+forumDate(end)+', осталось '+moonHoursMinutes(end-now)+'.';}
   else{
-    const next=peaks.find(p=>p.valueOf()-half>now)||peaks[peaks.length-1],start=new Date(next.valueOf()-half),end=new Date(next.valueOf()+half),days=Math.max(1,Math.ceil((start-now)/moonDay)),phase=moonIllumination(now).phase;
+    const next=peaks.find(p=>p.valueOf()-half>now)||peaks[peaks.length-1],start=new Date(next.valueOf()-half),end=new Date(next.valueOf()+half),remaining=start-now,days=Math.max(1,Math.ceil(remaining/moonDay)),phase=moonIllumination(now).phase;
     const phaseText=phase<.035||phase>.965?"Сейчас новолуние.":phase<.5?"Сейчас Луна растёт.":"Сейчас Луна убывает.";
-    text=phaseText+' Ближайшее полнолуние будет с '+forumDate(start)+' по '+forumDate(end)+'. До начала осталось '+days+' '+plural(days,"день","дня","дней")+'.';
+    const remainingText=remaining<moonDay?moonHoursMinutes(remaining):days+' '+plural(days,"день","дня","дней");
+    text=phaseText+' Ближайшее полнолуние будет с '+forumDate(start)+' по '+forumDate(end)+'. До начала осталось '+remainingText+'.';
   }
   $("moonStatus").innerHTML='<p>'+text+'</p>';
 }
