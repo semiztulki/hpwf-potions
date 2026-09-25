@@ -124,6 +124,22 @@ function forumDate(date,withTime=false){
   const d=new Date(date.valueOf()+3600000),pad=n=>String(n).padStart(2,"0");
   return pad(d.getUTCDate())+"."+pad(d.getUTCMonth()+1)+(withTime?", "+pad(d.getUTCHours())+":"+pad(d.getUTCMinutes()):"");
 }
+const forumMoonCycle=29.530588853*moonDay,forumMoonThreshold=.97;
+const forumMoonCalibrationTime=Date.parse("2026-09-25T00:07:41Z"),forumMoonCalibrationFullness=.9687;
+const forumMoonReferencePeak=forumMoonCalibrationTime+Math.acos(2*forumMoonCalibrationFullness-1)/(2*Math.PI)*forumMoonCycle;
+const forumMoonThresholdOffset=Math.acos(2*forumMoonThreshold-1)/(2*Math.PI)*forumMoonCycle;
+const positiveModulo=(value,modulo)=>((value%modulo)+modulo)%modulo;
+function forumMoonWindow(now){
+  let peak=forumMoonReferencePeak+Math.round((now-forumMoonReferencePeak)/forumMoonCycle)*forumMoonCycle;
+  let start=peak-forumMoonThresholdOffset,end=peak+forumMoonThresholdOffset;
+  if(now>end){peak+=forumMoonCycle;start=peak-forumMoonThresholdOffset;end=peak+forumMoonThresholdOffset;}
+  return {start:new Date(start),end:new Date(end),active:now>=start&&now<=end};
+}
+function forumMoonPhaseText(now){
+  const fromPeak=positiveModulo(now-forumMoonReferencePeak,forumMoonCycle),fromNew=Math.abs(fromPeak-forumMoonCycle/2);
+  if(fromNew<forumMoonCycle*.035)return "Сейчас новолуние.";
+  return fromPeak<forumMoonCycle/2?"Сейчас Луна убывает.":"Сейчас Луна растёт.";
+}
 function moonHoursMinutes(ms){
   const totalMinutes=Math.max(1,Math.ceil(ms/60000)),hours=Math.floor(totalMinutes/60),minutes=totalMinutes%60,parts=[];
   if(hours)parts.push(hours+" "+plural(hours,"час","часа","часов"));
@@ -131,15 +147,13 @@ function moonHoursMinutes(ms){
   return parts.join(" ");
 }
 function renderMoonStatus(){
-  const now=new Date(),peaks=fullMoonCandidates(now),half=36*3600000;
-  const active=peaks.find(p=>now>=p-half&&now<=p.valueOf()+half);
+  const now=new Date(),window=forumMoonWindow(now);
   let text;
-  if(active){const end=new Date(active.valueOf()+half);text='<strong>Полнолуние сейчас, скорее загружай котлы!</strong> Оно продлится до '+forumDate(end)+', осталось '+moonHoursMinutes(end-now)+'.';}
+  if(window.active){text='<strong>Полнолуние сейчас, скорее загружай котлы!</strong> Оно продлится до '+forumDate(window.end)+', осталось '+moonHoursMinutes(window.end-now)+'.';}
   else{
-    const next=peaks.find(p=>p.valueOf()-half>now)||peaks[peaks.length-1],start=new Date(next.valueOf()-half),end=new Date(next.valueOf()+half),remaining=start-now,days=Math.max(1,Math.ceil(remaining/moonDay)),phase=moonIllumination(now).phase;
-    const phaseText=phase<.035||phase>.965?"Сейчас новолуние.":phase<.5?"Сейчас Луна растёт.":"Сейчас Луна убывает.";
+    const remaining=window.start-now,days=Math.max(1,Math.ceil(remaining/moonDay)),phaseText=forumMoonPhaseText(now);
     const remainingText=remaining<moonDay?moonHoursMinutes(remaining):days+' '+plural(days,"день","дня","дней");
-    text=phaseText+' Ближайшее полнолуние будет с '+forumDate(start)+' по '+forumDate(end)+'. До начала осталось '+remainingText+'.';
+    text=phaseText+' Ближайшее полнолуние будет с '+forumDate(window.start)+' по '+forumDate(window.end)+'. До начала осталось '+remainingText+'.';
   }
   $("moonStatus").innerHTML='<p>'+text+'</p>';
 }
