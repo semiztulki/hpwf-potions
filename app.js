@@ -110,15 +110,24 @@ function moonIllumination(date){
   return {fraction:(1+Math.cos(inc))/2,phase:.5+.5*inc*(angle<0?-1:1)/Math.PI};
 }
 function fullMoonCandidates(now){
-  const step=3*3600000,start=now.valueOf()-35*moonDay,end=now.valueOf()+40*moonDay,samples=[];
-  for(let t=start;t<=end;t+=step)samples.push({t,f:moonIllumination(new Date(t)).fraction});
-  const peaks=[];
-  for(let i=1;i<samples.length-1;i++)if(samples[i].f>=samples[i-1].f&&samples[i].f>=samples[i+1].f){
-    let left=samples[i].t-step,right=samples[i].t+step;
-    for(let n=0;n<35;n++){const a=left+(right-left)/3,b=right-(right-left)/3;if(moonIllumination(new Date(a)).fraction<moonIllumination(new Date(b)).fraction)left=a;else right=b;}
-    peaks.push(new Date((left+right)/2));
-  }
-  return peaks;
+  const cycle=29.530588853,base=2451550.09765,jd=now.valueOf()/moonDay+2440587.5;
+  const center=Math.round((jd-base)/cycle-.5)+.5;
+  return [-2,-1,0,1,2].map(offset=>fullMoonDate(center+offset));
+}
+function fullMoonDate(k){
+  const sin=degrees=>Math.sin(degrees*moonRad),T=k/1236.85,T2=T*T,T3=T2*T,T4=T3*T,E=1-.002516*T-.0000074*T2;
+  const M=2.5534+29.1053567*k-.0000014*T2-.00000011*T3;
+  const Mp=201.5643+385.81693528*k+.0107582*T2+.00001238*T3-.000000058*T4;
+  const F=160.7108+390.67050284*k-.0016118*T2-.00000227*T3+.000000011*T4;
+  const omega=124.7746-1.5637558*k+.0020672*T2+.00000215*T3;
+  let jde=2451550.09765+29.530588853*k+.0001337*T2-.00000015*T3+.00000000073*T4;
+  jde+=-.40614*sin(Mp)+.17302*E*sin(M)+.01614*sin(2*Mp)+.01043*sin(2*F)+.00734*E*sin(Mp-M)-.00515*E*sin(Mp+M)+.00209*E*E*sin(2*M)-.00111*sin(Mp-2*F)-.00057*sin(Mp+2*F)+.00056*E*sin(2*Mp+M)-.00042*sin(3*Mp)+.00042*E*sin(M+2*F)+.00038*E*sin(M-2*F)-.00024*E*sin(2*Mp-M)-.00017*sin(omega)-.00007*sin(Mp+2*M)+.00004*sin(2*Mp-2*F)+.00004*sin(3*M)+.00003*sin(Mp+M-2*F)+.00003*sin(2*Mp+2*F)-.00003*sin(Mp+M+2*F)+.00003*sin(Mp-M+2*F)-.00002*sin(Mp-M-2*F)-.00002*sin(3*Mp+M)+.00002*sin(4*Mp);
+  const angles=[299.77+.107408*k-.009173*T2,251.88+.016321*k,251.83+26.651886*k,349.42+36.412478*k,84.66+18.206239*k,141.74+53.303771*k,207.14+2.453732*k,154.84+7.30686*k,34.52+27.261239*k,207.19+.121824*k,291.34+1.844379*k,161.72+24.198154*k,239.56+25.513099*k,331.55+3.592518*k];
+  const weights=[.000325,.000165,.000164,.000126,.00011,.000062,.00006,.000056,.000047,.000042,.00004,.000037,.000035,.000023];
+  jde+=angles.reduce((sum,angle,index)=>sum+weights[index]*sin(angle),0);
+  const year=2000+(jde-2451545)/365.2425,u=year-2000;
+  const deltaT=year>=2005&&year<=2050?62.92+.32217*u+.005589*u*u:62.92;
+  return new Date((jde-2440587.5)*moonDay-deltaT*1000);
 }
 function forumDate(date,withTime=false){
   const d=new Date(date),pad=n=>String(n).padStart(2,"0");
@@ -131,7 +140,8 @@ function moonHoursMinutes(ms){
   return parts.join(" ");
 }
 function renderMoonStatus(){
-  const now=new Date(),peaks=fullMoonCandidates(now),half=36*3600000;
+  const now=new Date(),peaks=fullMoonCandidates(now),threshold=.98;
+  const half=Math.acos(2*threshold-1)/(2*Math.PI)*29.530588853*moonDay;
   const active=peaks.find(p=>now>=p-half&&now<=p.valueOf()+half);
   let text;
   if(active){const end=new Date(active.valueOf()+half);text='<strong>Полнолуние сейчас, скорее загружай котлы!</strong> Оно продлится до '+forumDate(end)+', осталось '+moonHoursMinutes(end-now)+'.';}
