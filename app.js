@@ -140,7 +140,7 @@ function moonHoursMinutes(ms){
   return parts.join(" ");
 }
 function renderMoonStatus(){
-  const now=new Date(),peaks=fullMoonCandidates(now),threshold=.98;
+  const now=new Date(),peaks=fullMoonCandidates(now),threshold=.985;
   const half=Math.acos(2*threshold-1)/(2*Math.PI)*29.530588853*moonDay;
   const active=peaks.find(p=>now>=p-half&&now<=p.valueOf()+half);
   let text;
