@@ -121,11 +121,11 @@ function fullMoonCandidates(now){
   return peaks;
 }
 function forumDate(date,withTime=false){
-  const d=new Date(date.valueOf()+3600000),pad=n=>String(n).padStart(2,"0");
+  const d=new Date(date),pad=n=>String(n).padStart(2,"0");
   return pad(d.getUTCDate())+"."+pad(d.getUTCMonth()+1)+(withTime?", "+pad(d.getUTCHours())+":"+pad(d.getUTCMinutes()):"");
 }
 const forumMoonCycle=29.530588853*moonDay,forumMoonThreshold=.97;
-const forumMoonCalibrationTime=Date.parse("2026-09-25T00:07:41Z"),forumMoonCalibrationFullness=.9687;
+const forumMoonCalibrationTime=Date.parse("2026-09-25T01:07:41Z"),forumMoonCalibrationFullness=.9687;
 const forumMoonReferencePeak=forumMoonCalibrationTime+Math.acos(2*forumMoonCalibrationFullness-1)/(2*Math.PI)*forumMoonCycle;
 const forumMoonThresholdOffset=Math.acos(2*forumMoonThreshold-1)/(2*Math.PI)*forumMoonCycle;
 const positiveModulo=(value,modulo)=>((value%modulo)+modulo)%modulo;
