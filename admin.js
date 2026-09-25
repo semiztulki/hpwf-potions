@@ -48,8 +48,8 @@ function adminDraft(){
   return {
     category,
     level,
-    number:adminNumber("adminNumber"),
-    name:a$("adminName").value.trim()||null,
+    number:category==="special"?null:adminNumber("adminNumber"),
+    name:category==="special"?(a$("adminName").value.trim()||null):null,
     duration,
     toxicity,
     value,
@@ -439,6 +439,8 @@ function adminStatus(text,type=""){
 function adminSyncEffectMode(){
   const isSpecial=a$("adminCategory").value==="special";
   const isCustom=isSpecial&&a$("adminUniqueEffectToggle").checked;
+  a$("adminNumberField").hidden=isSpecial;
+  a$("adminNameField").hidden=!isSpecial;
   a$("adminUniqueEffectToggleWrap").hidden=!isSpecial;
   a$("adminUniqueEffectFields").hidden=!isCustom;
   a$("adminStandardEffects").hidden=isCustom;
