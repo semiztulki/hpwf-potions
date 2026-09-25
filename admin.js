@@ -437,6 +437,7 @@ function adminSyncEffectMode(){
   const isCustom=isSpecial&&a$("adminUniqueEffectToggle").checked;
   a$("adminUniqueEffectToggleWrap").hidden=!isSpecial;
   a$("adminUniqueEffectField").hidden=!isCustom;
+  a$("adminStandardEffects").hidden=isCustom;
   for(const id of ["adminConcentration","adminResistance","adminEfficiency"]) a$(id).disabled=isCustom;
   if(!isSpecial){
     a$("adminUniqueEffectToggle").checked=false;

@@ -621,7 +621,7 @@ function renderLevelView(level){
     +oldSection(level);
 }
 function specialGroupKey(p){
-  if(p.category==="mana"||(p.effects||[]).some(e=>e.type==="mana")) return "mana";
+  if(p.category==="mana"||(p.effects||[]).some(e=>e.type==="mana")) return "other";
   const types=[...new Set((p.effects||[]).map(e=>e.type))];
   if(types.length===0) return "other";
   if(types.length>1) return "mixed";
@@ -643,7 +643,6 @@ function renderSpecialView(){
     +specialSection("Устойчивость","resistance",list)
     +specialSection("Эффективность","efficiency",list)
     +specialSection("Несколько эффектов","mixed",list)
-    +specialSection("Зелья маны","mana",list)
     +specialSection("Прочие","other",list);
 }
 function visiblePotionCount(){
