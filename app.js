@@ -627,9 +627,13 @@ function specialGroupKey(p){
   if(types.length>1) return "mixed";
   return ["concentration","resistance","efficiency"].includes(types[0])?types[0]:"other";
 }
-function flatSpecialSection(title,key,list){
+function flatSpecialList(title,key,list){
   const filtered=filterPotions(list.filter(p=>specialGroupKey(p)===key)).sort((a,b)=>String(potionTitle(a)).localeCompare(potionTitle(b),"ru"));
-  return filtered.length?'<section class="recipe-effect-section"><h3>'+esc(title)+'</h3><div class="duration-content">'+filtered.map(renderPotionCard).join("")+'</div></section>':"";
+  return filtered.length?'<details class="duration-block"><summary><span>'+esc(title)+'</span><span class="duration-count">'+filtered.length+' '+plural(filtered.length,"зелье","зелья","зелий")+'</span></summary><div class="duration-content">'+filtered.map(renderPotionCard).join("")+'</div></details>':"";
+}
+function otherSpecialSection(list){
+  const lists=flatSpecialList("Зелья маны","mana",list)+flatSpecialList("Зелья с уникальными эффектами","other",list);
+  return lists?'<section class="recipe-effect-section"><h3>Прочее</h3>'+lists+'</section>':"";
 }
 function specialSection(title,key,list){
   const filtered=filterPotions(list.filter(p=>specialGroupKey(p)===key));
@@ -649,8 +653,7 @@ function renderSpecialView(){
     +specialSection("Устойчивость","resistance",list)
     +specialSection("Эффективность","efficiency",list)
     +specialSection("Несколько эффектов","mixed",list)
-    +flatSpecialSection("Зелья маны","mana",list)
-    +flatSpecialSection("Зелья с уникальными эффектами","other",list);
+    +otherSpecialSection(list);
 }
 function visiblePotionCount(){
   let list=recipeView==="special"?[...(state.potions.special||[]),...(state.potions.mana||[])]:[
