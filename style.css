@@ -143,7 +143,7 @@ input,select,.check-select summary{min-height:46px;border:1px solid var(--line);
 input::placeholder{color:#8a6bae;opacity:.8}
 input:focus,select:focus,.check-select[open] summary{border-color:var(--accent);box-shadow:0 0 0 3px var(--rose)}
 input[type="checkbox"]{accent-color:var(--accent)}
-.admin-effect-toggle{display:flex;align-items:center;gap:9px;width:max-content;margin:0 0 12px;color:var(--ink);font-weight:700}.admin-effect-toggle input{width:auto;min-height:auto}.admin-unique-effect{display:block;margin-top:12px}.admin-unique-effect textarea{resize:vertical;min-height:84px}
+.admin-effect-toggle{display:flex;align-items:center;gap:9px;width:max-content;margin:0 0 12px;color:var(--ink);font-weight:700}.admin-effect-toggle input{width:auto;min-height:auto}.admin-unique-effect-fields{display:grid;grid-template-columns:minmax(0,1fr) minmax(160px,220px);gap:12px;align-items:end;margin-top:12px}.admin-unique-effect textarea{resize:vertical;min-height:108px}.admin-unique-toxicity{align-self:end}@media(max-width:620px){.admin-unique-effect-fields{grid-template-columns:1fr}}
 .field>span,.field span{color:var(--muted);font-size:.86rem;font-weight:600}
 .check-select-menu{border:0;border-top:3px solid var(--accent);border-radius:9px;background:#fff;box-shadow:6px 6px 0 rgba(138,107,174,.2)}
 .check-select-menu label:hover{background:var(--lavender)}

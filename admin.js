@@ -41,7 +41,10 @@ function adminDraft(){
   const level=adminNumber("adminLevel");
   const duration=a$("adminDuration").value||null;
   const value=adminNumber("adminObservedValue");
-  const toxicity=(level&&duration)?state.mechanics?.toxicity?.byLevel?.[String(level)]?.[duration]??null:null;
+  const hasCustomEffect=category==="special"&&a$("adminUniqueEffectToggle").checked;
+  const toxicity=hasCustomEffect
+    ?adminNumber("adminUniqueToxicity")
+    :(level&&duration)?state.mechanics?.toxicity?.byLevel?.[String(level)]?.[duration]??null:null;
   return {
     category,
     level,
@@ -143,6 +146,7 @@ function adminPopulatePotion(p,overwrite=false){
     a$("adminUniqueEffectToggle").checked=Boolean(custom);
     adminSetField("adminUniqueEffect",custom,overwrite);
   }
+  adminSetField("adminUniqueToxicity",p.toxicity,overwrite);
   adminSyncEffectMode();
   adminSetField("adminDescription",p.description,overwrite);
   adminSetField("adminAuthor",p.author,overwrite);
@@ -436,12 +440,13 @@ function adminSyncEffectMode(){
   const isSpecial=a$("adminCategory").value==="special";
   const isCustom=isSpecial&&a$("adminUniqueEffectToggle").checked;
   a$("adminUniqueEffectToggleWrap").hidden=!isSpecial;
-  a$("adminUniqueEffectField").hidden=!isCustom;
+  a$("adminUniqueEffectFields").hidden=!isCustom;
   a$("adminStandardEffects").hidden=isCustom;
   for(const id of ["adminConcentration","adminResistance","adminEfficiency"]) a$(id).disabled=isCustom;
   if(!isSpecial){
     a$("adminUniqueEffectToggle").checked=false;
     a$("adminUniqueEffect").value="";
+    a$("adminUniqueToxicity").value="";
   }
 }
 function initAdmin(){
@@ -450,7 +455,7 @@ function initAdmin(){
   adminPopulateBuilder();
   adminSyncEffectMode();
 
-  ["adminCategory","adminLevel","adminNumber","adminName","adminDuration","adminObservedValue","adminConcentration","adminResistance","adminEfficiency","adminUniqueEffectToggle","adminUniqueEffect","adminDescription","adminAuthor"]
+  ["adminCategory","adminLevel","adminNumber","adminName","adminDuration","adminObservedValue","adminConcentration","adminResistance","adminEfficiency","adminUniqueEffectToggle","adminUniqueEffect","adminUniqueToxicity","adminDescription","adminAuthor"]
     .forEach(id=>a$(id).addEventListener("input",()=>{
       if(id==="adminCategory"||id==="adminUniqueEffectToggle") adminSyncEffectMode();
       if(["adminCategory","adminLevel","adminNumber","adminName"].includes(id)){

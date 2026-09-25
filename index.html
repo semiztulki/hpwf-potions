@@ -313,10 +313,16 @@
               <label class="field"><span>Устойчивость</span><input id="adminResistance" type="number" step="1" placeholder="+"></label>
               <label class="field"><span>Эффективность, %</span><input id="adminEfficiency" type="number" step="1" placeholder="+"></label>
             </div>
-            <label id="adminUniqueEffectField" class="field admin-unique-effect" hidden>
-              <span>Описание уникального эффекта</span>
-              <textarea id="adminUniqueEffect" rows="3" placeholder="Например: восстанавливает ману или позволяет видеть невидимое"></textarea>
-            </label>
+            <div id="adminUniqueEffectFields" class="admin-unique-effect-fields" hidden>
+              <label class="field admin-unique-effect">
+                <span>Описание уникального эффекта</span>
+                <textarea id="adminUniqueEffect" rows="4" placeholder="Например:&#10;+10% к опыту&#10;+20% регенерации маны&#10;+30% поглощение мощности негативных заклинаний"></textarea>
+              </label>
+              <label class="field admin-unique-toxicity">
+                <span>Токсикация</span>
+                <input id="adminUniqueToxicity" type="number" min="0" step="1" placeholder="Можно оставить пустой">
+              </label>
+            </div>
           </div>
           <div class="admin-grid">
             <label class="field field-wide"><span>Описание или примечание</span><input id="adminDescription" type="text" placeholder="Необязательно"></label>
@@ -387,7 +393,7 @@
   </footer>
   </div>
   <script src="app.js?v=20260925-8" defer></script>
-  <script src="admin.js?v=20260925-2" defer></script>
+  <script src="admin.js?v=20260925-3" defer></script>
   <script src="review.js?v=20260918-1" defer></script>
 </body>
 </html>
