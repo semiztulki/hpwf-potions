@@ -22,6 +22,10 @@ function adminNumber(id){
   return v===""?null:Number(v);
 }
 function adminEffectsDraft(){
+  if(a$("adminCategory").value==="special"&&a$("adminUniqueEffectToggle").checked){
+    const value=a$("adminUniqueEffect").value.trim();
+    return value?[{type:"custom",value,unit:"text"}]:[];
+  }
   const fields=[
     ["adminConcentration","concentration","points"],
     ["adminResistance","resistance","points"],
@@ -68,7 +72,9 @@ function adminSameEffectValues(a,b){
   const keys=new Set([...Object.keys(am),...Object.keys(bm)]);
   for(const k of keys){
     if(!am[k]||!bm[k]) return false;
-    if(Number(am[k].value)!==Number(bm[k].value)) return false;
+    if(k==="custom"){
+      if(norm(am[k].value)!==norm(bm[k].value)) return false;
+    }else if(Number(am[k].value)!==Number(bm[k].value)) return false;
     if((am[k].unit||"")!==(bm[k].unit||"")) return false;
   }
   return true;
@@ -132,6 +138,12 @@ function adminPopulatePotion(p,overwrite=false){
   adminSetField("adminConcentration",effects.concentration?.value,overwrite);
   adminSetField("adminResistance",effects.resistance?.value,overwrite);
   adminSetField("adminEfficiency",effects.efficiency?.value,overwrite);
+  const custom=effects.custom?.value;
+  if(overwrite||custom){
+    a$("adminUniqueEffectToggle").checked=Boolean(custom);
+    adminSetField("adminUniqueEffect",custom,overwrite);
+  }
+  adminSyncEffectMode();
   adminSetField("adminDescription",p.description,overwrite);
   adminSetField("adminAuthor",p.author,overwrite);
 }
@@ -178,6 +190,7 @@ function adminClearForm(){
   adminState.confirmedPotionId=null;
   adminStatus("");
   adminRenderSequence();
+  adminSyncEffectMode();
   adminRenderValidation();
 }
 function adminRenderPotionMatch(){
@@ -247,6 +260,7 @@ function adminValidatePotionDraft(d){
   if(d.category==="special"){
     if(!d.name) errors.push("Для именного или особого зелья укажи название.");
     if(!d.duration) errors.push("Укажи длительность именного или особого зелья.");
+    if(a$("adminUniqueEffectToggle").checked&&!a$("adminUniqueEffect").value.trim()) errors.push("Опиши уникальный эффект.");
   }
   return errors;
 }
@@ -418,13 +432,26 @@ function adminStatus(text,type=""){
   el.textContent=text;
   el.className="admin-status"+(type?" "+type:"");
 }
+function adminSyncEffectMode(){
+  const isSpecial=a$("adminCategory").value==="special";
+  const isCustom=isSpecial&&a$("adminUniqueEffectToggle").checked;
+  a$("adminUniqueEffectToggleWrap").hidden=!isSpecial;
+  a$("adminUniqueEffectField").hidden=!isCustom;
+  for(const id of ["adminConcentration","adminResistance","adminEfficiency"]) a$(id).disabled=isCustom;
+  if(!isSpecial){
+    a$("adminUniqueEffectToggle").checked=false;
+    a$("adminUniqueEffect").value="";
+  }
+}
 function initAdmin(){
   if(adminState.ready||!state.ingredients?.length) return;
   adminState.ready=true;
   adminPopulateBuilder();
+  adminSyncEffectMode();
 
-  ["adminCategory","adminLevel","adminNumber","adminName","adminDuration","adminObservedValue","adminConcentration","adminResistance","adminEfficiency","adminDescription","adminAuthor"]
+  ["adminCategory","adminLevel","adminNumber","adminName","adminDuration","adminObservedValue","adminConcentration","adminResistance","adminEfficiency","adminUniqueEffectToggle","adminUniqueEffect","adminDescription","adminAuthor"]
     .forEach(id=>a$(id).addEventListener("input",()=>{
+      if(id==="adminCategory"||id==="adminUniqueEffectToggle") adminSyncEffectMode();
       if(["adminCategory","adminLevel","adminNumber","adminName"].includes(id)){
         adminState.selectedPotionId=null;
         adminState.confirmedPotionId=null;

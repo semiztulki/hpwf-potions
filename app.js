@@ -6,7 +6,7 @@ const norm=v=>String(v??"").toLowerCase().replaceAll("ё","е").trim();
 const formatXp=v=>v===1?"1 опыт":v===0.5?"1/2 опыта":Math.abs(v-1/3)<0.0001?"1/3 опыта":Math.abs(v-2/3)<0.0001?"2/3 опыта":String(v);
 const esc=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const durationOrder=["5m","1h","5h","1w","1mo","2mo"];
-const effectLabels={concentration:"Концентрация",resistance:"Устойчивость",efficiency:"Эффективность",mana:"Мана"};
+const effectLabels={concentration:"Концентрация",resistance:"Устойчивость",efficiency:"Эффективность",mana:"Мана",custom:"Уникальный эффект"};
 const effectWords={concentration:"концентрации",resistance:"устойчивости",efficiency:"эффективности",mana:"маны"};
 let recipeView="special";
 const recipeFilterState={rangeKey:""};
@@ -402,6 +402,7 @@ function effectValue(p,type){
 }
 function effectLine(e){
   if(!e) return "";
+  if(e.type==="custom"||e.unit==="text") return String(e.value||"");
   const unit=e.unit==="percent"?"%":"";
   return "+"+e.value+unit+" "+(effectWords[e.type]||e.type);
 }

@@ -304,11 +304,19 @@
           <div id="adminPotionSuggestions" class="admin-suggestions"></div>
           <div class="admin-effects">
             <p class="admin-mini-title">Эффекты</p>
+            <label id="adminUniqueEffectToggleWrap" class="admin-effect-toggle" hidden>
+              <input id="adminUniqueEffectToggle" type="checkbox">
+              <span>Уникальный эффект</span>
+            </label>
             <div class="admin-grid">
               <label class="field"><span>Концентрация</span><input id="adminConcentration" type="number" step="1" placeholder="+"></label>
               <label class="field"><span>Устойчивость</span><input id="adminResistance" type="number" step="1" placeholder="+"></label>
               <label class="field"><span>Эффективность, %</span><input id="adminEfficiency" type="number" step="1" placeholder="+"></label>
             </div>
+            <label id="adminUniqueEffectField" class="field admin-unique-effect" hidden>
+              <span>Описание уникального эффекта</span>
+              <textarea id="adminUniqueEffect" rows="3" placeholder="Например: восстанавливает ману или позволяет видеть невидимое"></textarea>
+            </label>
           </div>
           <div class="admin-grid">
             <label class="field field-wide"><span>Описание или примечание</span><input id="adminDescription" type="text" placeholder="Необязательно"></label>
@@ -379,7 +387,7 @@
   </footer>
   </div>
   <script src="app.js?v=20260925-4" defer></script>
-  <script src="admin.js?v=20260918-1" defer></script>
+  <script src="admin.js?v=20260925-1" defer></script>
   <script src="review.js?v=20260918-1" defer></script>
 </body>
 </html>
