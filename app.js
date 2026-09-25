@@ -630,10 +630,12 @@ function specialGroupKey(p){
 function specialSection(title,key,list){
   const filtered=filterPotions(list.filter(p=>specialGroupKey(p)===key));
   if(!filtered.length) return "";
-  const blocks=durationOrder.map(d=>durationBlock(state.mechanics.toxicity.durationLabels[d],filtered.filter(p=>p.duration===d),(a,b)=>{
+  const sorter=(a,b)=>{
     if(["concentration","resistance","efficiency"].includes(key)) return effectValue(a,key)-effectValue(b,key)||String(potionTitle(a)).localeCompare(potionTitle(b),"ru");
     return String(potionTitle(a)).localeCompare(potionTitle(b),"ru");
-  })).join("");
+  };
+  const blocks=durationOrder.map(d=>durationBlock(state.mechanics.toxicity.durationLabels[d],filtered.filter(p=>p.duration===d),sorter)).join("")
+    +durationBlock("Без длительности",filtered.filter(p=>!p.duration),sorter);
   return blocks?'<section class="recipe-effect-section"><h3>'+esc(title)+'</h3>'+blocks+'</section>':"";
 }
 function renderSpecialView(){
