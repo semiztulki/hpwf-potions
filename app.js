@@ -489,8 +489,7 @@ function recipeMatchesAvailability(r){
   return recipeMatchesRarities(r,selectedRecipeRarities())&&recipeMatchesMoon(r,selectedRecipeMoonModes());
 }
 function recipeValueThreshold(){
-  const value=Number($("recipeValueNumber").value);
-  return Number.isFinite(value)?Math.max(0,value):0;
+  return recipeValueSelection;
 }
 function availableRecipesForPotion(p){
   const recipes=recipesForPotion(p.id);
@@ -506,7 +505,7 @@ function recipeValueRatio(p,r){
 }
 function recipesVisibleForPotion(p){
   const recipes=availableRecipesForPotion(p),threshold=recipeValueThreshold();
-  return threshold===0?recipes:recipes.filter(r=>{
+  return threshold<=recipeValueStops[0]?recipes:recipes.filter(r=>{
     const ratio=recipeValueRatio(p,r);
     return ratio!=null&&ratio>=threshold;
   });
@@ -516,30 +515,58 @@ function potionMatchesAvailability(p){
   return availableRecipesForPotion(p).length>0;
 }
 function potionMatchesValue(p){
-  if(recipeValueThreshold()===0)return true;
+  if(recipeValueThreshold()<=recipeValueStops[0])return true;
   return recipesVisibleForPotion(p).length>0;
 }
-let recipeValueCeiling=1;
+let recipeValueStops=[0],recipeValueCategory="",recipeValueSelection=0;
+function recipeValueSteps(values){
+  if(!values.length)return [0];
+  const sorted=[...new Set(values)].sort((a,b)=>a-b),last=sorted.length-1;
+  const quantiles=[0,.1,.2,.3,.4,.5,.6,.7,.8,.9,.95,.975,.99,.995,1];
+  const steps=quantiles.map(q=>sorted[Math.round(q*last)]).concat(sorted.slice(-5));
+  if(sorted[0]<1&&sorted[last]>1)steps.push(1);
+  const distinct=new Map();
+  for(const value of steps.sort((a,b)=>a-b)){
+    const label=value.toFixed(3);
+    if(!distinct.has(label)||value===1||value===sorted[last])distinct.set(label,value);
+  }
+  return [...distinct.values()].sort((a,b)=>a-b);
+}
 function updateRecipeValueControls(){
-  let ceiling=1;
-  for(const p of Object.values(state.potions).flat()){
-    for(const r of recipesForPotion(p.id)){
+  const level=currentRecipeLevel(),era=selectedRecipeEra();
+  const category=recipeView+(level?":"+era:"");
+  const potions=level?[...(state.potions["standard-new"]||[]),...(state.potions["standard-old"]||[])].filter(p=>p.level===level&&(
+    era==="all"||era==="new"&&p.category==="standard_new"||era==="old"&&p.category==="standard_old"
+  )):[...(state.potions.special||[]),...(state.potions.mana||[])];
+  const values=[];
+  for(const p of potions){
+    for(const r of availableRecipesForPotion(p)){
       const ratio=recipeValueRatio(p,r);
-      if(ratio!=null)ceiling=Math.max(ceiling,ratio);
+      if(ratio!=null)values.push(ratio);
     }
   }
-  recipeValueCeiling=Math.ceil(ceiling*100)/100;
+  const previous=recipeValueSelection,changed=recipeValueCategory!==category;
+  recipeValueCategory=category;
+  recipeValueStops=recipeValueSteps(values);
+  const floor=recipeValueStops[0],ceiling=recipeValueStops.at(-1),number=$("recipeValueNumber");
+  number.min=String(floor);number.max=String(ceiling);number.step="any";
+  number.disabled=!values.length||floor===ceiling;
+  recipeValueSelection=changed?floor:Math.max(floor,Math.min(ceiling,previous));
+  number.value=ratioInputValue(recipeValueSelection);
   syncRecipeValueControls();
 }
+function ratioInputValue(value){return String(Number(value.toFixed(3)));}
 function syncRecipeValueControls(){
   const threshold=recipeValueThreshold(),slider=$("recipeValueThreshold");
-  slider.max=String(Math.max(recipeValueCeiling,threshold));
-  slider.value=String(threshold);
-  $("recipeValueCeiling").textContent="×"+formatValueRatio(Number(slider.max));
+  const closest=recipeValueStops.reduce((best,value,index)=>Math.abs(value-threshold)<Math.abs(recipeValueStops[best]-threshold)?index:best,0);
+  slider.min="0";slider.max=String(recipeValueStops.length-1);slider.step="1";
+  slider.value=String(closest);slider.disabled=recipeValueStops.length===1;
+  $("recipeValueFloor").textContent="×"+formatValueRatio(recipeValueStops[0]);
+  $("recipeValueCeiling").textContent="×"+formatValueRatio(recipeValueStops.at(-1));
   $("recipeValueOutput").textContent="×"+formatValueRatio(threshold);
 }
 function formatValueRatio(value){
-  return new Intl.NumberFormat("ru-RU",{maximumFractionDigits:2}).format(value);
+  return new Intl.NumberFormat("ru-RU",{maximumFractionDigits:3}).format(value);
 }
 function recipeEffectNumber(p,type){
   const e=(p.effects||[]).find(x=>x.type===type&&x.value!=null&&x.value!==""&&Number.isFinite(Number(x.value)));
@@ -816,11 +843,20 @@ for(const group of ["recipe-rarity","recipe-moon"]){
 for(const id of ["recipeDurationFilter","recipeEffectFilter"])$(id).addEventListener("change",()=>{recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();});
 for(const id of ["recipeRangeMin","recipeRangeMax"])$(id).addEventListener("input",e=>{syncRecipeRange(e.currentTarget);renderRecipeBrowser();});
 $("recipeValueThreshold").addEventListener("input",e=>{
-  $("recipeValueNumber").value=e.target.value;
+  recipeValueSelection=recipeValueStops[Number(e.target.value)];
+  $("recipeValueNumber").value=ratioInputValue(recipeValueSelection);
   syncRecipeValueControls();renderRecipeBrowser();
 });
 $("recipeValueNumber").addEventListener("input",e=>{
-  if(e.target.value!==""&&Number(e.target.value)<0)e.target.value="0";
+  if(e.target.value==="")return;
+  const value=Number(e.target.value),floor=recipeValueStops[0],ceiling=recipeValueStops.at(-1);
+  if(!Number.isFinite(value))return;
+  recipeValueSelection=Math.max(floor,Math.min(ceiling,value));
+  if(value>ceiling)e.target.value=ratioInputValue(ceiling);
+  syncRecipeValueControls();renderRecipeBrowser();
+});
+$("recipeValueNumber").addEventListener("change",e=>{
+  e.target.value=ratioInputValue(recipeValueSelection);
   syncRecipeValueControls();renderRecipeBrowser();
 });
 document.querySelectorAll(".recipe-view-btn").forEach(btn=>btn.addEventListener("click",()=>{
