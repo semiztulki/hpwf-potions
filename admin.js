@@ -457,6 +457,7 @@ async function adminSubmitRecipe(){
   }
   state.recipes[key].push({id:result.recipeId,potionId:result.potionId,sequence:adminState.sequence.map(x=>({...x})),source:{file:"Добавлено через форму",line:null},validation:{status:"ok",issues:[]}});
   renderRecipeBrowser();
+  renderWantedBrowser();
   adminState.sequence=[];
   adminState.confirmedPotionId=null;
   adminState.selectedPotionId=null;
