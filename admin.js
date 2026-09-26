@@ -60,12 +60,32 @@ function adminDraft(){
   };
 }
 function adminPopulateBuilder(){
-  a$("adminIngredientSelect").innerHTML=state.ingredients.slice()
-    .sort((a,b)=>a.level-b.level||a.rarity.localeCompare(b.rarity)||a.name.localeCompare(b.name,"ru"))
-    .map(x=>'<option value="'+esc(x.id)+'">'+x.level+' уровень · '+esc(adminRarityLabel(x.rarity))+' — '+esc(x.name)+'</option>')
-    .join("");
-  a$("adminActionSelect").innerHTML=state.actions.filter(x=>x.kind==="action").sort((a,b)=>a.level-b.level)
-    .map(x=>'<option value="'+esc(x.id)+'">'+x.level+' уровень — '+esc(x.name)+'</option>').join("");
+  const count=adminState.sequence.filter(x=>x.type==="ingredient").length;
+  a$("adminIngredientRows").innerHTML=[1,2,3].map(level=>{
+    const items=state.ingredients.filter(x=>Number(x.level)===level).sort((a,b)=>testBrewRarityOrder[a.rarity]-testBrewRarityOrder[b.rarity]||potionCollator.compare(a.name,b.name));
+    return '<section class="test-brew-level"><h3>'+level+' уровень</h3><div class="test-brew-choice-row">'+items.map(x=>testBrewChoice(x,"ingredient").replace('data-test-brew-type=',(count>=11?'disabled ':'')+'data-admin-type=')).join("")+'</div></section>';
+  }).join("");
+  const actions=state.actions.filter(x=>x.kind==="action").sort((a,b)=>a.level-b.level);
+  const moon=state.actions.find(x=>x.kind==="moon")||{id:"full-moon",name:"Свет полной луны",imageUrl:"assets/catalog/full-moon.png"};
+  a$("adminActionRow").innerHTML=actions.map(x=>testBrewChoice(x,"action").replace('data-test-brew-type=','data-admin-type=')).join("")
+    +testBrewChoice(moon,"moon").replace('data-test-brew-type=','data-admin-type=').replace(/ disabled(?=>)/,'');
+  a$("adminIngredientRows").querySelectorAll("[data-test-brew-ref]").forEach(x=>{x.dataset.adminRef=x.dataset.testBrewRef;delete x.dataset.testBrewRef;});
+  a$("adminActionRow").querySelectorAll("[data-test-brew-ref]").forEach(x=>{x.dataset.adminRef=x.dataset.testBrewRef;delete x.dataset.testBrewRef;});
+  if(adminState.sequence.some(x=>x.type==="moon")) a$("adminActionRow").querySelector('[data-admin-type="moon"]').disabled=true;
+}
+function adminParseRecipe(raw){
+  const parts=raw.split("+").map(x=>x.trim().replace(/\s+/g," "));
+  if(!raw.trim()||parts.some(x=>!x))throw new Error("Проверь последовательность: между знаками + должен быть ингредиент или действие.");
+  const lookup=new Map();
+  for(const item of state.ingredients)lookup.set(norm(item.name),{type:"ingredient",ref:item.id});
+  for(const item of state.actions)lookup.set(norm(item.name),{type:item.kind==="moon"?"moon":"action",ref:item.id});
+  lookup.set(norm("Свет полной луны"),{type:"moon",ref:"full-moon"});
+  const unknown=[...new Set(parts.filter(x=>!lookup.has(norm(x))))];
+  if(unknown.length)throw new Error("Не найдены в каталоге: "+unknown.join(", ")+". Рецепт не изменён.");
+  const sequence=parts.map(x=>({...lookup.get(norm(x))}));
+  if(sequence.filter(x=>x.type==="ingredient").length>11)throw new Error("В рецепте больше 11 ингредиентов. Рецепт не изменён.");
+  if(sequence.filter(x=>x.type==="moon").length>1)throw new Error("Свет полной луны указан более одного раза. Рецепт не изменён.");
+  return sequence;
 }
 function adminEffectMap(effects){
   return Object.fromEntries((effects||[]).map(e=>[e.type,e]));
@@ -234,6 +254,7 @@ function adminRenderSequence(){
   const box=a$("adminSequence");
   const count=adminState.sequence.filter(x=>x.type==="ingredient").length;
   a$("adminIngredientCount").textContent=count+" / 11";
+  adminPopulateBuilder();
   if(!adminState.sequence.length){
     box.className="admin-sequence empty";
     box.textContent="Рецепт пока пуст.";
@@ -322,6 +343,8 @@ function adminRenderValidation(){
   return v;
 }
 function adminAdd(item){
+  if(item.type==="ingredient"&&adminState.sequence.filter(x=>x.type==="ingredient").length>=11)return;
+  if(item.type==="moon"&&adminState.sequence.some(x=>x.type==="moon"))return;
   adminState.sequence.push(item);
   adminRenderSequence();
 }
@@ -477,9 +500,25 @@ function initAdmin(){
   });
   a$("adminClearForm").addEventListener("click",adminClearForm);
 
-  a$("adminAddIngredient").addEventListener("click",()=>adminAdd({type:"ingredient",ref:a$("adminIngredientSelect").value}));
-  a$("adminAddAction").addEventListener("click",()=>adminAdd({type:"action",ref:a$("adminActionSelect").value}));
-  a$("adminAddMoon").addEventListener("click",()=>adminAdd({type:"moon",ref:"full-moon"}));
+  a$("adminIngredientRows").parentElement.addEventListener("click",e=>{
+    const btn=e.target.closest("[data-admin-type]");
+    if(btn&&!btn.disabled)adminAdd({type:btn.dataset.adminType,ref:btn.dataset.adminRef});
+  });
+  a$("adminImportToggle").addEventListener("click",()=>{
+    const panel=a$("adminImportPanel"),open=panel.hidden;
+    panel.hidden=!open;
+    a$("adminImportToggle").setAttribute("aria-expanded",String(open));
+    if(open)a$("adminImportText").focus();
+  });
+  a$("adminImportApply").addEventListener("click",()=>{
+    const status=a$("adminImportStatus");
+    try{
+      adminState.sequence=adminParseRecipe(a$("adminImportText").value);
+      status.className="admin-status success";
+      status.textContent="Последовательность вставлена. Проверь её перед сохранением.";
+      adminRenderSequence();
+    }catch(error){status.className="admin-status error";status.textContent=error.message;}
+  });
 
   a$("adminSequence").addEventListener("click",e=>{
     const btn=e.target.closest("[data-seq-action]");
