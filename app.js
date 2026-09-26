@@ -523,7 +523,7 @@ function recipeValueSteps(values){
   if(!values.length)return [0];
   const floor=Math.min(...values),ceiling=Math.max(...values),steps=[floor];
   if(floor===ceiling)return steps;
-  const bands=[[0,1.5,.1],[1.5,3,.25],[3,5,.5],[5,10,1],[10,25,2.5],[25,50,5],[50,Infinity,10]];
+  const bands=[[0,2,.25],[2,5,.5],[5,10,1],[10,25,2.5],[25,50,5],[50,Infinity,10]];
   for(const [from,to,increment] of bands){
     const first=Math.ceil((Math.max(floor,from)-1e-9)/increment);
     const last=Math.floor((Math.min(ceiling,to)+1e-9)/increment);
