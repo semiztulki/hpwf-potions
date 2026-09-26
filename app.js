@@ -519,9 +519,9 @@ function potionMatchesValue(p){
   return recipesVisibleForPotion(p).length>0;
 }
 let recipeValueStops=[0],recipeValueCategory="",recipeValueSelection=0;
-function recipeValueSteps(values){
-  if(!values.length)return [0];
-  const floor=Math.min(...values),ceiling=Math.max(...values),steps=[floor];
+function recipeValueSteps(bestValues,floor){
+  if(!bestValues.length)return [0];
+  const ordered=[...bestValues].sort((a,b)=>a-b),sorted=[...new Set(ordered)],ceiling=sorted.at(-1),steps=[floor],grid=[];
   if(floor===ceiling)return steps;
   const bands=[[0,2,.25],[2,5,.5],[5,10,1],[10,25,2.5],[25,50,5],[50,Infinity,10]];
   for(const [from,to,increment] of bands){
@@ -529,11 +529,33 @@ function recipeValueSteps(values){
     const last=Math.floor((Math.min(ceiling,to)+1e-9)/increment);
     for(let n=first;n<=last;n++){
       const value=Number((n*increment).toFixed(3));
-      if(value>floor+1e-9&&value<ceiling-1e-9)steps.push(value);
+      if(value>floor+1e-9&&value<ceiling-1e-9)grid.push(value);
     }
   }
-  steps.push(ceiling);
-  return [...new Set(steps)].sort((a,b)=>a-b);
+  let lowestRemaining=sorted[0];
+  for(const target of [...new Set(grid)].sort((a,b)=>a-b)){
+    if(target<=steps.at(-1)+1e-9)continue;
+    const next=sorted.find(value=>value>=target-1e-9&&value>lowestRemaining+1e-9);
+    if(next!=null){steps.push(next);lowestRemaining=next;}
+  }
+  if(steps.at(-1)<ceiling)steps.push(ceiling);
+  const countAt=value=>{
+    let low=0,high=ordered.length;
+    while(low<high){const mid=(low+high)>>1;if(ordered[mid]<value)low=mid+1;else high=mid;}
+    return ordered.length-low;
+  };
+  const maxDrop=Math.max(15,Math.ceil(ordered.length/8)),refined=[steps[0]];
+  for(const end of steps.slice(1)){
+    let start=refined.at(-1),remaining=countAt(start);
+    while(remaining-countAt(end)>maxDrop){
+      const target=remaining-maxDrop;
+      const next=sorted.find(value=>value>start+1e-9&&value<end-1e-9&&value.toFixed(3)!==start.toFixed(3)&&countAt(value)<=target);
+      if(next==null)break;
+      refined.push(next);start=next;remaining=countAt(start);
+    }
+    refined.push(end);
+  }
+  return refined;
 }
 function updateRecipeValueControls(){
   const level=currentRecipeLevel(),era=selectedRecipeEra();
@@ -541,16 +563,18 @@ function updateRecipeValueControls(){
   const potions=level?[...(state.potions["standard-new"]||[]),...(state.potions["standard-old"]||[])].filter(p=>p.level===level&&(
     era==="all"||era==="new"&&p.category==="standard_new"||era==="old"&&p.category==="standard_old"
   )):[...(state.potions.special||[]),...(state.potions.mana||[])];
-  const values=[];
+  const values=[],bestValues=[];
   for(const p of potions){
+    let best=null;
     for(const r of availableRecipesForPotion(p)){
       const ratio=recipeValueRatio(p,r);
-      if(ratio!=null)values.push(ratio);
+      if(ratio!=null){values.push(ratio);best=best==null?ratio:Math.max(best,ratio);}
     }
+    if(best!=null)bestValues.push(best);
   }
   const previous=recipeValueSelection,changed=recipeValueCategory!==category;
   recipeValueCategory=category;
-  recipeValueStops=recipeValueSteps(values);
+  recipeValueStops=recipeValueSteps(bestValues,values.length?Math.min(...values):0);
   const floor=recipeValueStops[0],ceiling=recipeValueStops.at(-1),number=$("recipeValueNumber");
   number.min=String(floor);number.max=String(ceiling);number.step="any";
   number.disabled=!values.length||floor===ceiling;
