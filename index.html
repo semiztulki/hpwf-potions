@@ -263,8 +263,8 @@
               <div class="recipe-value-layout">
                 <div class="recipe-value-slider">
                   <label for="recipeValueThreshold">Коэффициент не ниже <output id="recipeValueOutput">×0</output></label>
-                  <input id="recipeValueThreshold" type="range" min="0" max="1" step="0.01" value="0">
-                  <div class="recipe-range-limits"><span>×0</span><span id="recipeValueCeiling">×1</span></div>
+                  <input id="recipeValueThreshold" type="range" min="0" max="1" step="1" value="0">
+                  <div class="recipe-range-limits"><span id="recipeValueFloor">×0</span><span id="recipeValueCeiling">×1</span></div>
                 </div>
                 <label class="field recipe-value-number"><span>Точное значение</span><input id="recipeValueNumber" type="number" min="0" step="0.01" value="0" inputmode="decimal"></label>
               </div>
@@ -403,7 +403,7 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260926-1" defer></script>
+  <script src="app.js?v=20260926-2" defer></script>
   <script src="admin.js?v=20260925-6" defer></script>
   <script src="review.js?v=20260918-1" defer></script>
 </body>
