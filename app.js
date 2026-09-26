@@ -37,9 +37,11 @@ function showAccessScreen(){
   showPortalScreen("accessScreen");
   $("entryPassword").value="";
   $("entryLoginStatus").textContent="";
+  $("wantedResults").replaceChildren();
+  $("wantedCount").hidden=true;
 }
 function openFunctionalTab(id){
-  if(["potions","test-brew","add-recipe","review"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
+  if(["potions","test-brew","add-recipe","review","wanted"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
   document.querySelectorAll(".tab,.tab-panel").forEach(x=>x.classList.remove("active"));
   const navButton=document.querySelector('.tab[data-tab="'+id+'"]');
   if(navButton) navButton.classList.add("active");
@@ -449,6 +451,9 @@ function recipesForPotion(potionId){
   }
   return recipeIndex.get(potionId)||[];
 }
+function hasKnownRecipe(p){
+  return recipesForPotion(p.id).some(r=>Array.isArray(r.sequence)&&r.sequence.length>0);
+}
 function currentRecipeLevel(){
   return recipeView.startsWith("level")?Number(recipeView.replace("level","")):null;
 }
@@ -492,7 +497,7 @@ function recipeValueThreshold(){
   return recipeValueSelection;
 }
 function availableRecipesForPotion(p){
-  const recipes=recipesForPotion(p.id);
+  const recipes=recipesForPotion(p.id).filter(r=>Array.isArray(r.sequence)&&r.sequence.length>0);
   if(recipeAvailabilityIsDefault())return recipes;
   return recipes.filter(recipeMatchesAvailability);
 }
@@ -699,6 +704,7 @@ function durationBlock(title,potions,sorter){
 function filterPotions(list){
   const q=norm($("recipeSearch").value);
   if(!currentRecipeLevel())return list.filter(p=>{
+    if(!hasKnownRecipe(p))return false;
     if(!potionMatchesAvailability(p))return false;
     if(!potionMatchesValue(p))return false;
     const recipes=recipesVisibleForPotion(p);
@@ -708,6 +714,7 @@ function filterPotions(list){
   const rangeActive=era==="new"&&duration&&effect&&!$("recipeEffectRange").hidden;
   const from=rangeActive?Number($("recipeRangeMin").value):null,to=rangeActive?Number($("recipeRangeMax").value):null;
   return list.filter(p=>{
+    if(!hasKnownRecipe(p))return false;
     if(era==="new"&&p.category!=="standard_new")return false;
     if(era==="old"&&p.category!=="standard_old")return false;
     if(!potionMatchesAvailability(p))return false;
@@ -799,6 +806,33 @@ function renderRecipeBrowser(){
   if(!$("recipeBrowser").innerHTML.trim()) $("recipeBrowser").innerHTML='<div class="panel empty-state">По этому запросу ничего не найдено.</div>';
 }
 
+function wantedUrl(value){
+  if(!value)return null;
+  try{
+    const url=new URL(String(value),location.href);
+    return ["https:","http:"].includes(url.protocol)?url.href:null;
+  }catch{return null;}
+}
+function wantedPotionCard(p){
+  const title=potionTitle(p),image=wantedUrl(p.imageUrl),link=wantedUrl(p.marketUrl||(p.sources||[]).find(s=>s.url)?.url);
+  const badges=[p.level?`${p.level} уровень`:null,p.duration?(state.mechanics?.toxicity?.durationLabels?.[p.duration]||p.duration):null,p.toxicity==null?null:`токсикация ${p.toxicity}`].filter(Boolean);
+  return '<article class="panel wanted-card">'
+    +'<div class="wanted-picture">'+(image?'<img src="'+esc(image)+'" alt="Изображение: '+esc(title)+'" loading="lazy">':'<span aria-hidden="true">?</span>')+'</div>'
+    +'<div class="wanted-details"><div class="wanted-card-head"><h3>'+esc(title)+'</h3><div class="badges">'+badges.map(x=>'<span class="badge">'+esc(x)+'</span>').join("")+'</div></div>'
+    +(p.effects?.length?'<p class="potion-effect">'+esc(potionEffectSummary(p))+'</p>':'')
+    +(p.description?'<p class="wanted-description">'+esc(p.description)+'</p>':'')
+    +(p.value!=null?'<p class="wanted-value">Истинная ценность: '+fmt(p.value)+'</p>':'')
+    +(link?'<a class="wanted-link" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">Запись на форуме ↗</a>':'')
+    +'</div></article>';
+}
+function renderWantedBrowser(){
+  const all=Object.values(state.potions).flat().filter(p=>!hasKnownRecipe(p)),q=norm($("wantedSearch").value);
+  const found=all.filter(p=>!q||norm([potionTitle(p),p.number,p.level,p.duration,p.value,p.description,potionEffectSummary(p)].join(" ")).includes(q)).sort(comparePotions);
+  $("wantedCount").textContent=found.length+" "+plural(found.length,"зелье","зелья","зелий");
+  $("wantedCount").hidden=false;
+  $("wantedResults").innerHTML=found.length?found.map(wantedPotionCard).join(""):'<div class="panel empty-state">'+(all.length?'По этому запросу ничего не найдено.':'Пока нет зелий без известного рецепта.')+'</div>';
+}
+
 async function loadPrivateData(password){
   const call=async(path,body={})=>{
     const r=await fetch("https://hpwf-potions-editor-api-siidraen-3125.vercel.app/api"+path,{
@@ -819,6 +853,7 @@ async function loadPrivateData(password){
   state.potions=potions;state.recipes=recipes;
   updateRecipeFilterControls();
   renderRecipeBrowser();
+  renderWantedBrowser();
   document.dispatchEvent(new CustomEvent("hpwf:private-data-ready"));
 }
 
@@ -833,6 +868,7 @@ async function load(){
   }catch(e){$("dataStatus").title="Не удалось загрузить справочник";}
 }
 $("dataStatus").addEventListener("click",()=>showHome());
+$("wantedSearch").addEventListener("input",renderWantedBrowser);
 function updateCheckSelect(input){
   const root=input.closest(".check-select"),all=root.querySelector("[data-filter-all]"),specific=[...root.querySelectorAll(".ingredient-filter:not([data-filter-all])")];
   if(input===all&&all.checked) specific.forEach(x=>x.checked=false);
