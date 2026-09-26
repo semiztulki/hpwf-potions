@@ -321,6 +321,7 @@ tbody tr:hover{background:#f5f0fa}
 .test-brew-ingredient-rows{display:grid;gap:20px}
 .test-brew-level h3,.test-brew-action-section h3{margin:0 0 10px;color:var(--muted);font:700 .88rem/1.3 var(--font-body);letter-spacing:.08em;text-transform:uppercase}
 .test-brew-choice-row{display:flex;gap:9px;min-width:0;padding:2px 2px 8px;overflow-x:auto;scrollbar-color:var(--lavender-deep) transparent}
+.admin-builder{padding:18px;border-radius:14px}.admin-import{display:grid;gap:10px}.admin-import [hidden]{display:none}.admin-import #adminImportPanel{display:grid;gap:10px}.admin-import #adminImportPanel[hidden]{display:none}.admin-import textarea{width:100%;min-height:90px}.admin-import #adminImportApply{justify-self:start}
 .test-brew-choice{position:relative;display:grid;flex:0 0 64px;width:64px;height:64px;place-items:center;padding:7px;border:0;border-radius:11px;background:#fff;box-shadow:3px 3px 0 var(--line);cursor:pointer;transition:transform .14s ease,box-shadow .14s ease,background-color .14s ease}
 .test-brew-choice:hover,.test-brew-choice:focus-visible{z-index:1;background:var(--cream);transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--peach)}
 .test-brew-choice:disabled{cursor:not-allowed;filter:grayscale(.65);opacity:.42;transform:none;box-shadow:2px 2px 0 var(--line)}
