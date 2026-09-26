@@ -336,17 +336,16 @@
             <div><p class="eyebrow">Шаг 2</p><h3>Собрать рецепт</h3></div>
             <span id="adminIngredientCount" class="count-pill">0 / 11</span>
           </div>
-          <div class="admin-builder">
-            <div class="admin-add-row">
-              <select id="adminIngredientSelect" aria-label="Ингредиент"></select>
-              <button type="button" id="adminAddIngredient" class="admin-secondary-btn">Добавить ингредиент</button>
-            </div>
-            <div class="admin-add-row">
-              <select id="adminActionSelect" aria-label="Действие"></select>
-              <button type="button" id="adminAddAction" class="admin-secondary-btn">Добавить действие</button>
-            </div>
-            <div class="admin-add-row">
-              <button type="button" id="adminAddMoon" class="admin-secondary-btn">Добавить Свет полной луны</button>
+          <div class="admin-builder test-brew-palette">
+            <div id="adminIngredientRows" class="test-brew-ingredient-rows"></div>
+            <div class="test-brew-action-section"><h3>Действия и полнолуние</h3><div id="adminActionRow" class="test-brew-choice-row"></div></div>
+          </div>
+          <div class="admin-import">
+            <button type="button" id="adminImportToggle" class="admin-secondary-btn" aria-expanded="false" aria-controls="adminImportPanel">Вставить рецепт в текстовом виде</button>
+            <div id="adminImportPanel" hidden>
+              <label class="field"><span>Последовательность с форума</span><textarea id="adminImportText" rows="4" placeholder="Капля родниковой воды+Капля родниковой воды+Нагревание+Белладонна+Белладонна+Молодая еловая шишка+Нагревание+Капля родниковой воды+Глаз змеи+Молодая еловая шишка+Нагревание+Капля родниковой воды+Белладонна+Белладонна"></textarea></label>
+              <button type="button" id="adminImportApply" class="admin-primary-btn">Вставить в рецепт</button>
+              <div id="adminImportStatus" class="admin-status" role="status"></div>
             </div>
           </div>
           <div id="adminSequence" class="admin-sequence empty"></div>
@@ -393,7 +392,7 @@
   </footer>
   </div>
   <script src="app.js?v=20260925-8" defer></script>
-  <script src="admin.js?v=20260925-4" defer></script>
+  <script src="admin.js?v=20260925-5" defer></script>
   <script src="review.js?v=20260918-1" defer></script>
 </body>
 </html>
