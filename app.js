@@ -588,6 +588,8 @@ function syncRecipeValueControls(){
   const closest=recipeValueStops.reduce((best,value,index)=>Math.abs(value-threshold)<Math.abs(recipeValueStops[best]-threshold)?index:best,0);
   slider.min="0";slider.max=String(recipeValueStops.length-1);slider.step="1";
   slider.value=String(closest);slider.disabled=recipeValueStops.length===1;
+  slider.style.setProperty("--value-fill",closest/Math.max(1,recipeValueStops.length-1)*100+"%");
+  slider.setAttribute("aria-valuetext","×"+formatValueRatio(threshold));
   $("recipeValueFloor").textContent="×"+formatValueRatio(recipeValueStops[0]);
   $("recipeValueCeiling").textContent="×"+formatValueRatio(recipeValueStops.at(-1));
   $("recipeValueOutput").textContent="×"+formatValueRatio(threshold);
