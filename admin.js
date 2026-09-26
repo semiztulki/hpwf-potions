@@ -321,6 +321,17 @@ function adminValidation(){
     const duplicate=Object.values(state.recipes).flat().some(r=>r.potionId===match.potion.id&&adminSequenceSignature(r.sequence)===sig);
     if(duplicate) errors.push("Такой рецепт у этого зелья уже есть в базе.");
   }
+  if(d.category==="standard_new"&&seq.length){
+    const sig=adminSequenceSignature(seq);
+    const other=Object.values(state.recipes).flat().find(r=>{
+      if(adminSequenceSignature(r.sequence)!==sig||r.potionId===match.potion?.id) return false;
+      return (state.potions["standard-new"]||[]).some(p=>p.id===r.potionId);
+    });
+    if(other){
+      const potion=(state.potions["standard-new"]||[]).find(p=>p.id===other.potionId);
+      errors.push("Такая последовательность уже записана у зелья «"+potionTitle(potion)+"». Сверь уровень, эффект и исходную запись перед добавлением.");
+    }
+  }
 
   const nominal=seq.reduce((sum,x)=>sum+(x.type==="ingredient"?Number(im[x.ref]?.basePower||0):0),0);
   if(seq.length&&errors.length===0){
