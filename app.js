@@ -422,15 +422,32 @@ function recipeItems(r){
 }
 function nominalRecipeValue(r){
   const im=Object.fromEntries(state.ingredients.map(x=>[x.id,x]));
-  let total=0,moon=false;
+  let total=0,moon=false,complete=true;
   for(const item of (r.sequence||[])){
-    if(item.type==="ingredient") total+=Number(im[item.ref]?.basePower||0);
+    if(item.type==="ingredient"){
+      if(im[item.ref])total+=Number(im[item.ref].basePower||0);
+      else complete=false;
+    }
     if(item.type==="moon") moon=true;
+    if(item.type==="unresolved")complete=false;
   }
-  return {total,moon};
+  return {total,moon,complete};
 }
+function calculatedRecipeValue(r){
+  const estimate=nominalRecipeValue(r);
+  return estimate.complete?estimate.total+(estimate.moon?225:0):null;
+}
+let recipeIndexSource=null,recipeIndexCount=0,recipeIndex=new Map();
 function recipesForPotion(potionId){
-  return Object.values(state.recipes).flat().filter(r=>r.potionId===potionId);
+  const groups=Object.values(state.recipes),count=groups.reduce((sum,group)=>sum+group.length,0);
+  if(recipeIndexSource!==state.recipes||recipeIndexCount!==count){
+    recipeIndexSource=state.recipes;recipeIndexCount=count;recipeIndex=new Map();
+    for(const group of groups)for(const recipe of group){
+      if(!recipeIndex.has(recipe.potionId))recipeIndex.set(recipe.potionId,[]);
+      recipeIndex.get(recipe.potionId).push(recipe);
+    }
+  }
+  return recipeIndex.get(potionId)||[];
 }
 function currentRecipeLevel(){
   return recipeView.startsWith("level")?Number(recipeView.replace("level","")):null;
@@ -471,14 +488,58 @@ function recipeAvailabilityIsDefault(){
 function recipeMatchesAvailability(r){
   return recipeMatchesRarities(r,selectedRecipeRarities())&&recipeMatchesMoon(r,selectedRecipeMoonModes());
 }
-function recipesVisibleForPotion(p){
+function recipeValueThreshold(){
+  const value=Number($("recipeValueNumber").value);
+  return Number.isFinite(value)?Math.max(0,value):0;
+}
+function availableRecipesForPotion(p){
   const recipes=recipesForPotion(p.id);
   if(recipeAvailabilityIsDefault())return recipes;
   return recipes.filter(recipeMatchesAvailability);
 }
+function recipeValueRatio(p,r){
+  if(p.value==null||!Number.isFinite(Number(p.value)))return 1;
+  const estimate=calculatedRecipeValue(r);
+  if(estimate==null)return null;
+  if(estimate<=0)return Number(p.value)===0?0:null;
+  return Number(p.value)/estimate;
+}
+function recipesVisibleForPotion(p){
+  const recipes=availableRecipesForPotion(p),threshold=recipeValueThreshold();
+  return threshold===0?recipes:recipes.filter(r=>{
+    const ratio=recipeValueRatio(p,r);
+    return ratio!=null&&ratio>=threshold;
+  });
+}
 function potionMatchesAvailability(p){
   if(recipeAvailabilityIsDefault())return true;
+  return availableRecipesForPotion(p).length>0;
+}
+function potionMatchesValue(p){
+  if(recipeValueThreshold()===0)return true;
   return recipesVisibleForPotion(p).length>0;
+}
+let recipeValueCeiling=1;
+function updateRecipeValueControls(){
+  let ceiling=1;
+  for(const p of Object.values(state.potions).flat()){
+    for(const r of recipesForPotion(p.id)){
+      const ratio=recipeValueRatio(p,r);
+      if(ratio!=null)ceiling=Math.max(ceiling,ratio);
+    }
+  }
+  recipeValueCeiling=Math.ceil(ceiling*100)/100;
+  syncRecipeValueControls();
+}
+function syncRecipeValueControls(){
+  const threshold=recipeValueThreshold(),slider=$("recipeValueThreshold");
+  slider.max=String(Math.max(recipeValueCeiling,threshold));
+  slider.value=String(threshold);
+  $("recipeValueCeiling").textContent="×"+formatValueRatio(Number(slider.max));
+  $("recipeValueOutput").textContent="×"+formatValueRatio(threshold);
+}
+function formatValueRatio(value){
+  return new Intl.NumberFormat("ru-RU",{maximumFractionDigits:2}).format(value);
 }
 function recipeEffectNumber(p,type){
   const e=(p.effects||[]).find(x=>x.type===type&&x.value!=null&&x.value!==""&&Number.isFinite(Number(x.value)));
@@ -512,6 +573,7 @@ function updateRecipeFilterControls(){
   const level=currentRecipeLevel(),panel=$("recipeAdvancedFilters");
   panel.hidden=false;
   document.querySelector(".recipe-era-filter").hidden=!level;
+  updateRecipeValueControls();
   if(!level){
     $("newPotionFilters").hidden=true;
     $("recipeEffectRange").hidden=true;
@@ -559,11 +621,12 @@ function renderPotionCard(p){
   const rs=recipesVisibleForPotion(p);
   const observed=p.value!=null;
   const recipeHtml=rs.map((r,i)=>{
-    const est=nominalRecipeValue(r);
-    const estimate=!observed?'<div class="recipe-estimate">Расчётная ценность: '+fmt(est.total)+(est.moon?' + Луна 0–450':'')+'</div>':"";
+    const est=nominalRecipeValue(r),calculated=calculatedRecipeValue(r);
+    const ratio=recipeValueRatio(p,r);
+    const estimate='<div class="recipe-estimate">Расчётная ценность: '+(calculated==null?'нет данных':fmt(calculated))+(est.moon&&calculated!=null?' (Луна: +225 в среднем)':'')+(ratio==null?'':' · ×'+formatValueRatio(ratio)+(observed?'':' <abbr title="Условная оценка: фактическая ценность неизвестна">(У)</abbr>'))+'</div>';
     return '<div class="recipe-line"><span class="recipe-number">'+(rs.length>1?(i+1)+".":"")+'</span><div><div class="recipe-sequence">'+recipeItems(r)+'</div>'+estimate+'</div></div>';
   }).join("");
-  const valueHtml=observed?'<p class="potion-value">Ценность: '+fmt(p.value)+'</p>':"";
+  const valueHtml=observed?'<p class="potion-value">Фактическая ценность: '+fmt(p.value)+'</p>':"";
   const meta=[state.mechanics?.toxicity?.durationLabels?.[p.duration]||p.duration,p.toxicity==null?null:"токсикация "+p.toxicity].filter(Boolean);
   return '<article class="potion-card">'
     +'<div class="potion-card-head"><div><h4>'+esc(potionTitle(p))+'</h4><p class="potion-effect">'+esc(potionEffectSummary(p))+'</p></div>'
@@ -581,6 +644,7 @@ function filterPotions(list){
   const q=norm($("recipeSearch").value);
   if(!currentRecipeLevel())return list.filter(p=>{
     if(!potionMatchesAvailability(p))return false;
+    if(!potionMatchesValue(p))return false;
     const recipes=recipesVisibleForPotion(p);
     return !q||potionSearchText(p,recipes).includes(q);
   });
@@ -591,6 +655,7 @@ function filterPotions(list){
     if(era==="new"&&p.category!=="standard_new")return false;
     if(era==="old"&&p.category!=="standard_old")return false;
     if(!potionMatchesAvailability(p))return false;
+    if(!potionMatchesValue(p))return false;
     if(era==="new"){
       if(duration&&p.duration!==duration)return false;
       if(effect&&recipeEffectNumber(p,effect)==null)return false;
@@ -750,6 +815,14 @@ for(const group of ["recipe-rarity","recipe-moon"]){
 }
 for(const id of ["recipeDurationFilter","recipeEffectFilter"])$(id).addEventListener("change",()=>{recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();});
 for(const id of ["recipeRangeMin","recipeRangeMax"])$(id).addEventListener("input",e=>{syncRecipeRange(e.currentTarget);renderRecipeBrowser();});
+$("recipeValueThreshold").addEventListener("input",e=>{
+  $("recipeValueNumber").value=e.target.value;
+  syncRecipeValueControls();renderRecipeBrowser();
+});
+$("recipeValueNumber").addEventListener("input",e=>{
+  if(e.target.value!==""&&Number(e.target.value)<0)e.target.value="0";
+  syncRecipeValueControls();renderRecipeBrowser();
+});
 document.querySelectorAll(".recipe-view-btn").forEach(btn=>btn.addEventListener("click",()=>{
   document.querySelectorAll(".recipe-view-btn").forEach(x=>x.classList.remove("active"));
   btn.classList.add("active");
