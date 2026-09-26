@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260926-2">
+  <link rel="stylesheet" href="style.css?v=20260926-3">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -43,6 +43,7 @@
         <button type="button" data-home-tab="add-recipe" data-auth-only>Добавить рецепт</button>
         <button type="button" data-home-tab="review" data-auth-only>На проверку</button>
         <button type="button" data-home-tab="mechanics">Советы и секреты</button>
+        <button type="button" data-home-tab="wanted" data-auth-only>Wanted</button>
       </div>
     </div>
   </section>
@@ -71,6 +72,7 @@
     <button class="tab" data-tab="add-recipe" data-auth-only>Добавить рецепт</button>
     <button class="tab" data-tab="review" data-auth-only>На проверку</button>
     <button class="tab" data-tab="mechanics">Советы и секреты</button>
+    <button class="tab" data-tab="wanted" data-auth-only>Wanted</button>
   </nav>
   <main class="wrap">
     <section id="ingredients" class="tab-panel active">
@@ -392,6 +394,16 @@
       <div id="reviewEmpty" class="panel empty-state" hidden>По этим фильтрам записей нет.</div>
       </div>
     </section>
+    <section id="wanted" class="tab-panel">
+      <div class="section-heading">
+        <div><p class="eyebrow">Ищем рецепты</p><h2>Wanted</h2></div>
+        <span id="wantedCount" class="count-pill" role="status" hidden></span>
+      </div>
+      <div class="panel recipe-controls">
+        <label class="field"><span>Поиск среди зелий без известного рецепта</span><input id="wantedSearch" type="search" placeholder="Название, номер, эффект, ценность или описание"></label>
+      </div>
+      <div id="wantedResults" class="wanted-results"></div>
+    </section>
   </main>
   <footer class="wrap footer" aria-label="Служебные ссылки">
     <span>HPWF Potions</span><span aria-hidden="true">·</span>
@@ -401,8 +413,8 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260926-6" defer></script>
-  <script src="admin.js?v=20260925-6" defer></script>
+  <script src="app.js?v=20260926-7" defer></script>
+  <script src="admin.js?v=20260926-1" defer></script>
   <script src="review.js?v=20260918-1" defer></script>
 </body>
 </html>
