@@ -521,16 +521,19 @@ function potionMatchesValue(p){
 let recipeValueStops=[0],recipeValueCategory="",recipeValueSelection=0;
 function recipeValueSteps(values){
   if(!values.length)return [0];
-  const sorted=[...new Set(values)].sort((a,b)=>a-b),last=sorted.length-1;
-  const quantiles=[0,.1,.2,.3,.4,.5,.6,.7,.8,.9,.95,.975,.99,.995,1];
-  const steps=quantiles.map(q=>sorted[Math.round(q*last)]).concat(sorted.slice(-5));
-  if(sorted[0]<1&&sorted[last]>1)steps.push(1);
-  const distinct=new Map();
-  for(const value of steps.sort((a,b)=>a-b)){
-    const label=value.toFixed(3);
-    if(!distinct.has(label)||value===1||value===sorted[last])distinct.set(label,value);
+  const floor=Math.min(...values),ceiling=Math.max(...values),steps=[floor];
+  if(floor===ceiling)return steps;
+  const bands=[[0,1.5,.1],[1.5,3,.25],[3,5,.5],[5,10,1],[10,25,2.5],[25,50,5],[50,Infinity,10]];
+  for(const [from,to,increment] of bands){
+    const first=Math.ceil((Math.max(floor,from)-1e-9)/increment);
+    const last=Math.floor((Math.min(ceiling,to)+1e-9)/increment);
+    for(let n=first;n<=last;n++){
+      const value=Number((n*increment).toFixed(3));
+      if(value>floor+1e-9&&value<ceiling-1e-9)steps.push(value);
+    }
   }
-  return [...distinct.values()].sort((a,b)=>a-b);
+  steps.push(ceiling);
+  return [...new Set(steps)].sort((a,b)=>a-b);
 }
 function updateRecipeValueControls(){
   const level=currentRecipeLevel(),era=selectedRecipeEra();
