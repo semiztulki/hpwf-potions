@@ -1,0 +1,2355 @@
+{
+  "source": "color.zip; classification from color.pdf",
+  "note": "v1–v3 are distinct appearances within each level/effect group, not a price range. any denotes older generic icons whose effect is not encoded by the image.",
+  "images": [
+    {
+      "file": "black-l1-any.png",
+      "original": "0_1.png",
+      "color": "black",
+      "level": 1,
+      "effect": "any",
+      "variant": null,
+      "sha256": "c12a94aaafd9d6561957b4f53fc1a030fa847bbacd0b5a99e644652e16afb6aa"
+    },
+    {
+      "file": "black-l2-any.png",
+      "original": "0_2.png",
+      "color": "black",
+      "level": 2,
+      "effect": "any",
+      "variant": null,
+      "sha256": "4bb5db5d2da2aad0ae26dc651383733da4fc6cb86c940736fd5c14824bea19a1"
+    },
+    {
+      "file": "red-l1-any.png",
+      "original": "1_1.png",
+      "color": "red",
+      "level": 1,
+      "effect": "any",
+      "variant": null,
+      "sha256": "05a17bee4ae62bcff99468eac6bafa6947479041e3eb8815c8c80f99d8f148a0"
+    },
+    {
+      "file": "red-l2-any.png",
+      "original": "1_2.png",
+      "color": "red",
+      "level": 2,
+      "effect": "any",
+      "variant": null,
+      "sha256": "a80c812fb86b9b47d53a022aae81ff5679e6238a1f836a8a06c7d6290e05a8d2"
+    },
+    {
+      "file": "orange-l1-any.png",
+      "original": "2_1.png",
+      "color": "orange",
+      "level": 1,
+      "effect": "any",
+      "variant": null,
+      "sha256": "8b7432e89840850754685f54524a820f279223f9baa7e38d4a3b9ae522f4526a"
+    },
+    {
+      "file": "orange-l2-any.png",
+      "original": "2_2.png",
+      "color": "orange",
+      "level": 2,
+      "effect": "any",
+      "variant": null,
+      "sha256": "fecff9a682fad1ee9862a5b31b0b8aaadcebc12705a7887cde7e20d3d7937c67"
+    },
+    {
+      "file": "yellow-l1-any.png",
+      "original": "3_1.png",
+      "color": "yellow",
+      "level": 1,
+      "effect": "any",
+      "variant": null,
+      "sha256": "0bfdadebfdfa237b08311e72ffec64c0736c443125b8dc7eb4ceb2989e5d41c0"
+    },
+    {
+      "file": "yellow-l2-any.png",
+      "original": "3_2.png",
+      "color": "yellow",
+      "level": 2,
+      "effect": "any",
+      "variant": null,
+      "sha256": "bc39a5accae346903f23f278a10e849bd587ccd251a41d147062780bf8635bf3"
+    },
+    {
+      "file": "green-l1-any.png",
+      "original": "4_1.png",
+      "color": "green",
+      "level": 1,
+      "effect": "any",
+      "variant": null,
+      "sha256": "4d73a4a90cdc8ae65e28775508202a4ba6448dc12b7f12ca16bba294bba309d0"
+    },
+    {
+      "file": "green-l2-any.png",
+      "original": "4_2.png",
+      "color": "green",
+      "level": 2,
+      "effect": "any",
+      "variant": null,
+      "sha256": "94b640b749fc019710e72bbabd2ca154557dbc5c7c7a01952bcee969cd0ccf42"
+    },
+    {
+      "file": "lightblue-l1-any.png",
+      "original": "5_1.png",
+      "color": "lightblue",
+      "level": 1,
+      "effect": "any",
+      "variant": null,
+      "sha256": "7257bf42f1c0f027884b08f09911e121de2716472f9a4a15dc24a475b854dcd7"
+    },
+    {
+      "file": "lightblue-l2-any.png",
+      "original": "5_2.png",
+      "color": "lightblue",
+      "level": 2,
+      "effect": "any",
+      "variant": null,
+      "sha256": "aa076578c9c9cafcc55d2bc80913d95ed05e8e2cfe125036f5f9a8b3c2e8dd9f"
+    },
+    {
+      "file": "blue-l1-any.png",
+      "original": "6_1.png",
+      "color": "blue",
+      "level": 1,
+      "effect": "any",
+      "variant": null,
+      "sha256": "b5ebb8c339e15008ec8e5ee5905ced2ea36ae594c4020f12d7eff3d1d53391f8"
+    },
+    {
+      "file": "blue-l2-any.png",
+      "original": "6_2.png",
+      "color": "blue",
+      "level": 2,
+      "effect": "any",
+      "variant": null,
+      "sha256": "bba260f4b22f8c95c9a94af50f358cddabaaf8c5df976ba12d1ca386762885b4"
+    },
+    {
+      "file": "violet-l1-any.png",
+      "original": "7_1.png",
+      "color": "violet",
+      "level": 1,
+      "effect": "any",
+      "variant": null,
+      "sha256": "60d011aa50a91415eb4bd717b63d0b357b98d736b176d4aa9ab188a54b74d2b8"
+    },
+    {
+      "file": "violet-l2-any.png",
+      "original": "7_2.png",
+      "color": "violet",
+      "level": 2,
+      "effect": "any",
+      "variant": null,
+      "sha256": "f7b97b2c1c9263f0fa053e20e5df6699a8b2e3877caf86da63f4faed7503497f"
+    },
+    {
+      "file": "white-l1-any.png",
+      "original": "8_1.png",
+      "color": "white",
+      "level": 1,
+      "effect": "any",
+      "variant": null,
+      "sha256": "1373266355066b7c20b0da86cd856c6eb01dfa6bc45ec310c550475968774e40"
+    },
+    {
+      "file": "white-l2-any.png",
+      "original": "8_2.png",
+      "color": "white",
+      "level": 2,
+      "effect": "any",
+      "variant": null,
+      "sha256": "c0fd8425afc1f9006f2554df7b9fe2aa3a8ce2537aa091d086b1f1f25e7bd5f8"
+    },
+    {
+      "file": "black-l1-concentration-v2.png",
+      "original": "black(1).png",
+      "color": "black",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "19f8d474113a5a561819de3d72dccac5f07deee64ec5fdd0074bd19a91541d1c"
+    },
+    {
+      "file": "black-l2-concentration-v2.png",
+      "original": "black(10).png",
+      "color": "black",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "ea669f4dd3cc3830017e09078d850e7c49994124dfd3f2b6c7ff004f7ec7bb8e"
+    },
+    {
+      "file": "black-l2-concentration-v3.png",
+      "original": "black(11).png",
+      "color": "black",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "0826c88d40789060eed3c8c3eb969f69c4e5c821c35393ba717104054ffda557"
+    },
+    {
+      "file": "black-l2-resistance-v1.png",
+      "original": "black(12).png",
+      "color": "black",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "167a152c14e06b23f3fb45a7f6fd8f8e5b9c2c91caad934c649cdfbb4bfb631a"
+    },
+    {
+      "file": "black-l2-resistance-v2.png",
+      "original": "black(13).png",
+      "color": "black",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "977673be491f08391ef6b0340d36c4bb87fd7be711c52b73b6f6a316fc06d97c"
+    },
+    {
+      "file": "black-l2-resistance-v3.png",
+      "original": "black(14).png",
+      "color": "black",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "977673be491f08391ef6b0340d36c4bb87fd7be711c52b73b6f6a316fc06d97c"
+    },
+    {
+      "file": "black-l2-effectiveness-v1.png",
+      "original": "black(15).png",
+      "color": "black",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "2f986432772b5c9280b5f0a6eb34bd48ed4fbb015d4337559a0ac20f0baedeb1"
+    },
+    {
+      "file": "black-l2-effectiveness-v2.png",
+      "original": "black(16).png",
+      "color": "black",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "80238dd8e96b3331f65ce923459e081193bfa12b00e2d87f17c13fb4e44b846f"
+    },
+    {
+      "file": "black-l2-effectiveness-v3.png",
+      "original": "black(17).png",
+      "color": "black",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "8313614e3437fb28ee083efde89fed134f4efb0194b466af9905bea00c13d383"
+    },
+    {
+      "file": "black-l3-concentration-v1.png",
+      "original": "black(18).png",
+      "color": "black",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "35cc0392be86742dc94a1187a4095483f806653ec4896e466bce5085c7d6b8d1"
+    },
+    {
+      "file": "black-l3-concentration-v2.png",
+      "original": "black(19).png",
+      "color": "black",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "67e713a910149d24965ef38b9567378c9d408594c9e5caff64985e45fb6e36cf"
+    },
+    {
+      "file": "black-l1-concentration-v3.png",
+      "original": "black(2).png",
+      "color": "black",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "716afc1e7f148bcf01529d06187ef741119c1db79a6594114741845fbe9e874a"
+    },
+    {
+      "file": "black-l3-concentration-v3.png",
+      "original": "black(20).png",
+      "color": "black",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "c0966ffdce88486f4137104d5928cf3f6a751d867bbc71c03a07dec069f34579"
+    },
+    {
+      "file": "black-l3-resistance-v1.png",
+      "original": "black(21).png",
+      "color": "black",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "729b56b1edc1858e280f76c4b59724838dcbd5e4f1803f8873ed7c84679c1dd9"
+    },
+    {
+      "file": "black-l3-resistance-v2.png",
+      "original": "black(22).png",
+      "color": "black",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "25af12a551396cd8caa7522695db8dd6386aaf80528f02d3ce6290c4b37ee98b"
+    },
+    {
+      "file": "black-l3-resistance-v3.png",
+      "original": "black(23).png",
+      "color": "black",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "8ad1406024ecdfec055d96fcb7626b945e622162be6c658951e8a82c51b974fc"
+    },
+    {
+      "file": "black-l3-effectiveness-v1.png",
+      "original": "black(24).png",
+      "color": "black",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "88db0fcbeb0c2f14e25e4ab02f2beee3860df46f3926b242d7314edad13d3a13"
+    },
+    {
+      "file": "black-l3-effectiveness-v2.png",
+      "original": "black(25).png",
+      "color": "black",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "dfaf92f296b399a12ca0785029779777448652932aae1a127b59e01bd2d270df"
+    },
+    {
+      "file": "black-l3-effectiveness-v3.png",
+      "original": "black(26).png",
+      "color": "black",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "7bfabd342de50797d723fa02207d0828515c942051df8329debcee3474e38928"
+    },
+    {
+      "file": "black-l1-resistance-v1.png",
+      "original": "black(3).png",
+      "color": "black",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "01a4b248b4f774d3534d9ca3aa610d15bf71c89d5cab3576e7c3300dc2dca821"
+    },
+    {
+      "file": "black-l1-resistance-v2.png",
+      "original": "black(4).png",
+      "color": "black",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "850c8cfc91760d1afc4e313d8fea6dc30f936ea4772a5c6a8e81c8b7dfe434d7"
+    },
+    {
+      "file": "black-l1-resistance-v3.png",
+      "original": "black(5).png",
+      "color": "black",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "da2a8ec917835c013e5281f727e46bb90580d2f247798e022283d6222f7039a3"
+    },
+    {
+      "file": "black-l1-effectiveness-v1.png",
+      "original": "black(6).png",
+      "color": "black",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "13595a846f66f875c1beec1f9f6ceecf63e52425cf2cca6608ac5401b4e4ed31"
+    },
+    {
+      "file": "black-l1-effectiveness-v2.png",
+      "original": "black(7).png",
+      "color": "black",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "b70c2ee81efbb275295aad437a9df0e611c3d4df1dc2fabfe9ea4bc55aba1efa"
+    },
+    {
+      "file": "black-l1-effectiveness-v3.png",
+      "original": "black(8).png",
+      "color": "black",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "1556a16db7e3fbe0696ad4105b3df122bb55ebbadf96b04198eec7b992d35aa1"
+    },
+    {
+      "file": "black-l2-concentration-v1.png",
+      "original": "black(9).png",
+      "color": "black",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "dfb9925405a20e7726b817ed3370ab7e251816d797cc24eb4b8ce21afd89796e"
+    },
+    {
+      "file": "black-l1-concentration-v1.png",
+      "original": "black.png",
+      "color": "black",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "1747b4a9470ca8980e5e2fc9416c4a9830f584167e1d61bb238055625baec774"
+    },
+    {
+      "file": "blue-l1-concentration-v2.png",
+      "original": "blue(1).png",
+      "color": "blue",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "8f4eb528f82694814c6d21bc9dd58852b6328186b4832ac1a551d31527d82874"
+    },
+    {
+      "file": "blue-l2-concentration-v2.png",
+      "original": "blue(10).png",
+      "color": "blue",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "852626e6021295ad4050819c1dd61240d8833852bd043a6b47a665925a9b2c3d"
+    },
+    {
+      "file": "blue-l2-concentration-v3.png",
+      "original": "blue(11).png",
+      "color": "blue",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "5e76e899097349340b5af4e095543bdec1ddbf04141df75e5d816e9461d74979"
+    },
+    {
+      "file": "blue-l2-resistance-v1.png",
+      "original": "blue(12).png",
+      "color": "blue",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "f9c0dd695f237adf0ef85a350185cb23d8f379bec8bdb065f18b57439989312f"
+    },
+    {
+      "file": "blue-l2-resistance-v2.png",
+      "original": "blue(13).png",
+      "color": "blue",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "422e975de2518804055ed6e474c2076fc2b9ec2099d0124af6061c5ecb1c48dc"
+    },
+    {
+      "file": "blue-l2-resistance-v3.png",
+      "original": "blue(14).png",
+      "color": "blue",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "05d09ff29e9f3f745d166d70b699c27862c3e843c795fda35ede786710eb4be2"
+    },
+    {
+      "file": "blue-l2-effectiveness-v1.png",
+      "original": "blue(15).png",
+      "color": "blue",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "2c5733c65f07d69736fd322c090375a36f78c145be9288da8d2edc1810ff3d5d"
+    },
+    {
+      "file": "blue-l2-effectiveness-v2.png",
+      "original": "blue(16).png",
+      "color": "blue",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "19405afd4f9014ee0da665df7c619197300b94c371c6de809a45543208c26c29"
+    },
+    {
+      "file": "blue-l2-effectiveness-v3.png",
+      "original": "blue(17).png",
+      "color": "blue",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "e3a0b151f82c40358168ea8c787c9dd71cd9402f650ad4289cde5c9c78f271d4"
+    },
+    {
+      "file": "blue-l3-concentration-v1.png",
+      "original": "blue(18).png",
+      "color": "blue",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "f4b5b99520dcc7b1cee581c3b67943f74e0d776c7386832a3ae43fe4c87f65da"
+    },
+    {
+      "file": "blue-l3-concentration-v2.png",
+      "original": "blue(19).png",
+      "color": "blue",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "417b3ed86150031288ed164c688a4c40bf9f61346b4a92f85185fe6058aa2744"
+    },
+    {
+      "file": "blue-l1-concentration-v3.png",
+      "original": "blue(2).png",
+      "color": "blue",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "f2e950f83afd3790ad937c29e10f239c3eb4f7ba59efa5d55dd0b53ca34b9017"
+    },
+    {
+      "file": "blue-l3-concentration-v3.png",
+      "original": "blue(20).png",
+      "color": "blue",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "5fb8b89a39bc31265a81f9ffb0923358602cca3d6d9f6c1e703af65d84666d69"
+    },
+    {
+      "file": "blue-l3-resistance-v1.png",
+      "original": "blue(21).png",
+      "color": "blue",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "06edc22ce31046ec0f52af21a4bb5bcc32bef6bd6b78e4d427f364e4bcb0b9c6"
+    },
+    {
+      "file": "blue-l3-resistance-v2.png",
+      "original": "blue(22).png",
+      "color": "blue",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "0115b181431650d47dded58e9ed957f5518341fb81504bcf380dc81e51c288ce"
+    },
+    {
+      "file": "blue-l3-resistance-v3.png",
+      "original": "blue(23).png",
+      "color": "blue",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "4ca9eb6df29def8b4a9218673bfc8742bc5e812f8f4de23b05d28ce9e9531218"
+    },
+    {
+      "file": "blue-l3-effectiveness-v1.png",
+      "original": "blue(24).png",
+      "color": "blue",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "bf506130d847835770a3018654666848dc923c325465b280041d67e1f91f46f1"
+    },
+    {
+      "file": "blue-l3-effectiveness-v2.png",
+      "original": "blue(25).png",
+      "color": "blue",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "81beb716990189734d7089f533a92be71a5f7259aa602d1ca3bcdb3850f7743a"
+    },
+    {
+      "file": "blue-l3-effectiveness-v3.png",
+      "original": "blue(26).png",
+      "color": "blue",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "f5ffb7fe2f67cf9cec5183fe6d6e1e5928f352d80a5b3a351e1862baac6dd24a"
+    },
+    {
+      "file": "blue-l1-resistance-v1.png",
+      "original": "blue(3).png",
+      "color": "blue",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "510a759e40fbc803dec8dc299817a03094579ba5da81d7412f02077bb64453e7"
+    },
+    {
+      "file": "blue-l1-resistance-v2.png",
+      "original": "blue(4).png",
+      "color": "blue",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "58714a5e46468f50906d75b077c0fa0141eb0b2d091a63140e399c36f802cf22"
+    },
+    {
+      "file": "blue-l1-resistance-v3.png",
+      "original": "blue(5).png",
+      "color": "blue",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "3d3d16f0e7d12a10bff15a4b6407bddd2737d9064ea3afbc41d265a7111cb1ea"
+    },
+    {
+      "file": "blue-l1-effectiveness-v1.png",
+      "original": "blue(6).png",
+      "color": "blue",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "c57b204388b9b9fdcece40fd7774505cb3ea926f70ac7d6e60a914b1e4dfbef0"
+    },
+    {
+      "file": "blue-l1-effectiveness-v2.png",
+      "original": "blue(7).png",
+      "color": "blue",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "c63a876a66ce50fac7990d62a04cdefedf7071c1fce9e39ff0975cafc247ec4e"
+    },
+    {
+      "file": "blue-l1-effectiveness-v3.png",
+      "original": "blue(8).png",
+      "color": "blue",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "6c5bc94f9becdbd54022c542464d79e9c87b1a4a89e169c4079ade04220f0756"
+    },
+    {
+      "file": "blue-l2-concentration-v1.png",
+      "original": "blue(9).png",
+      "color": "blue",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "35b461f3c8a358de6f2ff7580930d40b77bfd5087ef00189ecb2e2989245e340"
+    },
+    {
+      "file": "blue-l1-concentration-v1.png",
+      "original": "blue.png",
+      "color": "blue",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "3f713723c143969e5bb9257306da64df20451eaff0485b17928c85ef3eb6cfa0"
+    },
+    {
+      "file": "green-l1-concentration-v2.png",
+      "original": "green(1).png",
+      "color": "green",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "182b090db61d16717f76c370041e6b1a6cedddde1b1a36e9c75e87244164d91d"
+    },
+    {
+      "file": "green-l2-concentration-v2.png",
+      "original": "green(10).png",
+      "color": "green",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "0c5fef8bef53f26134d1d437d066ad93374ef34b5005671601ac547635f21f99"
+    },
+    {
+      "file": "green-l2-concentration-v3.png",
+      "original": "green(11).png",
+      "color": "green",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "4004a5c129d9fd0169b25951401276908a0804c39f8cf34d2cab13701a9e1049"
+    },
+    {
+      "file": "green-l2-resistance-v1.png",
+      "original": "green(12).png",
+      "color": "green",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "20b70acc62d9d4f81ef15018cca7cfb049a339f908f88066691546aa05f2b531"
+    },
+    {
+      "file": "green-l2-resistance-v2.png",
+      "original": "green(13).png",
+      "color": "green",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "041644a8f7fcf2f185ec66096ef17f86d3bf1890a9d4c917f29ab1e9ea2f339e"
+    },
+    {
+      "file": "green-l2-resistance-v3.png",
+      "original": "green(14).png",
+      "color": "green",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "86dbf5193a29ee6dc1a6dd5dd72e05829fca290722bb6bd5a71922398c468f3a"
+    },
+    {
+      "file": "green-l2-effectiveness-v1.png",
+      "original": "green(15).png",
+      "color": "green",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "80a5ff0c649f6b2a417ea7ac1f1f33d89753b240f69076434cd3371fe27d7b66"
+    },
+    {
+      "file": "green-l2-effectiveness-v2.png",
+      "original": "green(16).png",
+      "color": "green",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "53980bc36b0f9aa2e7db76cce1517ff9f2510ff6f67e667a2ac38b336e783f77"
+    },
+    {
+      "file": "green-l2-effectiveness-v3.png",
+      "original": "green(17).png",
+      "color": "green",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "fb52eec433c05840270e9c0902c21e5dc5b20b63b9799d57ec9a533a4d16f947"
+    },
+    {
+      "file": "green-l3-concentration-v1.png",
+      "original": "green(18).png",
+      "color": "green",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "632f82c7650d102615b84e62acc07a9a2d4dd0c17cfe923ffb061584f97c0d8f"
+    },
+    {
+      "file": "green-l3-concentration-v2.png",
+      "original": "green(19).png",
+      "color": "green",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "c7cc63ffdec12401db71248af481c2bb0c611bd6574b8dafc4b61bd6602e0b38"
+    },
+    {
+      "file": "green-l1-concentration-v3.png",
+      "original": "green(2).png",
+      "color": "green",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "bd320bf2ea447fa129ccb0b2cdee4ce59ea63c7a36cec37832e0e9e2709fa4f9"
+    },
+    {
+      "file": "green-l3-concentration-v3.png",
+      "original": "green(20).png",
+      "color": "green",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "05d31ffcb32fc781e434c06e18a40b088dee8a0040ed783f6b73fd544302cad2"
+    },
+    {
+      "file": "green-l3-resistance-v1.png",
+      "original": "green(21).png",
+      "color": "green",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "625eb30b7de27091a57f3de50bee8d44e5f5777fc23760468998042957f3496e"
+    },
+    {
+      "file": "green-l3-resistance-v2.png",
+      "original": "green(22).png",
+      "color": "green",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "afab151cf2d6c0e8a55eb1e605f9e56fbcba423cfce846e4bc9531184ceef841"
+    },
+    {
+      "file": "green-l3-resistance-v3.png",
+      "original": "green(23).png",
+      "color": "green",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "9f7cbfe8eb8bde19cf1c66c0a746cd68b26a30a52a7dc074ed1ef8f3654ed5e9"
+    },
+    {
+      "file": "green-l3-effectiveness-v1.png",
+      "original": "green(24).png",
+      "color": "green",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "d02927532c09e6586eff61a3dc9cab0b04c53a9b07b838f30ad9484553363336"
+    },
+    {
+      "file": "green-l3-effectiveness-v2.png",
+      "original": "green(25).png",
+      "color": "green",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "e9208d0342e4a6d2b8da7e8e8f91cc1da94e13026b7a2c2043b04e06cad5c2dc"
+    },
+    {
+      "file": "green-l3-effectiveness-v3.png",
+      "original": "green(26).png",
+      "color": "green",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "f2076ddc5f67d736705c602a606eb02fbb7350c6bc1bb36b36c7c1221c992bd1"
+    },
+    {
+      "file": "green-l1-resistance-v1.png",
+      "original": "green(3).png",
+      "color": "green",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "ebb8c0f2739c4d552c9e4447192180a70a11dd9fe8d6573b2dc538f911c5f1c3"
+    },
+    {
+      "file": "green-l1-resistance-v2.png",
+      "original": "green(4).png",
+      "color": "green",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "a5f029ed1b062c7af92e983c9cda71dd837ad44163772d22aa0feafd2e07eb78"
+    },
+    {
+      "file": "green-l1-resistance-v3.png",
+      "original": "green(5).png",
+      "color": "green",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "a7df0239b01df03db2c1f1f86cff45065245f27785ac741e9f5d6b42b8503212"
+    },
+    {
+      "file": "green-l1-effectiveness-v1.png",
+      "original": "green(6).png",
+      "color": "green",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "e5929964173694318634907e99b35b3535178491e92e2690fff67d2c07901f9b"
+    },
+    {
+      "file": "green-l1-effectiveness-v2.png",
+      "original": "green(7).png",
+      "color": "green",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "c45a7b6909de24a979e09a4f39853bbe59437916bcc435f44811695f5ab2f345"
+    },
+    {
+      "file": "green-l1-effectiveness-v3.png",
+      "original": "green(8).png",
+      "color": "green",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "dd7d13df8b49cd183db8dbd1bd79dd24b9614a9773d69382700c2aee55c9a7e9"
+    },
+    {
+      "file": "green-l2-concentration-v1.png",
+      "original": "green(9).png",
+      "color": "green",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "9fd5ff8cc99e78c91e17b216529393e8ee8ba672a8605687da6517a07bcc190a"
+    },
+    {
+      "file": "green-l1-concentration-v1.png",
+      "original": "green.png",
+      "color": "green",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "033610f3d9e59dc512a4daa54fe78947ddd160cde12358a476c1e00753ca1962"
+    },
+    {
+      "file": "lightblue-l1-concentration-v2.png",
+      "original": "lightblue(1).png",
+      "color": "lightblue",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "a883cb053ad865c48711c203b90f3718d4242d391e501a314c5de3d72bb8d9e3"
+    },
+    {
+      "file": "lightblue-l2-concentration-v2.png",
+      "original": "lightblue(10).png",
+      "color": "lightblue",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "35e83102a6c8ea8f65960e1cd80d6964db882be062f2c2695d376d2c3d0d7114"
+    },
+    {
+      "file": "lightblue-l2-concentration-v3.png",
+      "original": "lightblue(11).png",
+      "color": "lightblue",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "bd59eef21e6a589be0cd91885cc7ed790ff9d8c24b3d76270c6d91e3ccae8076"
+    },
+    {
+      "file": "lightblue-l2-resistance-v1.png",
+      "original": "lightblue(12).png",
+      "color": "lightblue",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "31b727aeaf915775782eb303b157f8b6077c2107a07afb2f8082a74f6a50f0fc"
+    },
+    {
+      "file": "lightblue-l2-resistance-v2.png",
+      "original": "lightblue(13).png",
+      "color": "lightblue",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "383d9d9e293c0af9403cc900a4f8faafcaab7f9aae51554f4e63fd1f7ea1e2f5"
+    },
+    {
+      "file": "lightblue-l2-resistance-v3.png",
+      "original": "lightblue(14).png",
+      "color": "lightblue",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "34f3b7c549c02f636e89fb811c6aea7862f908db92ae6ef1f8c8b972791d3438"
+    },
+    {
+      "file": "lightblue-l2-effectiveness-v1.png",
+      "original": "lightblue(15).png",
+      "color": "lightblue",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "2195e42fc98bf3ef4aed79a33573bc4d61a8e5a38c73942c8baf3b5b76eddd9e"
+    },
+    {
+      "file": "lightblue-l2-effectiveness-v2.png",
+      "original": "lightblue(16).png",
+      "color": "lightblue",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "dd9ba54fd17137d65baf32935057d9cc55f957c59bf81c24473d17f9c6da72f9"
+    },
+    {
+      "file": "lightblue-l2-effectiveness-v3.png",
+      "original": "lightblue(17).png",
+      "color": "lightblue",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "0dcb963f849ae3c310adf77cbfccee057e08601987ab74174e3ecc7a42f730a0"
+    },
+    {
+      "file": "lightblue-l3-concentration-v1.png",
+      "original": "lightblue(18).png",
+      "color": "lightblue",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "e9335f1701c0c6e493896a75f594d7a48c615f378570ee9e8a8f3ef06f35333b"
+    },
+    {
+      "file": "lightblue-l3-concentration-v2.png",
+      "original": "lightblue(19).png",
+      "color": "lightblue",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "b79e1460253b9b7af0b9aea95c94e768d24cdac9bed82fb89b91e4b585593856"
+    },
+    {
+      "file": "lightblue-l1-concentration-v3.png",
+      "original": "lightblue(2).png",
+      "color": "lightblue",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "ee075b76b4e386455a2d6c9dc0286fb566961767f1c4fb1e7ee8dbe27e8e659e"
+    },
+    {
+      "file": "lightblue-l3-concentration-v3.png",
+      "original": "lightblue(20).png",
+      "color": "lightblue",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "899bdd614ef3b2be9b3242b1d382be33deaa981fdbd6c8f6339e1e92fa4fc920"
+    },
+    {
+      "file": "lightblue-l3-resistance-v1.png",
+      "original": "lightblue(21).png",
+      "color": "lightblue",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "57cad71d80f4b335af84f369a5584206e670a232c579fcb9fdb38246902517fd"
+    },
+    {
+      "file": "lightblue-l3-resistance-v2.png",
+      "original": "lightblue(22).png",
+      "color": "lightblue",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "2f3b0096df89ded6ba8a47059c094cf88f32a9ec89d19a7a0269ca70acaa5fd9"
+    },
+    {
+      "file": "lightblue-l3-resistance-v3.png",
+      "original": "lightblue(23).png",
+      "color": "lightblue",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "9f6b5d77979589ef51f19b14847316e8be43d6d12e4faac036453e917cfcaf0d"
+    },
+    {
+      "file": "lightblue-l3-effectiveness-v1.png",
+      "original": "lightblue(24).png",
+      "color": "lightblue",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "43a9475f64bc36a2003f5ad358c2fea59cca422b210389734ba760d8e171abe6"
+    },
+    {
+      "file": "lightblue-l3-effectiveness-v2.png",
+      "original": "lightblue(25).png",
+      "color": "lightblue",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "cfd381b5250df1ce7ee1c380c82120d9022427639f463e7f14f40e6fecbb1427"
+    },
+    {
+      "file": "lightblue-l3-effectiveness-v3.png",
+      "original": "lightblue(26).png",
+      "color": "lightblue",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "b3df3424d3c042faef1748b091ca1907491287fe5d7b00efce922385d6d569b3"
+    },
+    {
+      "file": "lightblue-l1-resistance-v1.png",
+      "original": "lightblue(3).png",
+      "color": "lightblue",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "c4b45775aa561bcf11b0a1cfddb08bd0909b7cac74d641c02360514444a146d5"
+    },
+    {
+      "file": "lightblue-l1-resistance-v2.png",
+      "original": "lightblue(4).png",
+      "color": "lightblue",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "a8c90e94b62bc9e4ffff054fedf0b2504f7a6f215d01ee8eefab5e7ab44a2ea4"
+    },
+    {
+      "file": "lightblue-l1-resistance-v3.png",
+      "original": "lightblue(5).png",
+      "color": "lightblue",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "ec7fb035ae88caade5a7a6841c91ea1670c9b8baefc15b4f231b8d5168d9114e"
+    },
+    {
+      "file": "lightblue-l1-effectiveness-v1.png",
+      "original": "lightblue(6).png",
+      "color": "lightblue",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "6e555f9b07b99a174504a13f598e9368c0c5af9345787e6b3cd552d0ee343188"
+    },
+    {
+      "file": "lightblue-l1-effectiveness-v2.png",
+      "original": "lightblue(7).png",
+      "color": "lightblue",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "354a875425e5c9b41ec2b4e111db049ff12a0788f9d1d43ca2abbb24085cbc90"
+    },
+    {
+      "file": "lightblue-l1-effectiveness-v3.png",
+      "original": "lightblue(8).png",
+      "color": "lightblue",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "60233634194e1a74319e5fa79e011636a933f89c93d16b83e9210aede926ebc7"
+    },
+    {
+      "file": "lightblue-l2-concentration-v1.png",
+      "original": "lightblue(9).png",
+      "color": "lightblue",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "62d93b16ebeddfce11600cc04f5125280b7063bb5f25523daf2e4a34af92f5ee"
+    },
+    {
+      "file": "lightblue-l1-concentration-v1.png",
+      "original": "lightblue.png",
+      "color": "lightblue",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "bf3d90c9ad66542764910d2ac4dc0d8708cfc759253e06d2376ba8dbacbb5837"
+    },
+    {
+      "file": "orange-l1-concentration-v2.png",
+      "original": "orange(1).png",
+      "color": "orange",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "0f7f8f101eecf2c3bf80a84b8cbf054bffe5495e7829f6e63b0518140e8fc7c5"
+    },
+    {
+      "file": "orange-l2-concentration-v2.png",
+      "original": "orange(10).png",
+      "color": "orange",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "bddc75a3c67021df4649f7ffb11144fdcfd0ee66dc4990ef9484cee1e6381cb4"
+    },
+    {
+      "file": "orange-l2-concentration-v3.png",
+      "original": "orange(11).png",
+      "color": "orange",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "8342051878f90f60e63de975a6a002ea21314c5dd62ad24379315e196e1fbc3f"
+    },
+    {
+      "file": "orange-l2-resistance-v1.png",
+      "original": "orange(12).png",
+      "color": "orange",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "6ac9a80efc581f20e505002f8031fa5762f249e1c838fb45bd2f8ede7af0932b"
+    },
+    {
+      "file": "orange-l2-resistance-v2.png",
+      "original": "orange(13).png",
+      "color": "orange",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "bc445c88b49a935a34dfe1d3c3b1604390be8c974cd59d49487ed4cdb348c693"
+    },
+    {
+      "file": "orange-l2-resistance-v3.png",
+      "original": "orange(14).png",
+      "color": "orange",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "4496fcc64dd8a49ea002556a80086f80fb53a3666f5e4524c58d3f06368ba03f"
+    },
+    {
+      "file": "orange-l2-effectiveness-v1.png",
+      "original": "orange(15).png",
+      "color": "orange",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "b2afcfc0eb1138af0d339816d96b1f5b9b8c93b64f1674b66166c7b8643b7974"
+    },
+    {
+      "file": "orange-l2-effectiveness-v2.png",
+      "original": "orange(16).png",
+      "color": "orange",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "19182f109bcfe1b156a8a9395c4a7b244daf501f3509c79a450fa375bc99b92f"
+    },
+    {
+      "file": "orange-l2-effectiveness-v3.png",
+      "original": "orange(17).png",
+      "color": "orange",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "620ef87b83f00928452009b8a72b0b87e0a35f7d043a95d444f5ee9bf0e38589"
+    },
+    {
+      "file": "orange-l3-concentration-v1.png",
+      "original": "orange(18).png",
+      "color": "orange",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "a519aed0baa843d0e3cdd09e4123e800235f1f31da7124e593a1025a375f4c40"
+    },
+    {
+      "file": "orange-l3-concentration-v2.png",
+      "original": "orange(19).png",
+      "color": "orange",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "b44f0ea58f85920c8dbcacc647bd8e8ca682d9df0c7ff57a66cfc461e503ecc5"
+    },
+    {
+      "file": "orange-l1-concentration-v3.png",
+      "original": "orange(2).png",
+      "color": "orange",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "a57afea3691d6968fac4332a05581fd4471c4baf4d2bd299329ddec723ddc54f"
+    },
+    {
+      "file": "orange-l3-concentration-v3.png",
+      "original": "orange(20).png",
+      "color": "orange",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "445368d075897569d93b526cbd095346a19aaef929907646a0745e893d63b8f6"
+    },
+    {
+      "file": "orange-l3-resistance-v1.png",
+      "original": "orange(21).png",
+      "color": "orange",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "e5e3df97ed6e572f70d95aa583dbe941340fe8be047bc7f073da29491914aa4a"
+    },
+    {
+      "file": "orange-l3-resistance-v2.png",
+      "original": "orange(22).png",
+      "color": "orange",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "15f9711314602d18ff3ef3c5b522d1d7af442fc6872a7847c4ac5db10be27d6b"
+    },
+    {
+      "file": "orange-l3-resistance-v3.png",
+      "original": "orange(23).png",
+      "color": "orange",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "bf65508b57c0bfe013055f4e2dadb9afeac07cfce3eabcc57eb852e89d56a8ee"
+    },
+    {
+      "file": "orange-l3-effectiveness-v1.png",
+      "original": "orange(24).png",
+      "color": "orange",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "0fb83055a063a9f59fb7c25f9e670cc1f4e7aab80a4462d4cc927d97a1eb14e7"
+    },
+    {
+      "file": "orange-l3-effectiveness-v2.png",
+      "original": "orange(25).png",
+      "color": "orange",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "24e3ef75e655744fe52ce04b187fa19a3717fe33d3edae7b1be3ab6ac542e978"
+    },
+    {
+      "file": "orange-l3-effectiveness-v3.png",
+      "original": "orange(26).png",
+      "color": "orange",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "2fb9f427cdcbb1db6adbbbf6ada4f82c70d9c831bfb876be0fe11f2eb1a83e1f"
+    },
+    {
+      "file": "orange-l1-resistance-v1.png",
+      "original": "orange(3).png",
+      "color": "orange",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "dc17b520aded0083db72c8536183086175638b3ef1dbfe40d106b18175da26e3"
+    },
+    {
+      "file": "orange-l1-resistance-v2.png",
+      "original": "orange(4).png",
+      "color": "orange",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "d6c02f88e80f0a9bb3a06d24e5f8aaac38a2cf03ea3dcda7d53e244c4831137d"
+    },
+    {
+      "file": "orange-l1-resistance-v3.png",
+      "original": "orange(5).png",
+      "color": "orange",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "5776f5fee1768af333cac8c0dfb6af20fcf9bf6e18a6d5bc673a9eee9a426635"
+    },
+    {
+      "file": "orange-l1-effectiveness-v1.png",
+      "original": "orange(6).png",
+      "color": "orange",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "1217bdb777a48a9aa1b0db3736b225be2c7fe87ba7e10fce63098ea2da1a9dd8"
+    },
+    {
+      "file": "orange-l1-effectiveness-v2.png",
+      "original": "orange(7).png",
+      "color": "orange",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "110d10fb8fbbe96c141ea0b80c70bc1cdb5b29b7edec7503b7ff97ef30f9aaa6"
+    },
+    {
+      "file": "orange-l1-effectiveness-v3.png",
+      "original": "orange(8).png",
+      "color": "orange",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "81aecb49381d4d5e881af09efed07d6ba90cf153999b9eea865e666c4710d9ca"
+    },
+    {
+      "file": "orange-l2-concentration-v1.png",
+      "original": "orange(9).png",
+      "color": "orange",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "eb4ab47dc200034901055b42b1f561f7353012d7fbf6de05b548041c61f95a25"
+    },
+    {
+      "file": "orange-l1-concentration-v1.png",
+      "original": "orange.png",
+      "color": "orange",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "e39a51bb8d4716e5add6ab412f857bc5364603fc0f6264d5d38596d51be05801"
+    },
+    {
+      "file": "red-l1-concentration-v2.png",
+      "original": "red(1).png",
+      "color": "red",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "a85665be5d50dbe6f00bb157977afbecf33efb908c7b0c79fa929b27bf4b8c2a"
+    },
+    {
+      "file": "red-l2-concentration-v2.png",
+      "original": "red(10).png",
+      "color": "red",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "e945f6d0464eabd74800f4f6133e0c3dc8c5d77b7eaa9d9340625da301bc149c"
+    },
+    {
+      "file": "red-l2-concentration-v3.png",
+      "original": "red(11).png",
+      "color": "red",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "93888d1048a2769e4568270978bde9afea953786e5acf8cfc5c9dac1c094725a"
+    },
+    {
+      "file": "red-l2-resistance-v1.png",
+      "original": "red(12).png",
+      "color": "red",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "dc98185134aa41e71578c0ee08eac8661d4ecb5c195d7074f32ed325c676bd25"
+    },
+    {
+      "file": "red-l2-resistance-v2.png",
+      "original": "red(13).png",
+      "color": "red",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "25b06ae1b83b2047cae713c819a2598808541026aaedca0ae75acec17454c523"
+    },
+    {
+      "file": "red-l2-resistance-v3.png",
+      "original": "red(14).png",
+      "color": "red",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "2bf395420793352bde8d20fcf1dac8716f5e31b25b725df98eeda7f7d636f486"
+    },
+    {
+      "file": "red-l2-effectiveness-v1.png",
+      "original": "red(15).png",
+      "color": "red",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "e870db7bd209bff4eda3c569af9925990068c9193d6364c4c1029f2c6f007431"
+    },
+    {
+      "file": "red-l2-effectiveness-v2.png",
+      "original": "red(16).png",
+      "color": "red",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "746e9ad331a2ef02b48c0692b36c2ce3e38f2a7020ee70c6b65f5174c3471160"
+    },
+    {
+      "file": "red-l2-effectiveness-v3.png",
+      "original": "red(17).png",
+      "color": "red",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "13f3ca4f21d8cd0719347e3a385c61587338bc06bec9a66daeecfa5d321654f3"
+    },
+    {
+      "file": "red-l3-concentration-v1.png",
+      "original": "red(18).png",
+      "color": "red",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "36ddedd55849b8990658208a158cdb5ed47d4bc204f77119167b7a76d22dadf7"
+    },
+    {
+      "file": "red-l3-concentration-v2.png",
+      "original": "red(19).png",
+      "color": "red",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "3e3e2469fcc4d3bce9628283967ae3e020a6032bc1848b45b7aaedcc90ee16c7"
+    },
+    {
+      "file": "red-l1-concentration-v3.png",
+      "original": "red(2).png",
+      "color": "red",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "23cfa03dfc31a605e0680d0e40028d4b0ece3b7aa3329028f2d2292a1495b34e"
+    },
+    {
+      "file": "red-l3-concentration-v3.png",
+      "original": "red(20).png",
+      "color": "red",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "3235ce5013a270dbcde484c818d5bcc219e9a15ff053a711bf74bb8c0839950c"
+    },
+    {
+      "file": "red-l3-resistance-v1.png",
+      "original": "red(21).png",
+      "color": "red",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "02ab36054fff090f51d28cebd64f930e533db305a1b06e0c4f711d32c49db3fa"
+    },
+    {
+      "file": "red-l3-resistance-v2.png",
+      "original": "red(22).png",
+      "color": "red",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "19744c8dcd50e4025d23308aaa343e78cf9db7c3252cbee4709f3136cf1e843a"
+    },
+    {
+      "file": "red-l3-resistance-v3.png",
+      "original": "red(23).png",
+      "color": "red",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "aa0a8d383313436462e7663e017afaaa5746283742de935ad59f1db18ee53f72"
+    },
+    {
+      "file": "red-l3-effectiveness-v1.png",
+      "original": "red(24).png",
+      "color": "red",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "cf1412451f8ded202483b5ec91eedd339a13a2e50dbb372a07094ceb8e5c6480"
+    },
+    {
+      "file": "red-l3-effectiveness-v2.png",
+      "original": "red(25).png",
+      "color": "red",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "86abecd151a1945378c8324182592538a42884d40e5a1d10ed7fb7dbe7c49542"
+    },
+    {
+      "file": "red-l3-effectiveness-v3.png",
+      "original": "red(26).png",
+      "color": "red",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "bf351c2b53fc588fadc62212c0d56e51b115de67e2b0e0926f2b534f0404630f"
+    },
+    {
+      "file": "red-l1-resistance-v1.png",
+      "original": "red(3).png",
+      "color": "red",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "13a59c3e095126e06417003c7656389a03e3a231e01265ae329bca0b5d2be571"
+    },
+    {
+      "file": "red-l1-resistance-v2.png",
+      "original": "red(4).png",
+      "color": "red",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "7dd732641b2975355b7d9ff269cb54dfa6e21dcbb632897157e7e78706f41a92"
+    },
+    {
+      "file": "red-l1-resistance-v3.png",
+      "original": "red(5).png",
+      "color": "red",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "c918b3d10b0e23463ee62d25200aaefdf734e20f3ffbb38bef7718555f40b22f"
+    },
+    {
+      "file": "red-l1-effectiveness-v1.png",
+      "original": "red(6).png",
+      "color": "red",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "9be9405385ffe82ee6254ff36bc4981a4b1b673ed2b57d43a1bcd295a12bf52f"
+    },
+    {
+      "file": "red-l1-effectiveness-v2.png",
+      "original": "red(7).png",
+      "color": "red",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "b74e9a4b95dad986780e132022fce8c4d86a450cef452b8387908b1dcebc7c63"
+    },
+    {
+      "file": "red-l1-effectiveness-v3.png",
+      "original": "red(8).png",
+      "color": "red",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "e688c9166e95036b2c2c5ab3c42c5ee1792a3d2bb6a90738a0fe7db672ab7e50"
+    },
+    {
+      "file": "red-l2-concentration-v1.png",
+      "original": "red(9).png",
+      "color": "red",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "daf8fa542f7881cc7219c93ebe34a6ecd5958afabca3add99060d776739c9d09"
+    },
+    {
+      "file": "red-l1-concentration-v1.png",
+      "original": "red.png",
+      "color": "red",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "92cd134f2fffed25d2e8e3f00e14191e6bf69866f9e6469532b2ec4d2e72d901"
+    },
+    {
+      "file": "violet-l1-concentration-v2.png",
+      "original": "violet(1).png",
+      "color": "violet",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "141939a15876451d6aedb149f184e7b0902ef04c394bd67dc61d662934d95eee"
+    },
+    {
+      "file": "violet-l2-concentration-v2.png",
+      "original": "violet(10).png",
+      "color": "violet",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "06efaecb6b653aba45ef5b342f1be853b21a669db932cd3fa95a3e49bfdf7567"
+    },
+    {
+      "file": "violet-l2-concentration-v3.png",
+      "original": "violet(11).png",
+      "color": "violet",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "d179606981750699fc4617db203a72c4690820a9fe9d452f7ef9ebb2b42d53ab"
+    },
+    {
+      "file": "violet-l2-resistance-v1.png",
+      "original": "violet(12).png",
+      "color": "violet",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "6f04f27f0c5bfd2d8654d96f3e3c3ad78399120aace337d37f738db32d78fc59"
+    },
+    {
+      "file": "violet-l2-resistance-v2.png",
+      "original": "violet(13).png",
+      "color": "violet",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "8a7ff4651168febe3b0837b9cb4599a3f76cbcf6ce4a6bcadd7e1cfe97ca7a7f"
+    },
+    {
+      "file": "violet-l2-resistance-v3.png",
+      "original": "violet(14).png",
+      "color": "violet",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "3e9ec72ceb08f9055aa9944bc76d0f9f8aad25ecadc397f1a7c807a887c1c45f"
+    },
+    {
+      "file": "violet-l2-effectiveness-v1.png",
+      "original": "violet(15).png",
+      "color": "violet",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "94ac76d07808c990a493320ee3e844fd21aaee2cc06d5d3e94a3bc130d598754"
+    },
+    {
+      "file": "violet-l2-effectiveness-v2.png",
+      "original": "violet(16).png",
+      "color": "violet",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "acc3cd59599d91e9ef24598980bf4132fe4af0b7f97fe22d9b93f02509bc7066"
+    },
+    {
+      "file": "violet-l2-effectiveness-v3.png",
+      "original": "violet(17).png",
+      "color": "violet",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "c6fd54b2f2f2a1e5fad6a289ec6ddb8f5aff2e511a066f1714ad60827f46aa8a"
+    },
+    {
+      "file": "violet-l3-concentration-v1.png",
+      "original": "violet(18).png",
+      "color": "violet",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "09d528acbc9c88bc73073aef90ee09d8e73f3048d1c8eba299abe9a070c942ed"
+    },
+    {
+      "file": "violet-l3-concentration-v2.png",
+      "original": "violet(19).png",
+      "color": "violet",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "d93290be6cd38efb4807f6abbe34c23d2b833e7d57098da3d5c17b6add6d6c8c"
+    },
+    {
+      "file": "violet-l1-concentration-v3.png",
+      "original": "violet(2).png",
+      "color": "violet",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "86bf9b91de8f572e38d58025bc82b35db483c0b0922ce2c9bb613810a924521c"
+    },
+    {
+      "file": "violet-l3-concentration-v3.png",
+      "original": "violet(20).png",
+      "color": "violet",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "978eae1350eea620e4b0227e8cd70d3788ca4001f383b2b945974b9016dcb526"
+    },
+    {
+      "file": "violet-l3-resistance-v1.png",
+      "original": "violet(21).png",
+      "color": "violet",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "48b664e4f270d67f4108cdc96e9602e1171536305a76b3ec4f7270a595613b39"
+    },
+    {
+      "file": "violet-l3-resistance-v2.png",
+      "original": "violet(22).png",
+      "color": "violet",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "28197613b4f24e0741de1026e09215c8d49206bb9a43505b6eb189d58440c45b"
+    },
+    {
+      "file": "violet-l3-resistance-v3.png",
+      "original": "violet(23).png",
+      "color": "violet",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "a0cf49560ddf48fa3c2b676575c089a3aed288f08348bbd6bfa0a6f99af6d3e1"
+    },
+    {
+      "file": "violet-l3-effectiveness-v1.png",
+      "original": "violet(24).png",
+      "color": "violet",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "e8fae2b68438fdc412ebcad2c0d7aea81cc6ca9d98ef8d1c9bf3a1f6ca151d9f"
+    },
+    {
+      "file": "violet-l3-effectiveness-v2.png",
+      "original": "violet(25).png",
+      "color": "violet",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "7e7c73b04ec0c5aab31650ae99b2cf1e7548173ec0437abcee590af9a0b978e6"
+    },
+    {
+      "file": "violet-l3-effectiveness-v3.png",
+      "original": "violet(26).png",
+      "color": "violet",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "e99f1f22bd9480be006160e4d4be1c9a2439a3b26261f3e803527475cdfd0ad1"
+    },
+    {
+      "file": "violet-l1-resistance-v1.png",
+      "original": "violet(3).png",
+      "color": "violet",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "d4cc581d261f025d974d3bcfd4040174c03b1011e88b36f840f5b332bb2a905c"
+    },
+    {
+      "file": "violet-l1-resistance-v2.png",
+      "original": "violet(4).png",
+      "color": "violet",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "6d1927003d37d9188890d3f821d62af87063006a1589236ef7b80270b63fed59"
+    },
+    {
+      "file": "violet-l1-resistance-v3.png",
+      "original": "violet(5).png",
+      "color": "violet",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "a249a44ef8c34135e17808a6593a932070c65fd2b9e27edfb39be574865a5936"
+    },
+    {
+      "file": "violet-l1-effectiveness-v1.png",
+      "original": "violet(6).png",
+      "color": "violet",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "8f2f2b905fc9abe77110f8821e463cbfeafa2c517e06c75ed612ca586cf07ec0"
+    },
+    {
+      "file": "violet-l1-effectiveness-v2.png",
+      "original": "violet(7).png",
+      "color": "violet",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "8d56e31a9a77559d8333d3e2e54e25530a7bee28aece9947346b351deb859fe8"
+    },
+    {
+      "file": "violet-l1-effectiveness-v3.png",
+      "original": "violet(8).png",
+      "color": "violet",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "98009e392a2347e654d7155b5356e7bac967f2690d18a44b4909642022e646a2"
+    },
+    {
+      "file": "violet-l2-concentration-v1.png",
+      "original": "violet(9).png",
+      "color": "violet",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "ac5e36de1bc5afc5f4f885707d27ea071a42bcd0701a516b93f68bbae136bf72"
+    },
+    {
+      "file": "violet-l1-concentration-v1.png",
+      "original": "violet.png",
+      "color": "violet",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "f34d462e874b9d5d3e45c462de782f2ac0533fb6aa2146d8a4204952d20dea6f"
+    },
+    {
+      "file": "white-l1-concentration-v2.png",
+      "original": "white(1).png",
+      "color": "white",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "7f6564f3a111dcf5359e2e615716bd89b76d9830ae3a94e418093b50721be134"
+    },
+    {
+      "file": "white-l2-concentration-v2.png",
+      "original": "white(10).png",
+      "color": "white",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "c6b485315ff160b4856b9d66db8b0de617d3bad462fb69a549768e0f334eb28c"
+    },
+    {
+      "file": "white-l2-concentration-v3.png",
+      "original": "white(11).png",
+      "color": "white",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "a1e127fd2eea066c785203ca15a57dabe25ccfdec2d7fd3d820b0d29aa0d38fc"
+    },
+    {
+      "file": "white-l2-resistance-v1.png",
+      "original": "white(12).png",
+      "color": "white",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "4084f4d3188f8a6dadb98d548450706f9db6676dc552b51651938269779306e6"
+    },
+    {
+      "file": "white-l2-resistance-v2.png",
+      "original": "white(13).png",
+      "color": "white",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "593e6a78fc5555cbfd4e28d015b67503dcb8a5f947ab6bd0422d082e8830ce00"
+    },
+    {
+      "file": "white-l2-resistance-v3.png",
+      "original": "white(14).png",
+      "color": "white",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "488621894f36b0b4b9e035313443927ca6bd47085ddf2875bce73ed1b7c1e956"
+    },
+    {
+      "file": "white-l2-effectiveness-v1.png",
+      "original": "white(15).png",
+      "color": "white",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "1b4155cf0f5ef3efe6d87e5c1d51460b22d7253253be3ee166d331cdced39f31"
+    },
+    {
+      "file": "white-l2-effectiveness-v2.png",
+      "original": "white(16).png",
+      "color": "white",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "3157e96e81480526b294216c1b26a967f43a4fecea7b10b0e5f7c93751ceb950"
+    },
+    {
+      "file": "white-l2-effectiveness-v3.png",
+      "original": "white(17).png",
+      "color": "white",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "a559fc4d2ec842ec068778ba5d17067c7d45da6b98cf60d8f0121b1aac8db471"
+    },
+    {
+      "file": "white-l3-concentration-v1.png",
+      "original": "white(18).png",
+      "color": "white",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "1d63e6c33f58a68fcf86bbbb93995243ea212e4662038c83aa33bd21485d5bc6"
+    },
+    {
+      "file": "white-l3-concentration-v2.png",
+      "original": "white(19).png",
+      "color": "white",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "4e2d52b5f6fbfb0b9cb9142f8b558ffc0e0ea39d52c6f620d21c30cb8b038ec8"
+    },
+    {
+      "file": "white-l1-concentration-v3.png",
+      "original": "white(2).png",
+      "color": "white",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "10ed0703eed6fc17fb4691880576949aec32c840afbadf7c5fcd1676c3334412"
+    },
+    {
+      "file": "white-l3-concentration-v3.png",
+      "original": "white(20).png",
+      "color": "white",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "b7b6b6162f13213fa7c49b18b2c0bb90f7a52c07b1dcf8ce0ceb7ed65752c90c"
+    },
+    {
+      "file": "white-l3-resistance-v1.png",
+      "original": "white(21).png",
+      "color": "white",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "c72fd0c88d318061cf2820d8fdd3a866dd312438b1f8f9865c66c7a5cd3ef77e"
+    },
+    {
+      "file": "white-l3-resistance-v2.png",
+      "original": "white(22).png",
+      "color": "white",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "89117aebdc7741a35bf57d5f2b2189e2c7be2bd6d1943ea1ce19b4dc2bb09364"
+    },
+    {
+      "file": "white-l3-resistance-v3.png",
+      "original": "white(23).png",
+      "color": "white",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "e4204fcf66b238d47a7b551e4ab5981f65d331f7fc2cd857c536b578585fe5d2"
+    },
+    {
+      "file": "white-l3-effectiveness-v1.png",
+      "original": "white(24).png",
+      "color": "white",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "255878eecc6426228a7d72995b5955d19f11b788169210591dbcc4f2efc160fc"
+    },
+    {
+      "file": "white-l3-effectiveness-v2.png",
+      "original": "white(25).png",
+      "color": "white",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "8d735d2e27678d32970ec3922c9abdbb18ed55863399d424f05204ef2ea651ad"
+    },
+    {
+      "file": "white-l3-effectiveness-v3.png",
+      "original": "white(26).png",
+      "color": "white",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "066458e2465f6e7b08848f2610feb469f00cb79441d8dce0ba9eebe510bc9423"
+    },
+    {
+      "file": "white-l1-resistance-v1.png",
+      "original": "white(3).png",
+      "color": "white",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "7f73f4a84579cbc14b6aecdb93515bc21985f408378e8617bc2e645ade991e1f"
+    },
+    {
+      "file": "white-l1-resistance-v2.png",
+      "original": "white(4).png",
+      "color": "white",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "4cba3669c2f8e0c357b208159e2b80627fe2068276359d30f2e6586efd2958a0"
+    },
+    {
+      "file": "white-l1-resistance-v3.png",
+      "original": "white(5).png",
+      "color": "white",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "0118bdac02652927d4084608923bedc70b4fe58f5c7e224481f28835950dbf05"
+    },
+    {
+      "file": "white-l1-effectiveness-v1.png",
+      "original": "white(6).png",
+      "color": "white",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "fd1f253263ce90578db7535985cfb9d927285910ea7d1325d5a0479f57c9856c"
+    },
+    {
+      "file": "white-l1-effectiveness-v2.png",
+      "original": "white(7).png",
+      "color": "white",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "eb9610fcf6233c73f669943574f53de59224ccdd07991cdcdfd70d9c7a0c8c4d"
+    },
+    {
+      "file": "white-l1-effectiveness-v3.png",
+      "original": "white(8).png",
+      "color": "white",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "3d6f65d2921ef998b39e81a88b2a4ed2daf6a6b62fcca496fee48214df2b804c"
+    },
+    {
+      "file": "white-l2-concentration-v1.png",
+      "original": "white(9).png",
+      "color": "white",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "401ec8a9efb69c072c4280c0013e98eb4e0755db14be3884ab9512532289aff1"
+    },
+    {
+      "file": "white-l1-concentration-v1.png",
+      "original": "white.png",
+      "color": "white",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "7bf1d54922f7d661db9f1e532fad453e6d436b3b8337c18a29609fd1d2c415e0"
+    },
+    {
+      "file": "yellow-l1-concentration-v2.png",
+      "original": "yellow(1).png",
+      "color": "yellow",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "81fd475399379c4349b79bd45969b96a3e49ad8be090e748f8500df074a64aa2"
+    },
+    {
+      "file": "yellow-l2-concentration-v2.png",
+      "original": "yellow(10).png",
+      "color": "yellow",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "a5e3d8f6c67270a7a872090a257a183c0d1e17199a63d099aa7f2790e93ccab6"
+    },
+    {
+      "file": "yellow-l2-concentration-v3.png",
+      "original": "yellow(11).png",
+      "color": "yellow",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "14dec4e337ec73dc027e3b8688b01ea026c2b69499804b9865f63722652b2df0"
+    },
+    {
+      "file": "yellow-l2-resistance-v1.png",
+      "original": "yellow(12).png",
+      "color": "yellow",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "a26165e85f97cabd9deee3671003ebaba0f462770e0a76705eaa2ce1192bf7a9"
+    },
+    {
+      "file": "yellow-l2-resistance-v2.png",
+      "original": "yellow(13).png",
+      "color": "yellow",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "a20cb05c1285ccd43b54bb256e6ff3cb6057fb3eb731e6415abd2ef4a7e13559"
+    },
+    {
+      "file": "yellow-l2-resistance-v3.png",
+      "original": "yellow(14).png",
+      "color": "yellow",
+      "level": 2,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "5813a802af1848c11dcb5f36d6c69326b4d3a8d1e23ebf3af5961d3feccc177d"
+    },
+    {
+      "file": "yellow-l2-effectiveness-v1.png",
+      "original": "yellow(15).png",
+      "color": "yellow",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "ff8fa2e5f5b8dded8cb33966079a39809ee0152bab3cf696d636e76002bef7e9"
+    },
+    {
+      "file": "yellow-l2-effectiveness-v2.png",
+      "original": "yellow(16).png",
+      "color": "yellow",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "ea8a95fd14990714c56ea678b593e8b38974fb7279dcb1298b1aebaccad301e1"
+    },
+    {
+      "file": "yellow-l2-effectiveness-v3.png",
+      "original": "yellow(17).png",
+      "color": "yellow",
+      "level": 2,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "00306f48440d14721d25c00f2d2894126c58fd50c91aa7e64c3155d81410493e"
+    },
+    {
+      "file": "yellow-l3-concentration-v1.png",
+      "original": "yellow(18).png",
+      "color": "yellow",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "042b8babd4529cae5acc049ccd7b85ebb31272518fdb6ab0477747a14f56ec4c"
+    },
+    {
+      "file": "yellow-l3-concentration-v2.png",
+      "original": "yellow(19).png",
+      "color": "yellow",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 2,
+      "sha256": "e280bb456b6c715e60c659aa41504bc788a837a7aac9fb7f969a160fa633a2ec"
+    },
+    {
+      "file": "yellow-l1-concentration-v3.png",
+      "original": "yellow(2).png",
+      "color": "yellow",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "8bc91612c27457b449e6a4958e0f7c41ed2436e820e8b35d622b0a8d92955569"
+    },
+    {
+      "file": "yellow-l3-concentration-v3.png",
+      "original": "yellow(20).png",
+      "color": "yellow",
+      "level": 3,
+      "effect": "concentration",
+      "variant": 3,
+      "sha256": "29fbccf6e9de6b8470813fdcafd249c937b4e8c19543ace8f14482c7a193b0a3"
+    },
+    {
+      "file": "yellow-l3-resistance-v1.png",
+      "original": "yellow(21).png",
+      "color": "yellow",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "229a01111bff04fcbfe33ad36dc7da76e4ce7e6bcbdf15d0e53ffa41a74c8bc9"
+    },
+    {
+      "file": "yellow-l3-resistance-v2.png",
+      "original": "yellow(22).png",
+      "color": "yellow",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "7545374d95b917b2757258c7d5ba744b3ab283ea237aaf3de46ba0cb55664391"
+    },
+    {
+      "file": "yellow-l3-resistance-v3.png",
+      "original": "yellow(23).png",
+      "color": "yellow",
+      "level": 3,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "699fe5650b0b34e1a41c91426e2f0ca2f212bd921a81d2928b1e8ad6d4c7b5c9"
+    },
+    {
+      "file": "yellow-l3-effectiveness-v1.png",
+      "original": "yellow(24).png",
+      "color": "yellow",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "4a731f52b749d48b9b4f2ab41e351191076456c7874c3319c113a653f991fbfa"
+    },
+    {
+      "file": "yellow-l3-effectiveness-v2.png",
+      "original": "yellow(25).png",
+      "color": "yellow",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "d6f156316e55207f4032ea0d7b42e30d8a5419da5eada7e3f622046e2a1db2f8"
+    },
+    {
+      "file": "yellow-l3-effectiveness-v3.png",
+      "original": "yellow(26).png",
+      "color": "yellow",
+      "level": 3,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "3c61caf5bd08a669523a10b704ebdec5f2564564a036210810ba27f719dac084"
+    },
+    {
+      "file": "yellow-l1-resistance-v1.png",
+      "original": "yellow(3).png",
+      "color": "yellow",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 1,
+      "sha256": "7c7ff8f985df7373b325e2688faaedff69b593515cdf34ff98c5d91a291099fd"
+    },
+    {
+      "file": "yellow-l1-resistance-v2.png",
+      "original": "yellow(4).png",
+      "color": "yellow",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 2,
+      "sha256": "dbcc78fecb6ffd3cdb297a3872922d7397b4b5fb90167f26fef9016c8300519f"
+    },
+    {
+      "file": "yellow-l1-resistance-v3.png",
+      "original": "yellow(5).png",
+      "color": "yellow",
+      "level": 1,
+      "effect": "resistance",
+      "variant": 3,
+      "sha256": "b67b5dfe1580104009fca0dfd16de51132c35b7b808b5df5d835dd203a6676bc"
+    },
+    {
+      "file": "yellow-l1-effectiveness-v1.png",
+      "original": "yellow(6).png",
+      "color": "yellow",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 1,
+      "sha256": "d11aca6a8d443b609e52a9bd54149db15feb24377f2ad5408b576300c5a72e36"
+    },
+    {
+      "file": "yellow-l1-effectiveness-v2.png",
+      "original": "yellow(7).png",
+      "color": "yellow",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 2,
+      "sha256": "ca9bc7d194f868e19fe798d2b72169a05c5f34f5a4005c9a5c077e09d123f813"
+    },
+    {
+      "file": "yellow-l1-effectiveness-v3.png",
+      "original": "yellow(8).png",
+      "color": "yellow",
+      "level": 1,
+      "effect": "effectiveness",
+      "variant": 3,
+      "sha256": "389ba606089daa4fbf9be71075b5b9acd9b584f2aa7e1d6031ecba5a096d3026"
+    },
+    {
+      "file": "yellow-l2-concentration-v1.png",
+      "original": "yellow(9).png",
+      "color": "yellow",
+      "level": 2,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "8bd58381f35344cf4d9c593e605880ae763e91ee11ff4bcfe0f474e62d423c9e"
+    },
+    {
+      "file": "yellow-l1-concentration-v1.png",
+      "original": "yellow.png",
+      "color": "yellow",
+      "level": 1,
+      "effect": "concentration",
+      "variant": 1,
+      "sha256": "e21fc363a73b0bcc25e75a4fa437d04eca5b8158e5457d5d59f86300c9f42054"
+    }
+  ]
+}
