@@ -153,11 +153,13 @@ function moonStatusText(now){
     text='<strong>Полнолуние сейчас, скорее загружай котлы!</strong> Расчётное окончание — '+forumDate(end,true)+' UTC. До конца: '+moonHoursMinutes(remaining)+'.';
   }
   else{
-    const next=peaks.find(p=>p.valueOf()-half>now)||peaks[peaks.length-1],start=new Date(next.valueOf()-half),end=new Date(next.valueOf()+half),remaining=start-now,days=Math.max(1,Math.ceil(remaining/moonDay)),phase=moonIllumination(now).phase;
-    const previous=peaks.filter(p=>p.valueOf()+half<=now).at(-1);
-    const phaseText=previous&&now-(previous.valueOf()+half)<moonDay?"Полнолуние закончилось.":phase<.035||phase>.965?"Сейчас новолуние.":phase<.5?"Сейчас Луна растёт.":"Сейчас Луна убывает.";
-    const remainingText=remaining<moonDay?moonHoursMinutes(remaining):days+' '+plural(days,"день","дня","дней");
-    text=phaseText+' Следующее расчётное полнолуние — с '+forumDate(start,true)+' по '+forumDate(end,true)+' UTC. До начала около '+remainingText+'.';
+    const next=peaks.find(p=>p.valueOf()-half>now)||peaks[peaks.length-1],start=new Date(next.valueOf()-half),end=new Date(next.valueOf()+half),remaining=start-now;
+    if(remaining>=moonDay){
+      const days=Math.ceil(remaining/moonDay);
+      text='Следующее расчётное полнолуние с '+forumDate(start)+' по '+forumDate(end)+'. До начала '+days+' '+plural(days,"день","дня","дней")+'.';
+    }else{
+      text='Следующее расчётное полнолуние с '+forumDate(start,true)+' по '+forumDate(end,true)+' UTC. До начала '+moonHoursMinutes(remaining)+'.';
+    }
   }
   return text;
 }
