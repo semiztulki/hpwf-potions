@@ -144,15 +144,13 @@ function moonHoursMinutes(ms){
 function moonStatusText(now){
   const peaks=fullMoonCandidates(now),threshold=.985;
   // 27.09.2026 форум завершил полнолуние примерно на 45 минут раньше этой модели.
-  // Дальнейшие даты остаются прогнозом, поэтому вблизи границы не обещаем точное время.
+  // Поправку сохраняем и для следующих циклов; показанное время остаётся прогнозом.
   const half=Math.acos(2*threshold-1)/(2*Math.PI)*29.530588853*moonDay-45*60000;
   const active=peaks.find(p=>now>=p.valueOf()-half&&now<p.valueOf()+half);
   let text;
   if(active){
     const end=new Date(active.valueOf()+half),remaining=end-now;
-    text=remaining<2*3600000
-      ?'<strong>Полнолуние подходит к концу.</strong> Расчётная граница — '+forumDate(end,true)+' UTC. Перед варкой проверь наличие Луны в котле.'
-      :'<strong>Полнолуние сейчас, скорее загружай котлы!</strong> Расчётное окончание — '+forumDate(end,true)+' UTC. Осталось около '+moonHoursMinutes(remaining)+'.';
+    text='<strong>Полнолуние сейчас, скорее загружай котлы!</strong> Расчётное окончание — '+forumDate(end,true)+' UTC. До конца: '+moonHoursMinutes(remaining)+'.';
   }
   else{
     const next=peaks.find(p=>p.valueOf()-half>now)||peaks[peaks.length-1],start=new Date(next.valueOf()-half),end=new Date(next.valueOf()+half),remaining=start-now,days=Math.max(1,Math.ceil(remaining/moonDay)),phase=moonIllumination(now).phase;
