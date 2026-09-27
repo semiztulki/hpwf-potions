@@ -261,7 +261,7 @@ function testBrewExistingResult(potions){
     const meta=[categoryLabels[potion.category],potion.level?potion.level+" уровень":null,potion.duration?(state.mechanics?.toxicity?.durationLabels?.[potion.duration]||calculatorDurationLabels[potion.duration]):null].filter(Boolean).join(" · ");
     const estimate=testBrewValueEstimate();
     const value=potion.value!=null?'<p class="test-brew-observed-value">Ценность: '+fmt(potion.value)+'</p>':'<p class="test-brew-observed-value calculated">Расчётная ценность: '+fmt(estimate.base)+(estimate.moon?' + Луна 0–450':'')+'</p>';
-    return '<article class="test-brew-match"><h4>'+esc(potionTitle(potion))+'</h4><p class="meta">'+esc(meta)+'</p>'
+    return '<article class="test-brew-match"><div class="potion-heading">'+potionThumbnail(potion)+'<div><h4>'+esc(potionTitle(potion))+'</h4><p class="meta">'+esc(meta)+'</p></div></div>'
       +(potionEffectSummary(potion)?'<p class="potion-effect">'+esc(potionEffectSummary(potion))+'</p>':"")
       +(potion.author?'<p class="test-brew-author">Автор: '+esc(potion.author)+'</p>':"")+value+'</article>';
   }).join("");
@@ -681,6 +681,7 @@ function potionSearchText(p,recipes){
 function renderPotionCard(p){
   const rs=recipesVisibleForPotion(p);
   const observed=p.value!=null;
+  const thumbnail=potionThumbnail(p);
   const recipeHtml=rs.map((r,i)=>{
     const est=nominalRecipeValue(r),calculated=calculatedRecipeValue(r);
     const ratio=recipeValueRatio(p,r);
@@ -690,7 +691,7 @@ function renderPotionCard(p){
   const valueHtml=observed?'<p class="potion-value">Фактическая ценность: '+fmt(p.value)+'</p>':"";
   const meta=[state.mechanics?.toxicity?.durationLabels?.[p.duration]||p.duration,p.toxicity==null?null:"токсикация "+p.toxicity].filter(Boolean);
   return '<article class="potion-card">'
-    +'<div class="potion-card-head"><div><h4>'+esc(potionTitle(p))+'</h4><p class="potion-effect">'+esc(potionEffectSummary(p))+'</p></div>'
+    +'<div class="potion-card-head"><div class="potion-heading">'+thumbnail+'<div><h4>'+esc(potionTitle(p))+'</h4><p class="potion-effect">'+esc(potionEffectSummary(p))+'</p></div></div>'
     +'<div class="badges">'+meta.map(x=>'<span class="badge">'+esc(x)+'</span>').join("")+'</div></div>'
     +'<div class="potion-recipes"><p class="recipe-label">'+(rs.length===1?"Рецепт":"Рецепты")+'</p>'+recipeHtml+'</div>'
     +valueHtml+'</article>';
@@ -812,6 +813,10 @@ function wantedUrl(value){
     const url=new URL(String(value),location.href);
     return ["https:","http:"].includes(url.protocol)?url.href:null;
   }catch{return null;}
+}
+function potionThumbnail(p){
+  const image=wantedUrl(p.imageUrl);
+  return image?'<img class="potion-thumbnail" src="'+esc(image)+'" alt="" loading="lazy">':'';
 }
 function wantedPotionCard(p){
   const title=potionTitle(p),image=wantedUrl(p.imageUrl),link=wantedUrl(p.marketUrl||(p.sources||[]).find(s=>s.url)?.url);
