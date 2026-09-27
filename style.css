@@ -203,6 +203,9 @@ tbody tr:hover{background:#f5f0fa}
 .duration-block[open]>summary{background:#d9ccee}
 .duration-content{border-top:2px solid var(--lavender-deep)}
 .potion-card{border-bottom:1px solid var(--line)}
+.potion-heading{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.potion-heading>div{min-width:0}
+.potion-thumbnail{display:block;width:48px;height:48px;flex:none;object-fit:contain;border-radius:7px;image-rendering:pixelated}
 .potion-card-head h4{color:var(--ink)}
 .potion-effect{color:var(--accent);font-weight:700}
 .badge{border:0;background:var(--cream);color:#6b5a1e;font-weight:700}
