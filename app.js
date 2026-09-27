@@ -826,7 +826,7 @@ function wantedPotionCard(p){
     +'<div class="wanted-details"><div class="wanted-card-head"><h3>'+esc(title)+'</h3><div class="badges">'+badges.map(x=>'<span class="badge">'+esc(x)+'</span>').join("")+'</div></div>'
     +(p.effects?.length?'<p class="potion-effect">'+esc(potionEffectSummary(p))+'</p>':'')
     +(p.description?'<p class="wanted-description">'+esc(p.description)+'</p>':'')
-    +(p.value!=null?'<p class="wanted-value">Истинная ценность: '+fmt(p.value)+'</p>':'')
+    +(p.value!=null?'<p class="wanted-value">Ценность: '+fmt(p.value)+'</p>':'')
     +(link?'<a class="wanted-link" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">Запись на форуме ↗</a>':'')
     +'</div></article>';
 }
