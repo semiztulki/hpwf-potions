@@ -380,3 +380,9 @@ tbody tr:hover{background:#f5f0fa}
 @media(max-width:950px){.test-brew-layout{grid-template-columns:1fr}.test-brew-cauldron{position:static}.test-brew-sequence{min-height:100px}}
 @media(max-width:720px){.test-brew-matches,.test-brew-estimate-grid{grid-template-columns:1fr}.test-brew-effects .calculator-effects-head{display:grid}.test-brew-effects .calculator-effects-grid{grid-template-columns:1fr}}
 @media(max-width:560px){.test-brew-choice{flex-basis:58px;width:58px;height:58px}.test-brew-choice img,.test-brew-choice-placeholder{width:43px;height:43px}.test-brew-cauldron-head,.test-brew-expanded-head{align-items:flex-start;flex-direction:column}.test-brew-cauldron-head .admin-secondary-btn{align-self:stretch}.test-brew-expanded-recipe{padding:15px}.test-brew-inline-recipe{padding:15px;font-size:1rem}}
+
+/* Keep recipe text and value rows aligned consistently in both card variants. */
+.recipe-line{display:block}
+.recipe-line+.recipe-line{margin-top:18px}
+.recipe-estimate{margin-top:8px}
+.potion-value,.recipe-estimate{color:var(--ink);font-size:.9rem;line-height:1.45}

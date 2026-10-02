@@ -550,10 +550,10 @@ function potionSearchText(p){
 function renderPotionCard(p){
   const rs=recipesVisibleForPotion(p);
   const observed=p.value!=null;
-  const recipeHtml=rs.map((r,i)=>{
+  const recipeHtml=rs.map(r=>{
     const est=nominalRecipeValue(r);
     const estimate=!observed?'<div class="recipe-estimate">Расчётная ценность: '+fmt(est.total)+(est.moon?' + Луна 0–450':'')+'</div>':"";
-    return '<div class="recipe-line"><span class="recipe-number">'+(rs.length>1?(i+1)+".":"")+'</span><div><div class="recipe-sequence">'+recipeItems(r)+'</div>'+estimate+'</div></div>';
+    return '<div class="recipe-line"><div class="recipe-sequence">'+recipeItems(r)+'</div>'+estimate+'</div>';
   }).join("");
   const valueHtml=observed?'<p class="potion-value">Ценность: '+fmt(p.value)+'</p>':"";
   const meta=[state.mechanics?.toxicity?.durationLabels?.[p.duration]||p.duration,p.toxicity==null?null:"токсикация "+p.toxicity].filter(Boolean);
@@ -658,7 +658,7 @@ function renderRecipeSearchResults(){
   ].filter(p=>p.level===level);
   const found=filterPotions(list).sort(comparePotions);
   if(!found.length) return '<div class="panel empty-state">По этому запросу ничего не найдено.</div>';
-  return '<div class="recipe-page-title"><p class="eyebrow">Поиск</p><h2>Результаты по порядку названий</h2></div><div class="duration-content">'+found.map(renderPotionCard).join("")+'</div>';
+  return '<div class="recipe-page-title"><p class="eyebrow">Поиск</p><h2>Результаты поиска в алфавитном порядке.</h2></div><div class="duration-content">'+found.map(renderPotionCard).join("")+'</div>';
 }
 function renderRecipeBrowser(){
   const searching=recipeSearchNorm($("recipeSearch").value)!=="";
