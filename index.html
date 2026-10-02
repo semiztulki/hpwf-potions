@@ -337,18 +337,12 @@
             <div><p class="eyebrow">Шаг 2</p><h3>Собрать рецепт</h3></div>
             <span id="adminIngredientCount" class="count-pill">0 / 11</span>
           </div>
-          <div class="admin-builder">
-            <div class="admin-add-row">
-              <select id="adminIngredientSelect" aria-label="Ингредиент"></select>
-              <button type="button" id="adminAddIngredient" class="admin-secondary-btn">Добавить ингредиент</button>
-            </div>
-            <div class="admin-add-row">
-              <select id="adminActionSelect" aria-label="Действие"></select>
-              <button type="button" id="adminAddAction" class="admin-secondary-btn">Добавить действие</button>
-            </div>
-            <div class="admin-add-row">
-              <button type="button" id="adminAddMoon" class="admin-secondary-btn">Добавить Свет полной луны</button>
-            </div>
+          <div id="adminPalette" class="admin-builder admin-palette">
+            <div id="adminIngredientRows"></div>
+            <section class="test-brew-action-section">
+              <h3>Действия и Свет полной луны</h3>
+              <div id="adminActionRow" class="test-brew-choice-row"></div>
+            </section>
           </div>
           <div id="adminSequence" class="admin-sequence empty"></div>
           <div id="adminValidation" class="admin-validation"></div>
@@ -376,6 +370,6 @@
   </footer>
   </div>
   <script src="app.js?v=20261002-1" defer></script>
-  <script src="admin.js?v=20261002-1" defer></script>
+  <script src="admin.js?v=20261002-2" defer></script>
 </body>
 </html>

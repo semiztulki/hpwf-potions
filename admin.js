@@ -60,12 +60,26 @@ function adminDraft(){
   };
 }
 function adminPopulateBuilder(){
-  a$("adminIngredientSelect").innerHTML=state.ingredients.slice()
-    .sort((a,b)=>a.level-b.level||a.rarity.localeCompare(b.rarity)||a.name.localeCompare(b.name,"ru"))
-    .map(x=>'<option value="'+esc(x.id)+'">'+x.level+' уровень · '+esc(adminRarityLabel(x.rarity))+' — '+esc(x.name)+'</option>')
-    .join("");
-  a$("adminActionSelect").innerHTML=state.actions.filter(x=>x.kind==="action").sort((a,b)=>a.level-b.level)
-    .map(x=>'<option value="'+esc(x.id)+'">'+x.level+' уровень — '+esc(x.name)+'</option>').join("");
+  adminRenderPalette();
+}
+function adminChoice(item,type){
+  const isIngredient=type==="ingredient",isMoon=type==="moon";
+  const name=item.name||(isMoon?"Свет полной луны":"Элемент"),image=item.imageUrl;
+  const detail=isIngredient?adminRarityLabel(item.rarity)+", "+item.level+" уровень":isMoon?"дополнительный ингредиент":item.level+" уровень";
+  const ingredientCount=adminState.sequence.filter(x=>x.type==="ingredient").length;
+  const disabled=(isIngredient&&ingredientCount>=11)||(isMoon&&adminState.sequence.some(x=>x.type==="moon"));
+  return '<button type="button" class="test-brew-choice" data-admin-type="'+type+'" data-admin-ref="'+esc(item.id)+'" aria-label="Добавить: '+esc(name)+', '+esc(detail)+'" title="'+esc(name)+' · '+esc(detail)+'"'+(disabled?' disabled':'')+'>'
+    +(image?'<img src="'+esc(image)+'" alt="">':'<span class="test-brew-choice-placeholder">✦</span>')+'</button>';
+}
+function adminRenderPalette(){
+  const rarityOrder={common:0,seasonal:1,very_rare:2};
+  a$("adminIngredientRows").innerHTML=[1,2,3].map(level=>{
+    const items=state.ingredients.filter(x=>Number(x.level)===level).sort((a,b)=>rarityOrder[a.rarity]-rarityOrder[b.rarity]||a.name.localeCompare(b.name,"ru"));
+    return '<section class="test-brew-level"><h3>'+level+' уровень</h3><div class="test-brew-choice-row">'+items.map(item=>adminChoice(item,"ingredient")).join("")+'</div></section>';
+  }).join("");
+  const actions=state.actions.filter(x=>x.kind==="action").sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,"ru"));
+  const moon=state.actions.find(x=>x.kind==="moon")||{id:"full-moon",name:"Свет полной луны",imageUrl:"assets/catalog/full-moon.png"};
+  a$("adminActionRow").innerHTML=actions.map(item=>adminChoice(item,"action")).join("")+adminChoice(moon,"moon");
 }
 function adminEffectMap(effects){
   return Object.fromEntries((effects||[]).map(e=>[e.type,e]));
@@ -234,6 +248,7 @@ function adminRenderSequence(){
   const box=a$("adminSequence");
   const count=adminState.sequence.filter(x=>x.type==="ingredient").length;
   a$("adminIngredientCount").textContent=count+" / 11";
+  if(adminState.ready) adminRenderPalette();
   if(!adminState.sequence.length){
     box.className="admin-sequence empty";
     box.textContent="Рецепт пока пуст.";
@@ -322,6 +337,8 @@ function adminRenderValidation(){
   return v;
 }
 function adminAdd(item){
+  if(item.type==="ingredient"&&adminState.sequence.filter(x=>x.type==="ingredient").length>=11) return;
+  if(item.type==="moon"&&adminState.sequence.some(x=>x.type==="moon")) return;
   adminState.sequence.push(item);
   adminRenderSequence();
 }
@@ -486,9 +503,10 @@ function initAdmin(){
   });
   a$("adminClearForm").addEventListener("click",adminClearForm);
 
-  a$("adminAddIngredient").addEventListener("click",()=>adminAdd({type:"ingredient",ref:a$("adminIngredientSelect").value}));
-  a$("adminAddAction").addEventListener("click",()=>adminAdd({type:"action",ref:a$("adminActionSelect").value}));
-  a$("adminAddMoon").addEventListener("click",()=>adminAdd({type:"moon",ref:"full-moon"}));
+  a$("adminPalette").addEventListener("click",e=>{
+    const btn=e.target.closest("[data-admin-type]");
+    if(btn&&!btn.disabled) adminAdd({type:btn.dataset.adminType,ref:btn.dataset.adminRef});
+  });
 
   a$("adminSequence").addEventListener("click",e=>{
     const btn=e.target.closest("[data-seq-action]");
