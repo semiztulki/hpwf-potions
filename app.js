@@ -37,11 +37,9 @@ function showAccessScreen(){
   showPortalScreen("accessScreen");
   $("entryPassword").value="";
   $("entryLoginStatus").textContent="";
-  $("wantedResults").replaceChildren();
-  $("wantedCount").hidden=true;
 }
 function openFunctionalTab(id){
-  if(["potions","test-brew","add-recipe","review","wanted"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
+  if(["potions","test-brew","add-recipe"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
   document.querySelectorAll(".tab,.tab-panel").forEach(x=>x.classList.remove("active"));
   const navButton=document.querySelector('.tab[data-tab="'+id+'"]');
   if(navButton) navButton.classList.add("active");
@@ -141,30 +139,18 @@ function moonHoursMinutes(ms){
   if(minutes)parts.push(minutes+" "+plural(minutes,"минута","минуты","минут"));
   return parts.join(" ");
 }
-function moonStatusText(now){
-  const peaks=fullMoonCandidates(now),threshold=.985;
-  // 27.09.2026 форум завершил полнолуние примерно на 45 минут раньше этой модели.
-  // Поправку сохраняем и для следующих циклов; показанное время остаётся прогнозом.
-  const half=Math.acos(2*threshold-1)/(2*Math.PI)*29.530588853*moonDay-45*60000;
-  const active=peaks.find(p=>now>=p.valueOf()-half&&now<p.valueOf()+half);
-  let text;
-  if(active){
-    const end=new Date(active.valueOf()+half),remaining=end-now;
-    text='<strong>Полнолуние сейчас, скорее загружай котлы!</strong> Расчётное окончание — '+forumDate(end,true)+' UTC. До конца: '+moonHoursMinutes(remaining)+'.';
-  }
-  else{
-    const next=peaks.find(p=>p.valueOf()-half>now)||peaks[peaks.length-1],start=new Date(next.valueOf()-half),end=new Date(next.valueOf()+half),remaining=start-now;
-    if(remaining>=moonDay){
-      const days=Math.ceil(remaining/moonDay);
-      text='Следующее расчётное полнолуние с '+forumDate(start)+' по '+forumDate(end)+'. До начала '+days+' '+plural(days,"день","дня","дней")+'.';
-    }else{
-      text='Следующее расчётное полнолуние с '+forumDate(start,true)+' по '+forumDate(end,true)+' UTC. До начала '+moonHoursMinutes(remaining)+'.';
-    }
-  }
-  return text;
-}
 function renderMoonStatus(){
-  const text=moonStatusText(new Date());
+  const now=new Date(),peaks=fullMoonCandidates(now),threshold=.985;
+  const half=Math.acos(2*threshold-1)/(2*Math.PI)*29.530588853*moonDay;
+  const active=peaks.find(p=>now>=p-half&&now<=p.valueOf()+half);
+  let text;
+  if(active){const end=new Date(active.valueOf()+half);text='<strong>Полнолуние сейчас, скорее загружай котлы!</strong> Оно продлится до '+forumDate(end)+', осталось '+moonHoursMinutes(end-now)+'.';}
+  else{
+    const next=peaks.find(p=>p.valueOf()-half>now)||peaks[peaks.length-1],start=new Date(next.valueOf()-half),end=new Date(next.valueOf()+half),remaining=start-now,days=Math.max(1,Math.ceil(remaining/moonDay)),phase=moonIllumination(now).phase;
+    const phaseText=phase<.035||phase>.965?"Сейчас новолуние.":phase<.5?"Сейчас Луна растёт.":"Сейчас Луна убывает.";
+    const remainingText=remaining<moonDay?moonHoursMinutes(remaining):days+' '+plural(days,"день","дня","дней");
+    text=phaseText+' Ближайшее полнолуние будет с '+forumDate(start)+' по '+forumDate(end)+'. До начала осталось '+remainingText+'.';
+  }
   $("moonStatus").innerHTML='<p>'+text+'</p>';
 }
 function plural(n,one,few,many){const n10=n%10,n100=n%100;return n10===1&&n100!==11?one:n10>=2&&n10<=4&&(n100<12||n100>14)?few:many;}
@@ -273,7 +259,7 @@ function testBrewExistingResult(potions){
     const meta=[categoryLabels[potion.category],potion.level?potion.level+" уровень":null,potion.duration?(state.mechanics?.toxicity?.durationLabels?.[potion.duration]||calculatorDurationLabels[potion.duration]):null].filter(Boolean).join(" · ");
     const estimate=testBrewValueEstimate();
     const value=potion.value!=null?'<p class="test-brew-observed-value">Ценность: '+fmt(potion.value)+'</p>':'<p class="test-brew-observed-value calculated">Расчётная ценность: '+fmt(estimate.base)+(estimate.moon?' + Луна 0–450':'')+'</p>';
-    return '<article class="test-brew-match"><div class="potion-heading">'+potionThumbnail(potion)+'<div><h4>'+esc(potionTitle(potion))+'</h4><p class="meta">'+esc(meta)+'</p></div></div>'
+    return '<article class="test-brew-match"><h4>'+esc(potionTitle(potion))+'</h4><p class="meta">'+esc(meta)+'</p>'
       +(potionEffectSummary(potion)?'<p class="potion-effect">'+esc(potionEffectSummary(potion))+'</p>':"")
       +(potion.author?'<p class="test-brew-author">Автор: '+esc(potion.author)+'</p>':"")+value+'</article>';
   }).join("");
@@ -436,35 +422,15 @@ function recipeItems(r){
 }
 function nominalRecipeValue(r){
   const im=Object.fromEntries(state.ingredients.map(x=>[x.id,x]));
-  let total=0,moon=false,complete=true;
+  let total=0,moon=false;
   for(const item of (r.sequence||[])){
-    if(item.type==="ingredient"){
-      if(im[item.ref])total+=Number(im[item.ref].basePower||0);
-      else complete=false;
-    }
+    if(item.type==="ingredient") total+=Number(im[item.ref]?.basePower||0);
     if(item.type==="moon") moon=true;
-    if(item.type==="unresolved")complete=false;
   }
-  return {total,moon,complete};
+  return {total,moon};
 }
-function calculatedRecipeValue(r){
-  const estimate=nominalRecipeValue(r);
-  return estimate.complete?estimate.total+(estimate.moon?225:0):null;
-}
-let recipeIndexSource=null,recipeIndexCount=0,recipeIndex=new Map();
 function recipesForPotion(potionId){
-  const groups=Object.values(state.recipes),count=groups.reduce((sum,group)=>sum+group.length,0);
-  if(recipeIndexSource!==state.recipes||recipeIndexCount!==count){
-    recipeIndexSource=state.recipes;recipeIndexCount=count;recipeIndex=new Map();
-    for(const group of groups)for(const recipe of group){
-      if(!recipeIndex.has(recipe.potionId))recipeIndex.set(recipe.potionId,[]);
-      recipeIndex.get(recipe.potionId).push(recipe);
-    }
-  }
-  return recipeIndex.get(potionId)||[];
-}
-function hasKnownRecipe(p){
-  return recipesForPotion(p.id).some(r=>Array.isArray(r.sequence)&&r.sequence.length>0);
+  return Object.values(state.recipes).flat().filter(r=>r.potionId===potionId);
 }
 function currentRecipeLevel(){
   return recipeView.startsWith("level")?Number(recipeView.replace("level","")):null;
@@ -505,114 +471,14 @@ function recipeAvailabilityIsDefault(){
 function recipeMatchesAvailability(r){
   return recipeMatchesRarities(r,selectedRecipeRarities())&&recipeMatchesMoon(r,selectedRecipeMoonModes());
 }
-function recipeValueThreshold(){
-  return recipeValueSelection;
-}
-function availableRecipesForPotion(p){
-  const recipes=recipesForPotion(p.id).filter(r=>Array.isArray(r.sequence)&&r.sequence.length>0);
+function recipesVisibleForPotion(p){
+  const recipes=recipesForPotion(p.id);
   if(recipeAvailabilityIsDefault())return recipes;
   return recipes.filter(recipeMatchesAvailability);
 }
-function recipeValueRatio(p,r){
-  if(p.value==null||!Number.isFinite(Number(p.value)))return 1;
-  const estimate=calculatedRecipeValue(r);
-  if(estimate==null)return null;
-  if(estimate<=0)return Number(p.value)===0?0:null;
-  return Number(p.value)/estimate;
-}
-function recipesVisibleForPotion(p){
-  const recipes=availableRecipesForPotion(p),threshold=recipeValueThreshold();
-  return threshold<=recipeValueStops[0]?recipes:recipes.filter(r=>{
-    const ratio=recipeValueRatio(p,r);
-    return ratio!=null&&ratio>=threshold;
-  });
-}
 function potionMatchesAvailability(p){
   if(recipeAvailabilityIsDefault())return true;
-  return availableRecipesForPotion(p).length>0;
-}
-function potionMatchesValue(p){
-  if(recipeValueThreshold()<=recipeValueStops[0])return true;
   return recipesVisibleForPotion(p).length>0;
-}
-let recipeValueStops=[0],recipeValueCategory="",recipeValueSelection=0;
-function recipeValueSteps(bestValues,floor){
-  if(!bestValues.length)return [0];
-  const ordered=[...bestValues].sort((a,b)=>a-b),sorted=[...new Set(ordered)],ceiling=sorted.at(-1),steps=[floor],grid=[];
-  if(floor===ceiling)return steps;
-  const bands=[[0,2,.25],[2,5,.5],[5,10,1],[10,25,2.5],[25,50,5],[50,Infinity,10]];
-  for(const [from,to,increment] of bands){
-    const first=Math.ceil((Math.max(floor,from)-1e-9)/increment);
-    const last=Math.floor((Math.min(ceiling,to)+1e-9)/increment);
-    for(let n=first;n<=last;n++){
-      const value=Number((n*increment).toFixed(3));
-      if(value>floor+1e-9&&value<ceiling-1e-9)grid.push(value);
-    }
-  }
-  let lowestRemaining=sorted[0];
-  for(const target of [...new Set(grid)].sort((a,b)=>a-b)){
-    if(target<=steps.at(-1)+1e-9)continue;
-    const next=sorted.find(value=>value>=target-1e-9&&value>lowestRemaining+1e-9);
-    if(next!=null){steps.push(next);lowestRemaining=next;}
-  }
-  if(steps.at(-1)<ceiling)steps.push(ceiling);
-  const countAt=value=>{
-    let low=0,high=ordered.length;
-    while(low<high){const mid=(low+high)>>1;if(ordered[mid]<value)low=mid+1;else high=mid;}
-    return ordered.length-low;
-  };
-  const maxDrop=Math.max(15,Math.ceil(ordered.length/8)),refined=[steps[0]];
-  for(const end of steps.slice(1)){
-    let start=refined.at(-1),remaining=countAt(start);
-    while(remaining-countAt(end)>maxDrop){
-      const target=remaining-maxDrop;
-      const next=sorted.find(value=>value>start+1e-9&&value<end-1e-9&&value.toFixed(3)!==start.toFixed(3)&&countAt(value)<=target);
-      if(next==null)break;
-      refined.push(next);start=next;remaining=countAt(start);
-    }
-    refined.push(end);
-  }
-  return refined;
-}
-function updateRecipeValueControls(){
-  const level=currentRecipeLevel(),era=selectedRecipeEra();
-  const category=recipeView+(level?":"+era:"");
-  const potions=level?[...(state.potions["standard-new"]||[]),...(state.potions["standard-old"]||[])].filter(p=>p.level===level&&(
-    era==="all"||era==="new"&&p.category==="standard_new"||era==="old"&&p.category==="standard_old"
-  )):[...(state.potions.special||[]),...(state.potions.mana||[])];
-  const values=[],bestValues=[];
-  for(const p of potions){
-    let best=null;
-    for(const r of availableRecipesForPotion(p)){
-      const ratio=recipeValueRatio(p,r);
-      if(ratio!=null){values.push(ratio);best=best==null?ratio:Math.max(best,ratio);}
-    }
-    if(best!=null)bestValues.push(best);
-  }
-  const previous=recipeValueSelection,changed=recipeValueCategory!==category;
-  recipeValueCategory=category;
-  recipeValueStops=recipeValueSteps(bestValues,values.length?Math.min(...values):0);
-  const floor=recipeValueStops[0],ceiling=recipeValueStops.at(-1),number=$("recipeValueNumber");
-  number.min=String(floor);number.max=String(ceiling);number.step="any";
-  number.disabled=!values.length||floor===ceiling;
-  recipeValueSelection=changed?floor:Math.max(floor,Math.min(ceiling,previous));
-  number.value=ratioInputValue(recipeValueSelection);
-  syncRecipeValueControls();
-}
-function ratioInputValue(value){return String(Number(value.toFixed(3)));}
-function syncRecipeValueControls(){
-  const threshold=recipeValueThreshold(),slider=$("recipeValueThreshold");
-  const closest=recipeValueStops.reduce((best,value,index)=>Math.abs(value-threshold)<Math.abs(recipeValueStops[best]-threshold)?index:best,0);
-  slider.min="0";slider.max=String(recipeValueStops.length-1);slider.step="1";
-  slider.value=String(closest);slider.disabled=recipeValueStops.length===1;
-  slider.style.setProperty("--value-fill",closest/Math.max(1,recipeValueStops.length-1)*100+"%");
-  slider.setAttribute("aria-valuetext","×"+formatValueRatio(threshold));
-  $("recipeValueFloor").textContent="×"+formatValueRatio(recipeValueStops[0]);
-  $("recipeValueCeiling").textContent="×"+formatValueRatio(recipeValueStops.at(-1));
-  $("recipeValueOutput").textContent="×"+formatValueRatio(threshold);
-}
-function formatValueRatio(value){
-  return new Intl.NumberFormat("ru-RU",{maximumFractionDigits:3}).format(value);
 }
 function recipeEffectNumber(p,type){
   const e=(p.effects||[]).find(x=>x.type===type&&x.value!=null&&x.value!==""&&Number.isFinite(Number(x.value)));
@@ -646,7 +512,6 @@ function updateRecipeFilterControls(){
   const level=currentRecipeLevel(),panel=$("recipeAdvancedFilters");
   panel.hidden=false;
   document.querySelector(".recipe-era-filter").hidden=!level;
-  updateRecipeValueControls();
   if(!level){
     $("newPotionFilters").hidden=true;
     $("recipeEffectRange").hidden=true;
@@ -693,17 +558,15 @@ function potionSearchText(p,recipes){
 function renderPotionCard(p){
   const rs=recipesVisibleForPotion(p);
   const observed=p.value!=null;
-  const thumbnail=potionThumbnail(p);
   const recipeHtml=rs.map((r,i)=>{
-    const est=nominalRecipeValue(r),calculated=calculatedRecipeValue(r);
-    const ratio=recipeValueRatio(p,r);
-    const estimate='<div class="recipe-estimate">Расчётная ценность: '+(calculated==null?'нет данных':fmt(calculated))+(est.moon&&calculated!=null?' (Луна: +225 в среднем)':'')+(ratio==null?'':' · ×'+formatValueRatio(ratio)+(observed?'':' <abbr title="Условная оценка: фактическая ценность неизвестна">(У)</abbr>'))+'</div>';
+    const est=nominalRecipeValue(r);
+    const estimate=!observed?'<div class="recipe-estimate">Расчётная ценность: '+fmt(est.total)+(est.moon?' + Луна 0–450':'')+'</div>':"";
     return '<div class="recipe-line"><span class="recipe-number">'+(rs.length>1?(i+1)+".":"")+'</span><div><div class="recipe-sequence">'+recipeItems(r)+'</div>'+estimate+'</div></div>';
   }).join("");
-  const valueHtml=observed?'<p class="potion-value">Фактическая ценность: '+fmt(p.value)+'</p>':"";
+  const valueHtml=observed?'<p class="potion-value">Ценность: '+fmt(p.value)+'</p>':"";
   const meta=[state.mechanics?.toxicity?.durationLabels?.[p.duration]||p.duration,p.toxicity==null?null:"токсикация "+p.toxicity].filter(Boolean);
   return '<article class="potion-card">'
-    +'<div class="potion-card-head"><div class="potion-heading">'+thumbnail+'<div><h4>'+esc(potionTitle(p))+'</h4><p class="potion-effect">'+esc(potionEffectSummary(p))+'</p></div></div>'
+    +'<div class="potion-card-head"><div><h4>'+esc(potionTitle(p))+'</h4><p class="potion-effect">'+esc(potionEffectSummary(p))+'</p></div>'
     +'<div class="badges">'+meta.map(x=>'<span class="badge">'+esc(x)+'</span>').join("")+'</div></div>'
     +'<div class="potion-recipes"><p class="recipe-label">'+(rs.length===1?"Рецепт":"Рецепты")+'</p>'+recipeHtml+'</div>'
     +valueHtml+'</article>';
@@ -717,9 +580,7 @@ function durationBlock(title,potions,sorter){
 function filterPotions(list){
   const q=norm($("recipeSearch").value);
   if(!currentRecipeLevel())return list.filter(p=>{
-    if(!hasKnownRecipe(p))return false;
     if(!potionMatchesAvailability(p))return false;
-    if(!potionMatchesValue(p))return false;
     const recipes=recipesVisibleForPotion(p);
     return !q||potionSearchText(p,recipes).includes(q);
   });
@@ -727,11 +588,9 @@ function filterPotions(list){
   const rangeActive=era==="new"&&duration&&effect&&!$("recipeEffectRange").hidden;
   const from=rangeActive?Number($("recipeRangeMin").value):null,to=rangeActive?Number($("recipeRangeMax").value):null;
   return list.filter(p=>{
-    if(!hasKnownRecipe(p))return false;
     if(era==="new"&&p.category!=="standard_new")return false;
     if(era==="old"&&p.category!=="standard_old")return false;
     if(!potionMatchesAvailability(p))return false;
-    if(!potionMatchesValue(p))return false;
     if(era==="new"){
       if(duration&&p.duration!==duration)return false;
       if(effect&&recipeEffectNumber(p,effect)==null)return false;
@@ -819,37 +678,6 @@ function renderRecipeBrowser(){
   if(!$("recipeBrowser").innerHTML.trim()) $("recipeBrowser").innerHTML='<div class="panel empty-state">По этому запросу ничего не найдено.</div>';
 }
 
-function wantedUrl(value){
-  if(!value)return null;
-  try{
-    const url=new URL(String(value),location.href);
-    return ["https:","http:"].includes(url.protocol)?url.href:null;
-  }catch{return null;}
-}
-function potionThumbnail(p){
-  const image=wantedUrl(p.imageUrl);
-  return image?'<img class="potion-thumbnail" src="'+esc(image)+'" alt="" loading="lazy">':'';
-}
-function wantedPotionCard(p){
-  const title=potionTitle(p),image=wantedUrl(p.imageUrl),link=wantedUrl(p.marketUrl||(p.sources||[]).find(s=>s.url)?.url);
-  const badges=[p.level?`${p.level} уровень`:null,p.duration?(state.mechanics?.toxicity?.durationLabels?.[p.duration]||p.duration):null,p.toxicity==null?null:`токсикация ${p.toxicity}`].filter(Boolean);
-  return '<article class="panel wanted-card">'
-    +'<div class="wanted-picture">'+(image?'<img src="'+esc(image)+'" alt="Изображение: '+esc(title)+'" loading="lazy">':'<span aria-hidden="true">?</span>')+'</div>'
-    +'<div class="wanted-details"><div class="wanted-card-head"><h3>'+esc(title)+'</h3><div class="badges">'+badges.map(x=>'<span class="badge">'+esc(x)+'</span>').join("")+'</div></div>'
-    +(p.effects?.length?'<p class="potion-effect">'+esc(potionEffectSummary(p))+'</p>':'')
-    +(p.description?'<p class="wanted-description">'+esc(p.description)+'</p>':'')
-    +(p.value!=null?'<p class="wanted-value">Ценность: '+fmt(p.value)+'</p>':'')
-    +(link?'<a class="wanted-link" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">Запись на форуме ↗</a>':'')
-    +'</div></article>';
-}
-function renderWantedBrowser(){
-  const all=Object.values(state.potions).flat().filter(p=>!hasKnownRecipe(p)),q=norm($("wantedSearch").value);
-  const found=all.filter(p=>!q||norm([potionTitle(p),p.number,p.level,p.duration,p.value,p.description,potionEffectSummary(p)].join(" ")).includes(q)).sort(comparePotions);
-  $("wantedCount").textContent=found.length+" "+plural(found.length,"зелье","зелья","зелий");
-  $("wantedCount").hidden=false;
-  $("wantedResults").innerHTML=found.length?found.map(wantedPotionCard).join(""):'<div class="panel empty-state">'+(all.length?'По этому запросу ничего не найдено.':'Пока нет зелий без известного рецепта.')+'</div>';
-}
-
 async function loadPrivateData(password){
   const call=async(path,body={})=>{
     const r=await fetch("https://hpwf-potions-editor-api-siidraen-3125.vercel.app/api"+path,{
@@ -870,7 +698,6 @@ async function loadPrivateData(password){
   state.potions=potions;state.recipes=recipes;
   updateRecipeFilterControls();
   renderRecipeBrowser();
-  renderWantedBrowser();
   document.dispatchEvent(new CustomEvent("hpwf:private-data-ready"));
 }
 
@@ -885,7 +712,6 @@ async function load(){
   }catch(e){$("dataStatus").title="Не удалось загрузить справочник";}
 }
 $("dataStatus").addEventListener("click",()=>showHome());
-$("wantedSearch").addEventListener("input",renderWantedBrowser);
 function updateCheckSelect(input){
   const root=input.closest(".check-select"),all=root.querySelector("[data-filter-all]"),specific=[...root.querySelectorAll(".ingredient-filter:not([data-filter-all])")];
   if(input===all&&all.checked) specific.forEach(x=>x.checked=false);
@@ -924,23 +750,6 @@ for(const group of ["recipe-rarity","recipe-moon"]){
 }
 for(const id of ["recipeDurationFilter","recipeEffectFilter"])$(id).addEventListener("change",()=>{recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();});
 for(const id of ["recipeRangeMin","recipeRangeMax"])$(id).addEventListener("input",e=>{syncRecipeRange(e.currentTarget);renderRecipeBrowser();});
-$("recipeValueThreshold").addEventListener("input",e=>{
-  recipeValueSelection=recipeValueStops[Number(e.target.value)];
-  $("recipeValueNumber").value=ratioInputValue(recipeValueSelection);
-  syncRecipeValueControls();renderRecipeBrowser();
-});
-$("recipeValueNumber").addEventListener("input",e=>{
-  if(e.target.value==="")return;
-  const value=Number(e.target.value),floor=recipeValueStops[0],ceiling=recipeValueStops.at(-1);
-  if(!Number.isFinite(value))return;
-  recipeValueSelection=Math.max(floor,Math.min(ceiling,value));
-  if(value>ceiling)e.target.value=ratioInputValue(ceiling);
-  syncRecipeValueControls();renderRecipeBrowser();
-});
-$("recipeValueNumber").addEventListener("change",e=>{
-  e.target.value=ratioInputValue(recipeValueSelection);
-  syncRecipeValueControls();renderRecipeBrowser();
-});
 document.querySelectorAll(".recipe-view-btn").forEach(btn=>btn.addEventListener("click",()=>{
   document.querySelectorAll(".recipe-view-btn").forEach(x=>x.classList.remove("active"));
   btn.classList.add("active");

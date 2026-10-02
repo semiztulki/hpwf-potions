@@ -1,4 +1,4 @@
-const adminState={sequence:[],ready:false,password:"",confirmedPotionId:null,selectedPotionId:null};
+const adminState={sequence:[],ready:false,password:"",writePassword:"",confirmedPotionId:null,selectedPotionId:null};
 const a$=id=>document.getElementById(id);
 const adminApi="https://hpwf-potions-editor-api-siidraen-3125.vercel.app/api";
 
@@ -60,32 +60,12 @@ function adminDraft(){
   };
 }
 function adminPopulateBuilder(){
-  const count=adminState.sequence.filter(x=>x.type==="ingredient").length;
-  a$("adminIngredientRows").innerHTML=[1,2,3].map(level=>{
-    const items=state.ingredients.filter(x=>Number(x.level)===level).sort((a,b)=>testBrewRarityOrder[a.rarity]-testBrewRarityOrder[b.rarity]||potionCollator.compare(a.name,b.name));
-    return '<section class="test-brew-level"><h3>'+level+' уровень</h3><div class="test-brew-choice-row">'+items.map(x=>testBrewChoice(x,"ingredient").replace('data-test-brew-type=',(count>=11?'disabled ':'')+'data-admin-type=')).join("")+'</div></section>';
-  }).join("");
-  const actions=state.actions.filter(x=>x.kind==="action").sort((a,b)=>a.level-b.level);
-  const moon=state.actions.find(x=>x.kind==="moon")||{id:"full-moon",name:"Свет полной луны",imageUrl:"assets/catalog/full-moon.png"};
-  a$("adminActionRow").innerHTML=actions.map(x=>testBrewChoice(x,"action").replace('data-test-brew-type=','data-admin-type=')).join("")
-    +testBrewChoice(moon,"moon").replace('data-test-brew-type=','data-admin-type=').replace(/ disabled(?=>)/,'');
-  a$("adminIngredientRows").querySelectorAll("[data-test-brew-ref]").forEach(x=>{x.dataset.adminRef=x.dataset.testBrewRef;delete x.dataset.testBrewRef;});
-  a$("adminActionRow").querySelectorAll("[data-test-brew-ref]").forEach(x=>{x.dataset.adminRef=x.dataset.testBrewRef;delete x.dataset.testBrewRef;});
-  if(adminState.sequence.some(x=>x.type==="moon")) a$("adminActionRow").querySelector('[data-admin-type="moon"]').disabled=true;
-}
-function adminParseRecipe(raw){
-  const parts=raw.split("+").map(x=>x.trim().replace(/\s+/g," "));
-  if(!raw.trim()||parts.some(x=>!x))throw new Error("Проверь последовательность: между знаками + должен быть ингредиент или действие.");
-  const lookup=new Map();
-  for(const item of state.ingredients)lookup.set(norm(item.name),{type:"ingredient",ref:item.id});
-  for(const item of state.actions)lookup.set(norm(item.name),{type:item.kind==="moon"?"moon":"action",ref:item.id});
-  lookup.set(norm("Свет полной луны"),{type:"moon",ref:"full-moon"});
-  const unknown=[...new Set(parts.filter(x=>!lookup.has(norm(x))))];
-  if(unknown.length)throw new Error("Не найдены в каталоге: "+unknown.join(", ")+". Рецепт не изменён.");
-  const sequence=parts.map(x=>({...lookup.get(norm(x))}));
-  if(sequence.filter(x=>x.type==="ingredient").length>11)throw new Error("В рецепте больше 11 ингредиентов. Рецепт не изменён.");
-  if(sequence.filter(x=>x.type==="moon").length>1)throw new Error("Свет полной луны указан более одного раза. Рецепт не изменён.");
-  return sequence;
+  a$("adminIngredientSelect").innerHTML=state.ingredients.slice()
+    .sort((a,b)=>a.level-b.level||a.rarity.localeCompare(b.rarity)||a.name.localeCompare(b.name,"ru"))
+    .map(x=>'<option value="'+esc(x.id)+'">'+x.level+' уровень · '+esc(adminRarityLabel(x.rarity))+' — '+esc(x.name)+'</option>')
+    .join("");
+  a$("adminActionSelect").innerHTML=state.actions.filter(x=>x.kind==="action").sort((a,b)=>a.level-b.level)
+    .map(x=>'<option value="'+esc(x.id)+'">'+x.level+' уровень — '+esc(x.name)+'</option>').join("");
 }
 function adminEffectMap(effects){
   return Object.fromEntries((effects||[]).map(e=>[e.type,e]));
@@ -254,7 +234,6 @@ function adminRenderSequence(){
   const box=a$("adminSequence");
   const count=adminState.sequence.filter(x=>x.type==="ingredient").length;
   a$("adminIngredientCount").textContent=count+" / 11";
-  adminPopulateBuilder();
   if(!adminState.sequence.length){
     box.className="admin-sequence empty";
     box.textContent="Рецепт пока пуст.";
@@ -321,17 +300,6 @@ function adminValidation(){
     const duplicate=Object.values(state.recipes).flat().some(r=>r.potionId===match.potion.id&&adminSequenceSignature(r.sequence)===sig);
     if(duplicate) errors.push("Такой рецепт у этого зелья уже есть в базе.");
   }
-  if(d.category==="standard_new"&&seq.length){
-    const sig=adminSequenceSignature(seq);
-    const other=Object.values(state.recipes).flat().find(r=>{
-      if(adminSequenceSignature(r.sequence)!==sig||r.potionId===match.potion?.id) return false;
-      return (state.potions["standard-new"]||[]).some(p=>p.id===r.potionId);
-    });
-    if(other){
-      const potion=(state.potions["standard-new"]||[]).find(p=>p.id===other.potionId);
-      errors.push("Такая последовательность уже записана у зелья «"+potionTitle(potion)+"». Сверь уровень, эффект и исходную запись перед добавлением.");
-    }
-  }
 
   const nominal=seq.reduce((sum,x)=>sum+(x.type==="ingredient"?Number(im[x.ref]?.basePower||0):0),0);
   if(seq.length&&errors.length===0){
@@ -354,8 +322,6 @@ function adminRenderValidation(){
   return v;
 }
 function adminAdd(item){
-  if(item.type==="ingredient"&&adminState.sequence.filter(x=>x.type==="ingredient").length>=11)return;
-  if(item.type==="moon"&&adminState.sequence.some(x=>x.type==="moon"))return;
   adminState.sequence.push(item);
   adminRenderSequence();
 }
@@ -384,7 +350,7 @@ function adminRecipeId(category,level,current){
 async function adminApiCall(path,body){
   const r=await fetch(adminApi+path,{
     method:"POST",
-    headers:{"Content-Type":"application/json","X-Editor-Password":adminState.password},
+    headers:{"Content-Type":"application/json","X-Editor-Password":adminState.password,"X-Add-Password":adminState.writePassword},
     body:JSON.stringify(body||{})
   });
   let data={}; try{data=await r.json();}catch(e){}
@@ -405,7 +371,11 @@ async function adminAuthenticate(password){
 }
 async function adminLogin(){
   const password=a$("editorPassword").value;
-  await adminAuthenticate(password);
+  if(!password) throw new Error("Введи пароль редактора.");
+  adminState.writePassword=password;
+  try{await adminApiCall("/add-auth",{});}catch(err){adminState.writePassword="";throw err;}
+  sessionStorage.setItem("hpwf-add-recipe-password",password);
+  adminRenderAuth();
   a$("editorPassword").value="";
 }
 async function databaseLogin(){
@@ -415,31 +385,36 @@ async function databaseLogin(){
 }
 function adminLogout(){
   adminState.password="";
+  adminState.writePassword="";
   state.potions={};state.recipes={};
-  if(typeof reviewState!=="undefined") reviewState.rows=[];
   sessionStorage.removeItem("hpwf-editor-password");
+  sessionStorage.removeItem("hpwf-add-recipe-password");
   adminRenderAuth();
   showAccessScreen();
 }
+function adminEditorLogout(){
+  adminState.writePassword="";
+  sessionStorage.removeItem("hpwf-add-recipe-password");
+  adminRenderAuth();
+  openFunctionalTab("potions");
+}
 function adminRenderAuth(){
   const logged=!!adminState.password;
-  a$("editorGate").hidden=logged;
-  a$("adminRecipeForm").hidden=!logged;
+  const editorLogged=logged&&!!adminState.writePassword;
+  a$("editorGate").hidden=editorLogged;
+  a$("adminRecipeForm").hidden=!editorLogged;
   a$("editorLoginStatus").textContent="";
   const databaseGate=a$("databaseGate"),databaseContent=a$("databaseContent"),databaseStatus=a$("databaseLoginStatus");
   if(databaseGate) databaseGate.hidden=logged;
   if(databaseContent) databaseContent.hidden=!logged;
   const recipeCount=a$("recipeCount");
   if(recipeCount) recipeCount.hidden=!logged;
-  const reviewPanel=a$("reviewPrivateContent"),reviewCount=a$("reviewCount");
-  if(reviewPanel) reviewPanel.hidden=!logged;
-  if(reviewCount) reviewCount.hidden=!logged;
   if(databaseStatus&&logged) databaseStatus.textContent="";
 }
 async function adminSubmitRecipe(){
   const validation=adminValidation();
   if(validation.errors.length) throw new Error("Исправь ошибки формы перед сохранением.");
-  if(!adminState.password) throw new Error("Сначала войди с паролем редактора.");
+  if(!adminState.password||!adminState.writePassword) throw new Error("Сначала войди с паролем редактора.");
   const d=adminDraft();
   const result=await adminApiCall("/add-recipe",{potion:d,sequence:adminState.sequence.map(x=>({...x}))});
   const key=adminStateKey(d.category);
@@ -457,7 +432,6 @@ async function adminSubmitRecipe(){
   }
   state.recipes[key].push({id:result.recipeId,potionId:result.potionId,sequence:adminState.sequence.map(x=>({...x})),source:{file:"Добавлено через форму",line:null},validation:{status:"ok",issues:[]}});
   renderRecipeBrowser();
-  renderWantedBrowser();
   adminState.sequence=[];
   adminState.confirmedPotionId=null;
   adminState.selectedPotionId=null;
@@ -512,25 +486,9 @@ function initAdmin(){
   });
   a$("adminClearForm").addEventListener("click",adminClearForm);
 
-  a$("adminIngredientRows").parentElement.addEventListener("click",e=>{
-    const btn=e.target.closest("[data-admin-type]");
-    if(btn&&!btn.disabled)adminAdd({type:btn.dataset.adminType,ref:btn.dataset.adminRef});
-  });
-  a$("adminImportToggle").addEventListener("click",()=>{
-    const panel=a$("adminImportPanel"),open=panel.hidden;
-    panel.hidden=!open;
-    a$("adminImportToggle").setAttribute("aria-expanded",String(open));
-    if(open)a$("adminImportText").focus();
-  });
-  a$("adminImportApply").addEventListener("click",()=>{
-    const status=a$("adminImportStatus");
-    try{
-      adminState.sequence=adminParseRecipe(a$("adminImportText").value);
-      status.className="admin-status success";
-      status.textContent="Последовательность вставлена. Проверь её перед сохранением.";
-      adminRenderSequence();
-    }catch(error){status.className="admin-status error";status.textContent=error.message;}
-  });
+  a$("adminAddIngredient").addEventListener("click",()=>adminAdd({type:"ingredient",ref:a$("adminIngredientSelect").value}));
+  a$("adminAddAction").addEventListener("click",()=>adminAdd({type:"action",ref:a$("adminActionSelect").value}));
+  a$("adminAddMoon").addEventListener("click",()=>adminAdd({type:"moon",ref:"full-moon"}));
 
   a$("adminSequence").addEventListener("click",e=>{
     const btn=e.target.closest("[data-seq-action]");
@@ -560,7 +518,7 @@ function initAdmin(){
   });
   a$("entryPassword").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();a$("entryLoginButton").click();}});
   a$("guestLoginButton").addEventListener("click",()=>{
-    adminState.password="";sessionStorage.removeItem("hpwf-editor-password");showHome("guest");
+    adminState.password="";adminState.writePassword="";sessionStorage.removeItem("hpwf-editor-password");sessionStorage.removeItem("hpwf-add-recipe-password");showHome("guest");
   });
   ["homeAuthAction","functionalAuthAction","footerAuthAction"].forEach(id=>a$(id).addEventListener("click",()=>{
     if(accessMode==="authenticated") adminLogout(); else showAccessScreen();
@@ -568,10 +526,11 @@ function initAdmin(){
 
   a$("editorLoginButton").addEventListener("click",async ()=>{
     const st=a$("editorLoginStatus"); st.textContent="Проверяю пароль…"; st.className="admin-status";
-    try{await adminLogin();st.textContent="";}catch(err){adminState.password="";sessionStorage.removeItem("hpwf-editor-password");st.textContent=err.message||String(err);st.className="admin-status error";}
+    try{await adminLogin();st.textContent="";}catch(err){adminState.writePassword="";sessionStorage.removeItem("hpwf-add-recipe-password");st.textContent=err.message||String(err);st.className="admin-status error";}
   });
   a$("editorPassword").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();a$("editorLoginButton").click();}});
-  a$("editorLogoutButton").addEventListener("click",adminLogout);
+  a$("editorLogoutButton").addEventListener("click",adminEditorLogout);
+  a$("openAddRecipe").addEventListener("click",()=>openFunctionalTab("add-recipe"));
 
   a$("databaseLoginButton").addEventListener("click",async ()=>{
     const st=a$("databaseLoginStatus"); st.textContent="Проверяю пароль…"; st.className="admin-status";
@@ -598,13 +557,17 @@ function initAdmin(){
   adminRenderPotionMatch();
   adminRenderAuth();
   const savedPassword=sessionStorage.getItem("hpwf-editor-password");
+  const savedWritePassword=sessionStorage.getItem("hpwf-add-recipe-password");
   if(savedPassword){
     adminState.password=savedPassword;
+    adminState.writePassword=savedWritePassword||"";
     adminRenderAuth();
     showHome("authenticated");
     loadPrivateData(savedPassword).catch(()=>{
       adminState.password="";
+      adminState.writePassword="";
       sessionStorage.removeItem("hpwf-editor-password");
+      sessionStorage.removeItem("hpwf-add-recipe-password");
       adminRenderAuth();
       showAccessScreen();
     });

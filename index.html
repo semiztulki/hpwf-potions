@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260926-5">
+  <link rel="stylesheet" href="style.css?v=20260913-5">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -40,10 +40,7 @@
         <button type="button" data-home-anchor="moonStatus">Узнать, когда полнолуние</button>
         <button type="button" data-home-tab="potions" data-auth-only>Рецепты</button>
         <button type="button" data-home-tab="test-brew" data-auth-only>Тестовая варка зелья</button>
-        <button type="button" data-home-tab="add-recipe" data-auth-only>Добавить рецепт</button>
-        <button type="button" data-home-tab="review" data-auth-only>На проверку</button>
         <button type="button" data-home-tab="mechanics">Советы и секреты</button>
-        <button type="button" data-home-tab="wanted" data-auth-only>Wanted</button>
       </div>
     </div>
   </section>
@@ -69,10 +66,7 @@
     <button type="button" class="tab" data-home-anchor="valueCalculator">Калькулятор ценности</button>
     <button class="tab" data-tab="potions" data-auth-only>Рецепты</button>
     <button class="tab" data-tab="test-brew" data-auth-only>Тестовая варка зелья</button>
-    <button class="tab" data-tab="add-recipe" data-auth-only>Добавить рецепт</button>
-    <button class="tab" data-tab="review" data-auth-only>На проверку</button>
     <button class="tab" data-tab="mechanics">Советы и секреты</button>
-    <button class="tab" data-tab="wanted" data-auth-only>Wanted</button>
   </nav>
   <main class="wrap">
     <section id="ingredients" class="tab-panel active">
@@ -260,20 +254,13 @@
                 <div class="recipe-range-limits"><span id="recipeRangeFloor"></span><span id="recipeRangeCeiling"></span></div>
               </div>
             </div>
-            <fieldset class="recipe-filter-group recipe-value-filter">
-              <legend>Фактическая / расчётная ценность</legend>
-              <div class="recipe-range-head">
-                <label for="recipeValueThreshold">Коэффициент не ниже</label>
-                <label class="recipe-value-number"><span aria-hidden="true">×</span><input id="recipeValueNumber" type="number" min="0" step="any" value="0" inputmode="decimal" aria-label="Точное значение минимального коэффициента"></label>
-                <output id="recipeValueOutput" class="recipe-value-announcement" aria-live="polite">×0</output>
-              </div>
-              <input id="recipeValueThreshold" type="range" min="0" max="1" step="1" value="0">
-              <div class="recipe-range-limits"><span id="recipeValueFloor">×0</span><span id="recipeValueCeiling">×1</span></div>
-            </fieldset>
           </div>
           <p class="meta recipe-help">Структура повторяет факультетскую базу: эффект → длительность → зелья. Раздел длительности раскрывается по нажатию.</p>
         </div>
         <div id="recipeBrowser" class="recipe-browser"></div>
+        <div class="database-add-recipe-link">
+          <button type="button" id="openAddRecipe" class="inline-link discoverable-link">Добавить зелье в базу</button>
+        </div>
       </div>
     </section>
     <section id="add-recipe" class="tab-panel">
@@ -282,15 +269,17 @@
       </div>
 
       <div id="editorGate" class="panel editor-gate">
-        <h3>Этот раздел магически запечатан. Произнести пароль:</h3>
+        <h3>Добавление зелий защищено отдельным паролем</h3>
+        <p class="meta">Введи пароль редактора, чтобы открыть форму добавления.</p>
         <div class="admin-add-row">
           <div class="password-field">
-            <input id="editorPassword" type="password" autocomplete="current-password" placeholder="Введи пароль для доступа к базе и добавления рецептов" aria-label="Пароль для доступа к базе и добавления рецептов">
+            <input id="editorPassword" type="password" autocomplete="current-password" placeholder="Введи пароль редактора" aria-label="Пароль редактора для добавления зелий">
             <button type="button" class="password-toggle" data-password-toggle="editorPassword" aria-label="Показать пароль" title="Показать пароль"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg></button>
           </div>
           <button type="button" id="editorLoginButton" class="admin-primary-btn">Войти</button>
         </div>
         <div id="editorLoginStatus" class="admin-status"></div>
+        <p class="editor-forum-fallback">Если ты не знаешь пароль, <a href="https://harrypotter.com.ua/index.php?showtopic=49167" target="_blank" rel="noopener noreferrer">добавь зелье в тему на форуме</a> — после проверки оно будет перенесено в базу.</p>
       </div>
       <form id="adminRecipeForm" class="admin-form" hidden>
         <div class="panel admin-block">
@@ -348,16 +337,17 @@
             <div><p class="eyebrow">Шаг 2</p><h3>Собрать рецепт</h3></div>
             <span id="adminIngredientCount" class="count-pill">0 / 11</span>
           </div>
-          <div class="admin-builder test-brew-palette">
-            <div id="adminIngredientRows" class="test-brew-ingredient-rows"></div>
-            <div class="test-brew-action-section"><h3>Действия и полнолуние</h3><div id="adminActionRow" class="test-brew-choice-row"></div></div>
-          </div>
-          <div class="admin-import">
-            <button type="button" id="adminImportToggle" class="admin-secondary-btn" aria-expanded="false" aria-controls="adminImportPanel">Вставить рецепт в текстовом виде</button>
-            <div id="adminImportPanel" hidden>
-              <textarea id="adminImportText" aria-label="Текст рецепта" rows="4" placeholder="Капля родниковой воды+Капля родниковой воды+Нагревание+Белладонна+Белладонна+Молодая еловая шишка+Нагревание+Капля родниковой воды+Глаз змеи+Молодая еловая шишка+Нагревание+Капля родниковой воды+Белладонна+Белладонна"></textarea>
-              <button type="button" id="adminImportApply" class="admin-primary-btn">Вставить в рецепт</button>
-              <div id="adminImportStatus" class="admin-status" role="status"></div>
+          <div class="admin-builder">
+            <div class="admin-add-row">
+              <select id="adminIngredientSelect" aria-label="Ингредиент"></select>
+              <button type="button" id="adminAddIngredient" class="admin-secondary-btn">Добавить ингредиент</button>
+            </div>
+            <div class="admin-add-row">
+              <select id="adminActionSelect" aria-label="Действие"></select>
+              <button type="button" id="adminAddAction" class="admin-secondary-btn">Добавить действие</button>
+            </div>
+            <div class="admin-add-row">
+              <button type="button" id="adminAddMoon" class="admin-secondary-btn">Добавить Свет полной луны</button>
             </div>
           </div>
           <div id="adminSequence" class="admin-sequence empty"></div>
@@ -376,34 +366,6 @@
         </div>
       </form>
     </section>
-    <section id="review" class="tab-panel">
-      <div class="section-heading">
-        <div><p class="eyebrow">Контроль качества</p><h2>Рецепты, требующие проверки</h2></div>
-        <span id="reviewCount" class="count-pill" hidden>0</span>
-      </div>
-      <div id="reviewPrivateContent" hidden>
-      <div class="panel controls">
-        <p class="callout">Здесь остались только записи, которые не объясняются текущей механикой и действительно требуют ручной сверки. Действия более высокого уровня и Свет полной луны из ошибок уровня исключены.</p>
-        <div class="filter-grid review-filters">
-          <label class="field field-wide"><span>Поиск</span><input id="reviewSearch" type="search" placeholder="Название зелья, ингредиент, действие, причина"></label>
-          <label class="field"><span>Проблема</span><select id="reviewIssue"><option value="">Все</option><option value="unresolved_token">Компонент не описан</option><option value="two_actions_in_row">Два действия подряд</option><option value="too_many_ingredients">Слишком много ингредиентов</option><option value="level_mismatch">Ингредиент выше уровня зелья</option><option value="source_uncertain">Повреждён источник</option></select></label>
-          <label class="field"><span>Уровень</span><select id="reviewLevel"><option value="">Все</option><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3">3 уровень</option><option value="none">Без уровня</option></select></label>
-        </div>
-      </div>
-      <div id="reviewCards" class="review-cards"></div>
-      <div id="reviewEmpty" class="panel empty-state" hidden>По этим фильтрам записей нет.</div>
-      </div>
-    </section>
-    <section id="wanted" class="tab-panel">
-      <div class="section-heading">
-        <div><p class="eyebrow">Ищем рецепты</p><h2>Wanted</h2></div>
-        <span id="wantedCount" class="count-pill" role="status" hidden></span>
-      </div>
-      <div class="panel recipe-controls">
-        <label class="field"><span>Поиск среди зелий без известного рецепта</span><input id="wantedSearch" type="search" placeholder="Название, номер, эффект, ценность или описание"></label>
-      </div>
-      <div id="wantedResults" class="wanted-results"></div>
-    </section>
   </main>
   <footer class="wrap footer" aria-label="Служебные ссылки">
     <span>HPWF Potions</span><span aria-hidden="true">·</span>
@@ -413,8 +375,7 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20260927-3" defer></script>
-  <script src="admin.js?v=20260926-1" defer></script>
-  <script src="review.js?v=20260918-1" defer></script>
+  <script src="app.js?v=20261002-1" defer></script>
+  <script src="admin.js?v=20261002-1" defer></script>
 </body>
 </html>
