@@ -3,6 +3,7 @@ const $=id=>document.getElementById(id);
 const labels={rarity:{common:"Обычный",seasonal:"Сезонный редкий",very_rare:"Особо редкий"},season:{winter:"Зима",spring:"Весна",summer:"Лето",autumn:"Осень"}};
 const fmt=n=>new Intl.NumberFormat("ru-RU").format(n);
 const norm=v=>String(v??"").toLowerCase().replaceAll("ё","е").trim();
+const recipeSearchNorm=v=>norm(v).replace(/№\s*/g,"").replace(/\s+/g," ");
 const formatXp=v=>v===1?"1 опыт":v===0.5?"1/2 опыта":Math.abs(v-1/3)<0.0001?"1/3 опыта":Math.abs(v-2/3)<0.0001?"2/3 опыта":String(v);
 const esc=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const durationOrder=["5m","1h","5h","1w","1mo","2mo"];
@@ -543,17 +544,8 @@ function updateRecipeFilterControls(){
   $("recipeEffectRange").hidden=false;
   syncRecipeRange();
 }
-function potionSearchText(p,recipes){
-  const im=Object.fromEntries(state.ingredients.map(x=>[x.id,x]));
-  const am=Object.fromEntries(state.actions.map(x=>[x.id,x]));
-  const bits=[potionTitle(p),p.number,p.duration,potionEffectSummary(p)];
-  for(const r of recipes) for(const item of (r.sequence||[])){
-    if(item.type==="ingredient") bits.push(im[item.ref]?.name||item.ref);
-    else if(item.type==="action") bits.push(am[item.ref]?.name||item.ref);
-    else if(item.type==="moon") bits.push("свет полной луны луна");
-    else bits.push(item.raw||item.label||item.value||item.ref);
-  }
-  return norm(bits.join(" "));
+function potionSearchText(p){
+  return recipeSearchNorm([potionTitle(p),p.name,p.number].filter(x=>x!=null&&x!=="").join(" "));
 }
 function renderPotionCard(p){
   const rs=recipesVisibleForPotion(p);
@@ -573,16 +565,15 @@ function renderPotionCard(p){
 }
 function durationBlock(title,potions,sorter){
   if(!potions.length) return "";
-  const q=norm($("recipeSearch").value);
+  const q=recipeSearchNorm($("recipeSearch").value);
   const sorted=[...potions].sort(sorter);
   return '<details class="duration-block"'+(q?' open':'')+'><summary><span>'+esc(title)+'</span><span class="duration-count">'+sorted.length+' '+plural(sorted.length,"зелье","зелья","зелий")+'</span></summary><div class="duration-content">'+sorted.map(renderPotionCard).join("")+'</div></details>';
 }
 function filterPotions(list){
-  const q=norm($("recipeSearch").value);
+  const q=recipeSearchNorm($("recipeSearch").value);
   if(!currentRecipeLevel())return list.filter(p=>{
     if(!potionMatchesAvailability(p))return false;
-    const recipes=recipesVisibleForPotion(p);
-    return !q||potionSearchText(p,recipes).includes(q);
+    return !q||potionSearchText(p).includes(q);
   });
   const era=selectedRecipeEra(),duration=$("recipeDurationFilter").value,effect=$("recipeEffectFilter").value;
   const rangeActive=era==="new"&&duration&&effect&&!$("recipeEffectRange").hidden;
@@ -596,8 +587,7 @@ function filterPotions(list){
       if(effect&&recipeEffectNumber(p,effect)==null)return false;
       if(rangeActive){const value=recipeEffectNumber(p,effect);if(value<from||value>to)return false;}
     }
-    const recipes=recipesVisibleForPotion(p);
-    return !q||potionSearchText(p,recipes).includes(q);
+    return !q||potionSearchText(p).includes(q);
   });
 }
 function effectSection(title,type,potions){
@@ -671,7 +661,7 @@ function renderRecipeSearchResults(){
   return '<div class="recipe-page-title"><p class="eyebrow">Поиск</p><h2>Результаты по порядку названий</h2></div><div class="duration-content">'+found.map(renderPotionCard).join("")+'</div>';
 }
 function renderRecipeBrowser(){
-  const searching=norm($("recipeSearch").value)!=="";
+  const searching=recipeSearchNorm($("recipeSearch").value)!=="";
   $("recipeBrowser").innerHTML=searching?renderRecipeSearchResults():(recipeView==="special"?renderSpecialView():renderLevelView(Number(recipeView.replace("level",""))));
   const count=visiblePotionCount();
   $("recipeCount").textContent=count+" "+plural(count,"зелье","зелья","зелий");
