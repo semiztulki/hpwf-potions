@@ -193,6 +193,7 @@ tbody tr:hover{background:#f5f0fa}
 .mechanic-card th{background:rgba(255,255,255,.5)}
 
 .editor-gate{border-top-color:var(--accent);background:var(--accent-soft)}
+#add-recipe>.section-heading{width:min(760px,100%);margin-left:auto;margin-right:auto;padding-inline:22px}
 .database-session-row .meta{padding:8px 11px;border-radius:8px;background:var(--sage);color:var(--sage-deep);font-weight:700}
 .recipe-controls{border-top-color:var(--yellow);background:var(--cream)}
 .recipe-view-btn{border:0;border-radius:8px;background:var(--lavender);color:var(--ink);font-weight:700;box-shadow:2px 2px 0 var(--line)}
