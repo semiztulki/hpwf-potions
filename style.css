@@ -386,3 +386,5 @@ tbody tr:hover{background:#f5f0fa}
 .recipe-line+.recipe-line{margin-top:18px}
 .recipe-estimate{margin-top:8px}
 .potion-value,.recipe-estimate{color:var(--ink);font-size:.9rem;line-height:1.45}
+.potion-title-wrap{display:flex;align-items:flex-start;gap:11px;min-width:0}
+.potion-icon{width:41px;height:41px;object-fit:contain;image-rendering:auto;flex:0 0 41px}

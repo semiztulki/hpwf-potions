@@ -550,6 +550,7 @@ function potionSearchText(p){
 function renderPotionCard(p){
   const rs=recipesVisibleForPotion(p);
   const observed=p.value!=null;
+  const imageHtml=p.imageUrl?'<img class="potion-icon" src="'+esc(p.imageUrl)+'" alt="">':"";
   const recipeHtml=rs.map(r=>{
     const est=nominalRecipeValue(r);
     const estimate=!observed?'<div class="recipe-estimate">Расчётная ценность: '+fmt(est.total)+(est.moon?' + Луна 0–450':'')+'</div>':"";
@@ -558,7 +559,7 @@ function renderPotionCard(p){
   const valueHtml=observed?'<p class="potion-value">Ценность: '+fmt(p.value)+'</p>':"";
   const meta=[state.mechanics?.toxicity?.durationLabels?.[p.duration]||p.duration,p.toxicity==null?null:"токсикация "+p.toxicity].filter(Boolean);
   return '<article class="potion-card">'
-    +'<div class="potion-card-head"><div><h4>'+esc(potionTitle(p))+'</h4><p class="potion-effect">'+esc(potionEffectSummary(p))+'</p></div>'
+    +'<div class="potion-card-head"><div class="potion-title-wrap">'+imageHtml+'<div><h4>'+esc(potionTitle(p))+'</h4><p class="potion-effect">'+esc(potionEffectSummary(p))+'</p></div></div>'
     +'<div class="badges">'+meta.map(x=>'<span class="badge">'+esc(x)+'</span>').join("")+'</div></div>'
     +'<div class="potion-recipes"><p class="recipe-label">'+(rs.length===1?"Рецепт":"Рецепты")+'</p>'+recipeHtml+'</div>'
     +valueHtml+'</article>';
@@ -682,7 +683,7 @@ async function loadPrivateData(password){
   async function loadMany(paths){return (await Promise.all(paths.map(path=>call("/file",{path})))).flat();}
   const potions={},recipes={};
   for(const key of ["standard-new","standard-old","special","mana"]){
-    potions[key]=await loadMany(catalog.potions[key]||[]);
+    potions[key]=(await loadMany(catalog.potions[key]||[])).filter(p=>!p.draft);
     recipes[key]=await loadMany(catalog.recipes[key]||[]);
   }
   state.potions=potions;state.recipes=recipes;
