@@ -563,7 +563,8 @@ function renderPotionCard(p){
   const recipeHtml=rs.map(r=>{
     const est=nominalRecipeValue(r);
     const estimate=!observed?'<div class="recipe-estimate">Расчётная ценность: '+fmt(est.total)+(est.moon?' + Луна 0–450':'')+'</div>':"";
-    return '<div class="recipe-line"><div class="recipe-sequence">'+recipeItems(r)+'</div>'+estimate+'</div>';
+    return '<div class="recipe-line"><div class="recipe-sequence">'+recipeItems(r)+'</div>'+estimate
+      +(typeof canEditPotions==="function"&&canEditPotions()?'<button type="button" class="potion-edit-link" data-edit-recipe="'+esc(r.id)+'">Изменить рецепт</button>':"")+'</div>';
   }).join("");
   const valueHtml=observed?'<p class="potion-value">Ценность: '+fmt(p.value)+'</p>':"";
   const meta=[state.mechanics?.toxicity?.durationLabels?.[p.duration]||p.duration,p.toxicity==null?null:"токсикация "+p.toxicity].filter(Boolean);
@@ -571,7 +572,8 @@ function renderPotionCard(p){
     +'<div class="potion-card-head"><div class="potion-title-wrap">'+imageHtml+'<div><h4>'+esc(potionTitle(p))+'</h4><p class="potion-effect">'+esc(potionEffectSummary(p)||"Эффект пока не указан")+'</p></div></div>'
     +'<div class="badges">'+meta.map(x=>'<span class="badge">'+esc(x)+'</span>').join("")+'</div></div>'
     +'<div class="potion-recipes"><p class="recipe-label">'+(rs.length===1?"Рецепт":"Рецепты")+'</p>'+recipeHtml+'</div>'
-    +renderPotionAuthorNote(p)+valueHtml+'</article>';
+    +renderPotionAuthorNote(p)+valueHtml
+    +(typeof canEditPotions==="function"&&canEditPotions()?'<button type="button" class="potion-edit-link" data-edit-potion="'+esc(p.id)+'">Изменить данные зелья</button>':"")+'</article>';
 }
 function durationBlock(title,potions,sorter){
   if(!potions.length) return "";
@@ -689,7 +691,8 @@ function renderWanted(){
       +'<div class="wanted-card-main"><img class="wanted-image" src="'+esc(p.imageUrl)+'" alt="">'
       +'<div><h3>'+esc(potionTitle(p))+'</h3><p class="potion-effect">'+esc(potionEffectSummary(p)||"Эффект пока не указан")+'</p>'
       +(meta.length?'<div class="badges">'+meta.map(x=>'<span class="badge">'+esc(x)+'</span>').join("")+'</div>':"")+'</div></div>'
-      +'<button type="button" class="wanted-add-link" data-wanted-add="'+esc(p.id)+'">Добавить рецепт</button></article>';
+      +'<button type="button" class="wanted-add-link" data-wanted-add="'+esc(p.id)+'">Добавить рецепт</button>'
+      +(typeof canEditPotions==="function"&&canEditPotions()?'<button type="button" class="potion-edit-link" data-edit-potion="'+esc(p.id)+'">Изменить данные зелья</button>':"")+'</article>';
   }).join(""):'<div class="panel empty-state">'+(!selected.size?"Выбери хотя бы одну группу зелий.":(state.wanted||[]).length?"В выбранных группах нет зелий без рецепта.":"Все зелья с картинками уже имеют рецепты.")+'</div>';
 }
 

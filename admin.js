@@ -446,6 +446,7 @@ function adminRenderAuth(){
   if(editorLogged&&typeof renderWanted==="function") renderWanted();
   if(!editorLogged&&a$("wanted")?.classList.contains("active")) openFunctionalTab("potions");
   if(databaseStatus&&logged) databaseStatus.textContent="";
+  if(typeof hpwfEditAuthChanged==="function") hpwfEditAuthChanged();
 }
 async function adminSubmitRecipe(){
   const validation=adminValidation();
