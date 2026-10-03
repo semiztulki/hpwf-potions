@@ -479,7 +479,6 @@ function recipesVisibleForPotion(p){
   return recipes.filter(recipeMatchesAvailability);
 }
 function potionMatchesAvailability(p){
-  if(recipeAvailabilityIsDefault())return true;
   return recipesVisibleForPotion(p).length>0;
 }
 function recipeEffectNumber(p,type){
