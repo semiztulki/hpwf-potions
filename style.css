@@ -402,3 +402,8 @@ tbody tr:hover{background:#f5f0fa}
 .wanted-filters{display:flex;align-items:center;gap:10px 20px;flex-wrap:wrap;margin:0 0 18px;font-size:.88rem;color:var(--muted)}
 .wanted-filters label{display:flex;align-items:center;gap:7px;cursor:pointer}
 .wanted-filters input{width:16px;height:16px;min-height:0;margin:0;padding:0;accent-color:var(--accent)}
+
+.potion-author-note{margin-top:12px;color:var(--muted);font-size:.84rem;line-height:1.5;overflow-wrap:anywhere}
+.potion-author-note p{margin:0}
+.potion-author-comment{white-space:pre-line}
+.potion-author-note .potion-author-name{margin-top:3px}

@@ -548,6 +548,14 @@ function updateRecipeFilterControls(){
 function potionSearchText(p){
   return recipeSearchNorm([potionTitle(p),p.name,p.number].filter(x=>x!=null&&x!=="").join(" "));
 }
+function renderPotionAuthorNote(p){
+  if(!["special","mana"].includes(p.category)) return "";
+  const comment=String(p.description??"").trim(),author=String(p.author??"").trim();
+  if(!comment&&!author) return "";
+  return '<div class="potion-author-note">'
+    +(comment?'<p class="potion-author-comment">'+esc(comment)+'</p>':"")
+    +(author?'<p class="potion-author-name">Автор: '+esc(author)+'</p>':"")+'</div>';
+}
 function renderPotionCard(p){
   const rs=recipesVisibleForPotion(p);
   const observed=p.value!=null;
@@ -563,7 +571,7 @@ function renderPotionCard(p){
     +'<div class="potion-card-head"><div class="potion-title-wrap">'+imageHtml+'<div><h4>'+esc(potionTitle(p))+'</h4><p class="potion-effect">'+esc(potionEffectSummary(p))+'</p></div></div>'
     +'<div class="badges">'+meta.map(x=>'<span class="badge">'+esc(x)+'</span>').join("")+'</div></div>'
     +'<div class="potion-recipes"><p class="recipe-label">'+(rs.length===1?"Рецепт":"Рецепты")+'</p>'+recipeHtml+'</div>'
-    +valueHtml+'</article>';
+    +renderPotionAuthorNote(p)+valueHtml+'</article>';
 }
 function durationBlock(title,potions,sorter){
   if(!potions.length) return "";
