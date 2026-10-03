@@ -1,4 +1,4 @@
-const state={ingredients:[],actions:[],mechanics:null,potions:{},recipes:{}};
+const state={ingredients:[],actions:[],mechanics:null,potions:{},recipes:{},wanted:[]};
 const $=id=>document.getElementById(id);
 const labels={rarity:{common:"Обычный",seasonal:"Сезонный редкий",very_rare:"Особо редкий"},season:{winter:"Зима",spring:"Весна",summer:"Лето",autumn:"Осень"}};
 const fmt=n=>new Intl.NumberFormat("ru-RU").format(n);
@@ -40,7 +40,8 @@ function showAccessScreen(){
   $("entryLoginStatus").textContent="";
 }
 function openFunctionalTab(id){
-  if(["potions","test-brew","add-recipe"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
+  if(["potions","test-brew","add-recipe","wanted"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
+  if(id==="wanted"&&!adminState?.writePassword) return openFunctionalTab("potions");
   document.querySelectorAll(".tab,.tab-panel").forEach(x=>x.classList.remove("active"));
   const navButton=document.querySelector('.tab[data-tab="'+id+'"]');
   if(navButton) navButton.classList.add("active");
@@ -669,6 +670,19 @@ function renderRecipeBrowser(){
   if(!$("recipeBrowser").innerHTML.trim()) $("recipeBrowser").innerHTML='<div class="panel empty-state">По этому запросу ничего не найдено.</div>';
 }
 
+function renderWanted(){
+  const list=[...(state.wanted||[])].sort(comparePotions);
+  $("wantedCount").textContent=String(list.length);
+  $("wantedCards").innerHTML=list.length?list.map(p=>{
+    const meta=[p.level?p.level+" уровень":null,state.mechanics?.toxicity?.durationLabels?.[p.duration]||p.duration].filter(Boolean);
+    return '<article class="panel wanted-card">'
+      +'<div class="wanted-card-main"><img class="wanted-image" src="'+esc(p.imageUrl)+'" alt="">'
+      +'<div><h3>'+esc(potionTitle(p))+'</h3><p class="potion-effect">'+esc(potionEffectSummary(p)||"Эффект пока не указан")+'</p>'
+      +(meta.length?'<div class="badges">'+meta.map(x=>'<span class="badge">'+esc(x)+'</span>').join("")+'</div>':"")+'</div></div>'
+      +'<button type="button" class="wanted-add-link" data-wanted-add="'+esc(p.id)+'">Добавить рецепт</button></article>';
+  }).join(""):'<div class="panel empty-state">Все зелья с картинками уже имеют рецепты.</div>';
+}
+
 async function loadPrivateData(password){
   const call=async(path,body={})=>{
     const r=await fetch("https://hpwf-potions-editor-api-siidraen-3125.vercel.app/api"+path,{
@@ -681,14 +695,18 @@ async function loadPrivateData(password){
   };
   const catalog=await call("/catalog");
   async function loadMany(paths){return (await Promise.all(paths.map(path=>call("/file",{path})))).flat();}
-  const potions={},recipes={};
+  const potions={},recipes={},allPotions={};
   for(const key of ["standard-new","standard-old","special","mana"]){
-    potions[key]=(await loadMany(catalog.potions[key]||[])).filter(p=>!p.draft);
+    allPotions[key]=await loadMany(catalog.potions[key]||[]);
+    potions[key]=allPotions[key].filter(p=>!p.draft);
     recipes[key]=await loadMany(catalog.recipes[key]||[]);
   }
+  const recipePotionIds=new Set(Object.values(recipes).flat().map(r=>r.potionId));
   state.potions=potions;state.recipes=recipes;
+  state.wanted=Object.values(allPotions).flat().filter(p=>p.imageUrl&&!recipePotionIds.has(p.id));
   updateRecipeFilterControls();
   renderRecipeBrowser();
+  renderWanted();
   document.dispatchEvent(new CustomEvent("hpwf:private-data-ready"));
 }
 
@@ -730,6 +748,10 @@ document.addEventListener("click",e=>{if(!e.target.closest(".check-select"))docu
 $("moonInfoToggle").addEventListener("click",()=>{const panel=$("moonStatus"),show=panel.hidden;panel.hidden=!show;$("moonInfoToggle").setAttribute("aria-expanded",String(show));if(show)renderMoonStatus();});
 window.setInterval(()=>{if(!$("moonStatus").hidden)renderMoonStatus();},60000);
 $("recipeSearch").addEventListener("input",renderRecipeBrowser);
+$("wantedCards").addEventListener("click",e=>{
+  const btn=e.target.closest("[data-wanted-add]");
+  if(btn&&typeof adminOpenWantedPotion==="function") adminOpenWantedPotion(btn.dataset.wantedAdd);
+});
 document.querySelectorAll('input[name="recipe-era"]').forEach(input=>input.addEventListener("change",()=>{recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();}));
 for(const group of ["recipe-rarity","recipe-moon"]){
   document.querySelectorAll('input[name="'+group+'"]').forEach(input=>input.addEventListener("change",()=>{

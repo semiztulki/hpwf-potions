@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261003-1">
+  <link rel="stylesheet" href="style.css?v=20261003-2">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -67,6 +67,7 @@
     <button class="tab active" data-tab="ingredients">Каталог ингредиентов</button>
     <button type="button" class="tab" data-home-anchor="valueCalculator">Калькулятор ценности</button>
     <button class="tab" data-tab="mechanics">Советы и секреты</button>
+    <button class="tab" id="wantedNavButton" data-tab="wanted" hidden>Wanted</button>
   </nav>
   <main class="wrap">
     <section id="ingredients" class="tab-panel active">
@@ -358,6 +359,13 @@
         </div>
       </form>
     </section>
+    <section id="wanted" class="tab-panel">
+      <div class="section-heading">
+        <div><p class="eyebrow">Редактор базы</p><h2>Wanted</h2></div>
+        <span id="wantedCount" class="count-pill">0</span>
+      </div>
+      <div id="wantedCards" class="wanted-grid"></div>
+    </section>
   </main>
   <footer class="wrap footer" aria-label="Служебные ссылки">
     <span>HPWF Potions</span><span aria-hidden="true">·</span>
@@ -367,7 +375,7 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20261003-1" defer></script>
-  <script src="admin.js?v=20261002-2" defer></script>
+  <script src="app.js?v=20261003-2" defer></script>
+  <script src="admin.js?v=20261003-1" defer></script>
 </body>
 </html>

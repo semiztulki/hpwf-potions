@@ -130,7 +130,7 @@ function adminFindPotion(d,potions){
 function adminLocalMatch(){
   const d=adminDraft();
   const key=adminStateKey(d.category);
-  const potions=state.potions?.[key]||[];
+  const potions=adminPotionsForKey(key);
   if(adminState.selectedPotionId){
     const selected=potions.find(p=>p.id===adminState.selectedPotionId);
     if(selected){
@@ -139,6 +139,9 @@ function adminLocalMatch(){
     }
   }
   return adminFindPotion(d,potions);
+}
+function adminPotionsForKey(key){
+  return [...(state.potions?.[key]||[]),...(state.wanted||[]).filter(p=>adminStateKey(p.category)===key)];
 }
 function adminSetField(id,value,overwrite=false){
   const input=a$(id);
@@ -174,7 +177,7 @@ function adminConfirmExistingPotion(){
   adminRenderValidation();
 }
 function adminSuggestionPotions(){
-  const d=adminDraft(),potions=state.potions?.[adminStateKey(d.category)]||[];
+  const d=adminDraft(),potions=adminPotionsForKey(adminStateKey(d.category));
   if(d.category==="special"){
     const q=norm(d.name);
     if(q.length<2) return [];
@@ -194,12 +197,24 @@ function adminRenderSuggestions(){
   }).join("")+'</div>':"";
 }
 function adminSelectPotion(id){
-  const d=adminDraft(),p=(state.potions?.[adminStateKey(d.category)]||[]).find(x=>x.id===id);
+  const d=adminDraft(),p=adminPotionsForKey(adminStateKey(d.category)).find(x=>x.id===id);
   if(!p) return;
   adminState.selectedPotionId=p.id;
   adminState.confirmedPotionId=p.id;
   adminPopulatePotion(p,true);
   adminRenderValidation();
+}
+function adminOpenWantedPotion(id){
+  const p=(state.wanted||[]).find(x=>x.id===id);
+  if(!p||!adminState.writePassword) return;
+  adminClearForm();
+  a$("adminCategory").value=p.category==="standard_new"?"standard_new":p.category==="standard_old"?"standard_old":"special";
+  adminSyncEffectMode();
+  adminState.selectedPotionId=p.id;
+  adminState.confirmedPotionId=p.id;
+  adminPopulatePotion(p,true);
+  adminRenderValidation();
+  openFunctionalTab("add-recipe");
 }
 function adminClearForm(){
   a$("adminRecipeForm").reset();
@@ -403,7 +418,7 @@ async function databaseLogin(){
 function adminLogout(){
   adminState.password="";
   adminState.writePassword="";
-  state.potions={};state.recipes={};
+  state.potions={};state.recipes={};state.wanted=[];
   sessionStorage.removeItem("hpwf-editor-password");
   sessionStorage.removeItem("hpwf-add-recipe-password");
   adminRenderAuth();
@@ -426,6 +441,10 @@ function adminRenderAuth(){
   if(databaseContent) databaseContent.hidden=!logged;
   const recipeCount=a$("recipeCount");
   if(recipeCount) recipeCount.hidden=!logged;
+  const wantedNav=a$("wantedNavButton");
+  if(wantedNav) wantedNav.hidden=!editorLogged;
+  if(editorLogged&&typeof renderWanted==="function") renderWanted();
+  if(!editorLogged&&a$("wanted")?.classList.contains("active")) openFunctionalTab("potions");
   if(databaseStatus&&logged) databaseStatus.textContent="";
 }
 async function adminSubmitRecipe(){
@@ -435,7 +454,7 @@ async function adminSubmitRecipe(){
   const d=adminDraft();
   const result=await adminApiCall("/add-recipe",{potion:d,sequence:adminState.sequence.map(x=>({...x}))});
   const key=adminStateKey(d.category);
-  const localMatch=adminFindPotion(d,state.potions[key]||[]);
+  const localMatch=adminFindPotion(d,adminPotionsForKey(key));
   let potion=localMatch.potion;
   if(result.created){
     potion={id:result.potionId,number:d.number,name:d.name,category:d.category,level:d.level,duration:d.duration,toxicity:d.toxicity,value:d.value,valueStatus:d.valueStatus,effects:d.effects,description:d.description,author:d.author,notes:null,sources:[{file:"Добавлено через форму",line:null}],validation:{status:"ok",issues:[]}};
@@ -447,8 +466,14 @@ async function adminSubmitRecipe(){
     if((!potion.effects||!potion.effects.length)&&d.effects.length) potion.effects=d.effects;
     if(potion.value!=null) potion.valueStatus=d.valueStatus;
   }
+  if(potion){
+    potion.draft=false;
+    state.wanted=state.wanted.filter(x=>x.id!==potion.id);
+    if(!state.potions[key].some(x=>x.id===potion.id)) state.potions[key].push(potion);
+  }
   state.recipes[key].push({id:result.recipeId,potionId:result.potionId,sequence:adminState.sequence.map(x=>({...x})),source:{file:"Добавлено через форму",line:null},validation:{status:"ok",issues:[]}});
   renderRecipeBrowser();
+  renderWanted();
   adminState.sequence=[];
   adminState.confirmedPotionId=null;
   adminState.selectedPotionId=null;
