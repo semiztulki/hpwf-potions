@@ -6,7 +6,7 @@ const norm=v=>String(v??"").toLowerCase().replaceAll("ё","е").trim();
 const recipeSearchNorm=v=>norm(v).replace(/№\s*/g,"").replace(/\s+/g," ");
 const formatXp=v=>v===1?"1 опыт":v===0.5?"1/2 опыта":Math.abs(v-1/3)<0.0001?"1/3 опыта":Math.abs(v-2/3)<0.0001?"2/3 опыта":String(v);
 const esc=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
-const durationOrder=["5m","1h","5h","1w","1mo","2mo"];
+const durationOrder=["5m","1h","5h","10h","1w","1mo","2mo"];
 const effectLabels={concentration:"Концентрация",resistance:"Устойчивость",efficiency:"Эффективность",mana:"Мана",custom:"Уникальный эффект"};
 const effectWords={concentration:"концентрации",resistance:"устойчивости",efficiency:"эффективности",mana:"маны"};
 let recipeView="special";
@@ -406,7 +406,7 @@ function effectLine(e){
   if(!e) return "";
   if(e.type==="custom"||e.unit==="text") return String(e.value||"");
   const unit=e.unit==="percent"?"%":"";
-  return "+"+e.value+unit+" "+(effectWords[e.type]||e.type);
+  return (Number(e.value)>=0?"+":"")+e.value+unit+" "+(effectWords[e.type]||e.type);
 }
 function potionEffectSummary(p){
   return (p.effects||[]).map(effectLine).join(" · ");
@@ -568,7 +568,7 @@ function renderPotionCard(p){
   const valueHtml=observed?'<p class="potion-value">Ценность: '+fmt(p.value)+'</p>':"";
   const meta=[state.mechanics?.toxicity?.durationLabels?.[p.duration]||p.duration,p.toxicity==null?null:"токсикация "+p.toxicity].filter(Boolean);
   return '<article class="potion-card">'
-    +'<div class="potion-card-head"><div class="potion-title-wrap">'+imageHtml+'<div><h4>'+esc(potionTitle(p))+'</h4><p class="potion-effect">'+esc(potionEffectSummary(p))+'</p></div></div>'
+    +'<div class="potion-card-head"><div class="potion-title-wrap">'+imageHtml+'<div><h4>'+esc(potionTitle(p))+'</h4><p class="potion-effect">'+esc(potionEffectSummary(p)||"Эффект пока не указан")+'</p></div></div>'
     +'<div class="badges">'+meta.map(x=>'<span class="badge">'+esc(x)+'</span>').join("")+'</div></div>'
     +'<div class="potion-recipes"><p class="recipe-label">'+(rs.length===1?"Рецепт":"Рецепты")+'</p>'+recipeHtml+'</div>'
     +renderPotionAuthorNote(p)+valueHtml+'</article>';
@@ -622,6 +622,7 @@ function renderLevelView(level){
 }
 function specialGroupKey(p){
   if(p.category==="mana"||(p.effects||[]).some(e=>e.type==="mana")) return "mana";
+  if((p.effects||[]).some(e=>e.type==="custom"||e.unit==="text")) return "other";
   const types=[...new Set((p.effects||[]).map(e=>e.type))];
   if(types.length===0) return "other";
   if(types.length>1) return "mixed";
@@ -721,7 +722,7 @@ async function loadPrivateData(password){
 
 async function load(){
   try{
-    const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20260910-1"),fetch("data/actions.json?v=20260918-1"),fetch("data/mechanics.json?v=20260918-1")]);
+    const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20260910-1"),fetch("data/actions.json?v=20260918-1"),fetch("data/mechanics.json?v=20261003-6")]);
     if(![i,a,m].every(r=>r.ok)) throw new Error("load");
     state.ingredients=await i.json(); state.actions=await a.json(); state.mechanics=await m.json();
     renderIngredients();renderActions();renderMechanics();initTestBrew();
