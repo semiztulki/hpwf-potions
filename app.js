@@ -671,7 +671,8 @@ function renderRecipeBrowser(){
 }
 
 function renderWanted(){
-  const list=[...(state.wanted||[])].sort(comparePotions);
+  const selected=new Set([...document.querySelectorAll('input[name="wanted-kind"]:checked')].map(input=>input.value));
+  const list=(state.wanted||[]).filter(p=>selected.has(["special","mana"].includes(p.category)?"special":"other")).sort(comparePotions);
   $("wantedCount").textContent=String(list.length);
   $("wantedCards").innerHTML=list.length?list.map(p=>{
     const meta=[p.level?p.level+" уровень":null,state.mechanics?.toxicity?.durationLabels?.[p.duration]||p.duration].filter(Boolean);
@@ -680,7 +681,7 @@ function renderWanted(){
       +'<div><h3>'+esc(potionTitle(p))+'</h3><p class="potion-effect">'+esc(potionEffectSummary(p)||"Эффект пока не указан")+'</p>'
       +(meta.length?'<div class="badges">'+meta.map(x=>'<span class="badge">'+esc(x)+'</span>').join("")+'</div>':"")+'</div></div>'
       +'<button type="button" class="wanted-add-link" data-wanted-add="'+esc(p.id)+'">Добавить рецепт</button></article>';
-  }).join(""):'<div class="panel empty-state">Все зелья с картинками уже имеют рецепты.</div>';
+  }).join(""):'<div class="panel empty-state">'+(!selected.size?"Выбери хотя бы одну группу зелий.":(state.wanted||[]).length?"В выбранных группах нет зелий без рецепта.":"Все зелья с картинками уже имеют рецепты.")+'</div>';
 }
 
 async function loadPrivateData(password){
@@ -748,6 +749,7 @@ document.addEventListener("click",e=>{if(!e.target.closest(".check-select"))docu
 $("moonInfoToggle").addEventListener("click",()=>{const panel=$("moonStatus"),show=panel.hidden;panel.hidden=!show;$("moonInfoToggle").setAttribute("aria-expanded",String(show));if(show)renderMoonStatus();});
 window.setInterval(()=>{if(!$("moonStatus").hidden)renderMoonStatus();},60000);
 $("recipeSearch").addEventListener("input",renderRecipeBrowser);
+$("wantedFilters").addEventListener("change",renderWanted);
 $("wantedCards").addEventListener("click",e=>{
   const btn=e.target.closest("[data-wanted-add]");
   if(btn&&typeof adminOpenWantedPotion==="function") adminOpenWantedPotion(btn.dataset.wantedAdd);
