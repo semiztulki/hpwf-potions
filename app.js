@@ -698,10 +698,10 @@ async function loadPrivateData(password){
   const potions={},recipes={},allPotions={};
   for(const key of ["standard-new","standard-old","special","mana"]){
     allPotions[key]=await loadMany(catalog.potions[key]||[]);
-    potions[key]=allPotions[key].filter(p=>!p.draft);
     recipes[key]=await loadMany(catalog.recipes[key]||[]);
   }
   const recipePotionIds=new Set(Object.values(recipes).flat().map(r=>r.potionId));
+  for(const key of Object.keys(allPotions)) potions[key]=allPotions[key].filter(p=>!p.draft||recipePotionIds.has(p.id));
   state.potions=potions;state.recipes=recipes;
   state.wanted=Object.values(allPotions).flat().filter(p=>p.imageUrl&&!recipePotionIds.has(p.id));
   updateRecipeFilterControls();
