@@ -76,7 +76,7 @@ check(recipeEstimate.minimum,heart.base/11);check(recipeEstimate.maximum,heart.b
 context.potion={id:'control',category:'special',name:'Control',duration:'2mo',value:406398,effects:[{type:'efficiency',value:508,unit:'percent'}]};
 vm.runInContext("state.recipes={special:[{potionId:'control',sequence:Array.from({length:11},()=>({type:'ingredient',ref:'ing-033'}))}]}",context);
 const card=vm.runInContext('renderPotionCard(potion)',context);
-assert.ok(card.includes('Расчётная ценность состава:'));
+assert.ok(card.includes('Расчётная ценность: '));
 assert.ok(card.includes('Ценность:'));
 assert.ok(card.includes('508'));
 console.log('Value model and calculator integration checks passed.');

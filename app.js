@@ -167,8 +167,8 @@ function calculatorIngredientGroups(){
 }
 function calculatedValueText(estimate){
   if(estimate.partial)return 'Не все компоненты описаны: ценность пока не рассчитана';
-  const range=estimate.minimum===estimate.maximum?'':' ('+fmt(estimate.minimum)+'–'+fmt(estimate.maximum)+')';
-  return '≈ '+fmt(estimate.nominal)+range;
+  const range=estimate.minimum===estimate.maximum?'':' ('+fmt(Math.round(estimate.minimum))+'–'+fmt(Math.round(estimate.maximum))+')';
+  return fmt(Math.round(estimate.nominal))+range;
 }
 const calculatorDurations={1:["5m","1h","5h","1w"],2:["1h","5h","1w","1mo"],3:["5h","1w","1mo","2mo"]};
 const calculatorDurationLabels={"5m":"5 минут","1h":"1 час","5h":"5 часов","1w":"1 неделя","1mo":"1 месяц","2mo":"2 месяца"};
@@ -564,7 +564,7 @@ function renderPotionCard(p){
   const imageHtml=p.imageUrl?'<img class="potion-icon" src="'+esc(p.imageUrl)+'" alt="">':"";
   const recipeHtml=rs.map(r=>{
     const est=nominalRecipeValue(r);
-    const estimate=p.category!=='standard_old'&&p.category!=='mana'?'<div class="recipe-estimate">Расчётная ценность состава: '+calculatedValueText(est)+'</div>':"";
+    const estimate=p.category!=='standard_old'&&p.category!=='mana'?'<div class="recipe-estimate">Расчётная ценность: '+calculatedValueText(est)+'</div>':"";
     return '<div class="recipe-line"><div class="recipe-sequence">'+recipeItems(r)+'</div>'+estimate
       +(typeof canEditPotions==="function"&&canEditPotions()?'<button type="button" class="potion-edit-link" data-edit-recipe="'+esc(r.id)+'">Изменить рецепт</button>':"")+'</div>';
   }).join("");
