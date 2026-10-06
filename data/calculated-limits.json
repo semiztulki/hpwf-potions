@@ -116,7 +116,7 @@
       }
     }
   },
-  "modelVersion": "stable-rare-20261006",
+  "modelVersion": "grouped-rare-20261006",
   "assumptions": {
     "ingredientCount": 11,
     "moon": false,

@@ -1,9 +1,8 @@
 (function(root){
   "use strict";
-  const version="stable-rare-20261006";
+  const version="grouped-rare-20261006";
   function powerOf(ingredient){
-    const fraction=ingredient.powerFraction;
-    return fraction?Number(fraction.numerator)/Number(fraction.denominator):Number(ingredient.basePower);
+    return Number(ingredient.basePower);
   }
   function estimate(items,moon=false,mechanics={}){
     const modifier=mechanics.value?.modifierModel;

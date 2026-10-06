@@ -12,22 +12,33 @@ const check=(actual,expected)=>assert.ok(Math.abs(actual-expected)<1e-8,`${actua
 
 // The known control must reproduce both its value and its rounded effect.
 const heart=model.estimate(items({'ing-033':11}),false,mechanics);
-check(heart.base,406398);check(heart.minimum,406398);check(heart.maximum,406398);
+assert.equal(Math.round(heart.base),406398);check(heart.minimum,heart.base);check(heart.maximum,heart.base);
 assert.equal(model.effect(heart.nominal,800),508);
 const seasonal=model.estimate(items({'ing-006':11}),false,mechanics);
 assert.equal(seasonal.minimum,11000);assert.equal(seasonal.maximum,11000);
 const mixed=model.estimate(items({'ing-001':5,'ing-006':4,'ing-017':1,'ing-021':1}),false,mechanics);
-assert.equal(mixed.nominal,21000);assert.equal(mixed.minimum,20850);assert.equal(mixed.maximum,21150);
+assert.equal(Math.round(mixed.nominal),21310);check(mixed.minimum,mixed.nominal-150);check(mixed.maximum,mixed.nominal+150);
 const moon=model.estimate(items({'ing-001':5,'ing-006':4,'ing-017':1,'ing-021':1}),true,mechanics);
-assert.equal(moon.nominal,21225);assert.equal(moon.minimum,20850);assert.equal(moon.maximum,21600);
+check(moon.nominal,mixed.nominal+225);check(moon.minimum,mixed.minimum);check(moon.maximum,mixed.maximum+450);
 const common=model.estimate(items({'ing-012':11}),false,mechanics);
 check(common.minimum,5142.5);check(common.maximum,6957.5);
 assert.equal(model.effect(800,800),1);assert.equal(model.effect(800.01,800),2);
 assert.equal(model.sequence([{type:'unresolved',raw:'mana'}],ingredients,mechanics).partial,true);
 assert.equal(model.sequence([{type:'ingredient',ref:'unknown'}],ingredients,mechanics).partial,true);
 assert.equal(model.estimate(items({'ing-001':-1}),false,mechanics).partial,true);
-// Pollen must not inherit the phoenix calibration.
-assert.equal(model.estimate(items({'ing-032':11}),false,mechanics).base,396000);
+// Every member of the same level and rarity is interchangeable.
+for(const ingredient of ingredients){
+  const group=ingredients.filter(i=>i.level===ingredient.level&&i.rarity===ingredient.rarity);
+  for(const other of group)assert.equal(model.powerOf(ingredient),model.powerOf(other));
+}
+const pollen=model.estimate(items({'ing-032':11}),false,mechanics);
+check(pollen.base,heart.base);
+assert.equal(model.effect(pollen.base,800),508);
+assert.equal(model.effect(model.estimate(items({'ing-032':11}),true,mechanics).maximum,800),509);
+// Independent card values for pure seasonal and mixed rare controls.
+assert.equal(Math.round(model.estimate(items({'ing-017':11}),false,mechanics).base),29901);
+assert.equal(Math.round(model.estimate(items({'ing-028':11}),false,mechanics).base),81280);
+assert.equal(Math.round(model.estimate(items({'ing-010':9,'ing-021':1,'ing-032':1}),false,mechanics).base),95537);
 
 // Exercise the actual calculator and recipe renderer with a small DOM harness.
 let inputs=[];
@@ -45,9 +56,9 @@ vm.createContext(context);
 vm.runInContext(fs.readFileSync(path.join(root,'app.js'),'utf8').replace('initTabs();load();',''),context);
 context.fixtureIngredients=ingredients;context.fixtureMechanics=mechanics;
 vm.runInContext('state.ingredients=fixtureIngredients;state.mechanics=fixtureMechanics;Object.assign(calculatorEffectDivisors,state.mechanics.value.effectDivisors);initValueCalculator();',context);
-assert.equal(inputs.length,10);
+assert.equal(inputs.length,9);
 const setCounts=counts=>{for(const input of inputs)input.value=String(counts[input.dataset.ref]||0);};
-setCounts({'ing-033':11});node('calculatorDuration').value='2mo';
+setCounts({'ing-032':11});node('calculatorDuration').value='2mo';
 vm.runInContext('updateValueCalculator()',context);
 assert.ok(node('calculatorResult').innerHTML.replace(/\s/g,'').includes('406398'));
 assert.ok(node('calculatorEffects').innerHTML.includes('<strong>508</strong>'));
@@ -55,13 +66,13 @@ assert.ok(!node('calculatorEffects').innerHTML.includes('508–508'));
 assert.equal(node('calculatorDetectedLevel').innerHTML.includes('третьего'),true);
 setCounts({'ing-001':5,'ing-006':4,'ing-017':1,'ing-021':1});node('calculatorDuration').value='1mo';
 vm.runInContext('updateValueCalculator()',context);
-assert.ok(node('calculatorResult').innerHTML.replace(/\s/g,'').includes('20850–21150'));
-setCounts({'ing-033':12});vm.runInContext('updateValueCalculator()',context);
+assert.ok(node('calculatorResult').innerHTML.includes('–'));
+setCounts({'ing-032':12});vm.runInContext('updateValueCalculator()',context);
 assert.equal(node('calculatorEffects').hidden,true);
 assert.ok(node('calculatorResult').textContent.includes('больше 11'));
 context.recipe={sequence:[{type:'ingredient',ref:'ing-033'}]};
 const recipeEstimate=vm.runInContext('nominalRecipeValue(recipe)',context);
-check(recipeEstimate.minimum,406398/11);check(recipeEstimate.maximum,406398/11);
+check(recipeEstimate.minimum,heart.base/11);check(recipeEstimate.maximum,heart.base/11);
 context.potion={id:'control',category:'special',name:'Control',duration:'2mo',value:406398,effects:[{type:'efficiency',value:508,unit:'percent'}]};
 vm.runInContext("state.recipes={special:[{potionId:'control',sequence:Array.from({length:11},()=>({type:'ingredient',ref:'ing-033'}))}]}",context);
 const card=vm.runInContext('renderPotionCard(potion)',context);

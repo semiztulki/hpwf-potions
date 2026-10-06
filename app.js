@@ -159,7 +159,7 @@ function plural(n,one,few,many){const n10=n%10,n100=n%100;return n10===1&&n100!=
 function calculatorIngredientGroups(){
   const groups=new Map();
   for(const ingredient of state.ingredients){
-    const key=[ingredient.level,ingredient.rarity,HpwfValueModel.powerOf(ingredient),ingredient.basePowerStatus].join('-');
+    const key=[ingredient.level,ingredient.rarity].join('-');
     if(!groups.has(key))groups.set(key,{level:ingredient.level,rarity:ingredient.rarity,power:HpwfValueModel.powerOf(ingredient),ingredients:[]});
     groups.get(key).ingredients.push(ingredient);
   }
@@ -314,7 +314,7 @@ function initTestBrew(){
 let calculatorLevel=null;
 function initValueCalculator(){
   const rarityNames={common:"Обычный",seasonal:"Сезонный редкий",very_rare:"Особо редкий"};
-  $("calculatorIngredients").innerHTML=calculatorIngredientGroups().map(group=>{const {level,rarity,power,ingredients}=group,label=ingredients.length===1?ingredients[0].name:rarityNames[rarity];return '<label class="calculator-field"><span>'+level+' уровень · '+esc(label)+'<small>'+(ingredients[0].basePowerStatus==='supported_by_observation'?'':'≈ ')+fmt(power)+' силы</small></span><input class="calculator-quantity" type="text" inputmode="numeric" pattern="[0-9]*" value="0" data-ref="'+ingredients[0].id+'" data-rarity="'+rarity+'" data-level="'+level+'" aria-label="Количество: '+level+' уровень, '+esc(label.toLowerCase())+'"></label>';}).join("");
+  $("calculatorIngredients").innerHTML=calculatorIngredientGroups().map(group=>{const {level,rarity,power,ingredients}=group,label=rarityNames[rarity];return '<label class="calculator-field"><span>'+level+' уровень · '+esc(label)+'<small>'+(ingredients[0].basePowerStatus==='supported_by_observation'?'':'≈ ')+fmt(power)+' силы</small></span><input class="calculator-quantity" type="text" inputmode="numeric" pattern="[0-9]*" value="0" data-ref="'+ingredients[0].id+'" data-rarity="'+rarity+'" data-level="'+level+'" aria-label="Количество: '+level+' уровень, '+esc(label.toLowerCase())+'"></label>';}).join("");
   document.querySelectorAll(".calculator-quantity").forEach(input=>input.addEventListener("input",updateValueCalculator));
   $("calculatorMoon").addEventListener("change",()=>updateValueCalculator());
   $("calculatorDuration").addEventListener("change",updateValueCalculator);
@@ -727,7 +727,7 @@ async function loadPrivateData(password){
 
 async function load(){
   try{
-    const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20261006-stable1"),fetch("data/actions.json?v=20260918-1"),fetch("data/mechanics.json?v=20261006-stable1")]);
+    const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20261006-groups1"),fetch("data/actions.json?v=20260918-1"),fetch("data/mechanics.json?v=20261006-groups1")]);
     if(![i,a,m].every(r=>r.ok)) throw new Error("load");
     state.ingredients=await i.json(); state.actions=await a.json(); state.mechanics=await m.json();
     Object.assign(calculatorEffectDivisors,state.mechanics.value.effectDivisors);

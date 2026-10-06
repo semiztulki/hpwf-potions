@@ -70,12 +70,12 @@
     "level": 1,
     "rarity": "seasonal",
     "season": "autumn",
-    "basePower": 1000,
+    "basePower": 1000.0,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
     "imageUrl": "assets/catalog/maple-leaf.png",
     "basePowerStatus": "supported_by_observation",
-    "powerNote": "1000 согласуется с карточками составов из 11 одинаковых сезонных ингредиентов первого уровня."
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 1000 × exp(1-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-007",
@@ -83,12 +83,12 @@
     "level": 1,
     "rarity": "seasonal",
     "season": "spring",
-    "basePower": 1000,
+    "basePower": 1000.0,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
     "imageUrl": "assets/catalog/giacint.png",
     "basePowerStatus": "supported_by_observation",
-    "powerNote": "1000 согласуется с карточками составов из 11 одинаковых сезонных ингредиентов первого уровня."
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 1000 × exp(1-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-008",
@@ -96,12 +96,12 @@
     "level": 1,
     "rarity": "seasonal",
     "season": "winter",
-    "basePower": 1000,
+    "basePower": 1000.0,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
     "imageUrl": "assets/catalog/snowflake.png",
     "basePowerStatus": "supported_by_observation",
-    "powerNote": "1000 согласуется с карточками составов из 11 одинаковых сезонных ингредиентов первого уровня."
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 1000 × exp(1-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-009",
@@ -109,12 +109,12 @@
     "level": 1,
     "rarity": "seasonal",
     "season": "summer",
-    "basePower": 1000,
+    "basePower": 1000.0,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
     "imageUrl": "assets/catalog/egg.png",
     "basePowerStatus": "supported_by_observation",
-    "powerNote": "1000 согласуется с карточками составов из 11 одинаковых сезонных ингредиентов первого уровня."
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 1000 × exp(1-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-010",
@@ -122,12 +122,12 @@
     "level": 1,
     "rarity": "very_rare",
     "season": null,
-    "basePower": 5000,
+    "basePower": 5000.0,
     "pauseSeconds": 45,
     "approxQuestDropRate": "1/2000",
     "imageUrl": "assets/catalog/lilshroom.png",
-    "basePowerStatus": "provisional",
-    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 5000 × exp(1-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-011",
@@ -135,12 +135,12 @@
     "level": 1,
     "rarity": "very_rare",
     "season": null,
-    "basePower": 5000,
+    "basePower": 5000.0,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/2000",
     "imageUrl": "assets/catalog/hippogryf-pen.png",
-    "basePowerStatus": "provisional",
-    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 5000 × exp(1-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-012",
@@ -213,12 +213,12 @@
     "level": 2,
     "rarity": "seasonal",
     "season": "autumn",
-    "basePower": 2500,
+    "basePower": 2718.2818284590453,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
     "imageUrl": "assets/catalog/acorn.png",
-    "basePowerStatus": "provisional",
-    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 1000 × exp(2-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-018",
@@ -226,12 +226,12 @@
     "level": 2,
     "rarity": "seasonal",
     "season": "summer",
-    "basePower": 2500,
+    "basePower": 2718.2818284590453,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
     "imageUrl": "assets/catalog/scorpion.png",
-    "basePowerStatus": "provisional",
-    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 1000 × exp(2-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-019",
@@ -239,12 +239,12 @@
     "level": 2,
     "rarity": "seasonal",
     "season": "spring",
-    "basePower": 2500,
+    "basePower": 2718.2818284590453,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
     "imageUrl": "assets/catalog/dandelion.png",
-    "basePowerStatus": "provisional",
-    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 1000 × exp(2-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-020",
@@ -252,12 +252,12 @@
     "level": 2,
     "rarity": "seasonal",
     "season": "winter",
-    "basePower": 2500,
+    "basePower": 2718.2818284590453,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
     "imageUrl": "assets/catalog/privet.png",
-    "basePowerStatus": "provisional",
-    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 1000 × exp(2-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-021",
@@ -265,12 +265,12 @@
     "level": 2,
     "rarity": "very_rare",
     "season": null,
-    "basePower": 13500,
+    "basePower": 13591.409142295226,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/2000",
     "imageUrl": "assets/catalog/unicorn-hair.gif",
-    "basePowerStatus": "provisional",
-    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 5000 × exp(2-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-022",
@@ -278,12 +278,12 @@
     "level": 2,
     "rarity": "very_rare",
     "season": null,
-    "basePower": 13500,
+    "basePower": 13591.409142295226,
     "pauseSeconds": 45,
     "approxQuestDropRate": "1/2000",
     "imageUrl": "assets/catalog/leafy.png",
-    "basePowerStatus": "provisional",
-    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 5000 × exp(2-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-023",
@@ -356,12 +356,12 @@
     "level": 3,
     "rarity": "seasonal",
     "season": "spring",
-    "basePower": 7500,
+    "basePower": 7389.0560989306505,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
     "imageUrl": "assets/catalog/lighting.png",
-    "basePowerStatus": "provisional",
-    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 1000 × exp(3-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-029",
@@ -369,12 +369,12 @@
     "level": 3,
     "rarity": "seasonal",
     "season": "winter",
-    "basePower": 7500,
+    "basePower": 7389.0560989306505,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
     "imageUrl": "assets/catalog/north.png",
-    "basePowerStatus": "provisional",
-    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 1000 × exp(3-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-030",
@@ -382,12 +382,12 @@
     "level": 3,
     "rarity": "seasonal",
     "season": "autumn",
-    "basePower": 7500,
+    "basePower": 7389.0560989306505,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
     "imageUrl": "assets/catalog/mavka-hair.png",
-    "basePowerStatus": "provisional",
-    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 1000 × exp(3-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-031",
@@ -395,12 +395,12 @@
     "level": 3,
     "rarity": "seasonal",
     "season": "summer",
-    "basePower": 7500,
+    "basePower": 7389.0560989306505,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
     "imageUrl": "assets/catalog/sunny.png",
-    "basePowerStatus": "provisional",
-    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 1000 × exp(3-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-032",
@@ -408,12 +408,12 @@
     "level": 3,
     "rarity": "very_rare",
     "season": null,
-    "basePower": 36000,
+    "basePower": 36945.28049465325,
     "pauseSeconds": 45,
     "approxQuestDropRate": "1/2000",
     "imageUrl": "assets/catalog/goldendust.png",
-    "basePowerStatus": "provisional",
-    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 5000 × exp(3-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   },
   {
     "id": "ing-033",
@@ -421,15 +421,11 @@
     "level": 3,
     "rarity": "very_rare",
     "season": null,
-    "basePower": 36945.27272727273,
+    "basePower": 36945.28049465325,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/2000",
     "imageUrl": "assets/catalog/phoenix-pen.png",
-    "basePowerStatus": "conditional_calibration",
-    "powerNote": "Калибровка при принятой постоянной силе: 406398 / 11. Восстановлена из одного состава; требует проверки независимой варкой.",
-    "powerFraction": {
-      "numerator": 406398,
-      "denominator": 11
-    }
+    "basePowerStatus": "provisional_group_estimate",
+    "powerNote": "Общая сила для всех ингредиентов этой редкости и уровня. Предварительная модель: 5000 × exp(3-1), подобранная по контрольным составам. Требует проверки отдельными варками."
   }
 ]
