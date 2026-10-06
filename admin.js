@@ -331,9 +331,9 @@ function adminValidation(){
     if(duplicate) errors.push("Такой рецепт у этого зелья уже есть в базе.");
   }
 
-  const nominal=seq.reduce((sum,x)=>sum+(x.type==="ingredient"?Number(im[x.ref]?.basePower||0):0),0);
+  const estimate=HpwfValueModel.sequence(seq,state.ingredients,state.mechanics);
   if(seq.length&&errors.length===0){
-    info.push("Расчётная базовая ценность: "+fmt(nominal)+(moonCount?" + Луна 0–450":"")+".");
+    info.push("Расчётная ценность состава: "+calculatedValueText(estimate)+".");
     if(targetLevel) info.push("Уровень зелья: "+targetLevel+".");
     info.push(match.status==="existing"?"Рецепт будет добавлен к существующему зелью.":"Будет создано новое зелье и добавлен его первый рецепт.");
   }

@@ -98,6 +98,7 @@
           </div></details></div>
         </div>
         <div id="ingredientCards" class="table-wrap catalog-table-wrap"></div>
+        <p class="calculator-disclaimer">Знак ≈ означает оценку силы, которая ещё требует сверки по рецептам. Постоянная сила редкого ингредиента и точность её оценки — разные вещи.</p>
       </div>
       <div class="catalog-actions">
         <div class="action-reference-grid">
@@ -105,7 +106,7 @@
           <aside class="action-tips" aria-label="Полезные советы">
             <ul>
               <li>Даже с&nbsp;одинаковыми ингредиентами могут получиться разные рецепты, если изменить их порядок или добавить разные действия.</li>
-              <li>Ценность зелья — это общая сила всех ингредиентов с&nbsp;небольшим случайным разбросом в&nbsp;пределах ±15%.</li>
+              <li>В принятой модели ценность складывается из постоянной силы сезонных и особо редких ингредиентов и силы обычных с разбросом ±15%. Разброс применяется только к обычной части состава.</li>
               <li>Действия второго и&nbsp;третьего уровней изменяют бросок длительности: эффект распределяется на&nbsp;более долгий срок и&nbsp;становится слабее.</li>
               <li>В&nbsp;котёл помещается не&nbsp;больше 11 ингредиентов. Свет полной луны можно добавить сверх этого количества.</li>
             </ul>
@@ -127,6 +128,7 @@
           <div class="calculator-title">
             <h2>Расчёт примерной ценности зелья</h2>
             <p class="calculator-disclaimer">Калькулятор не применим к зельям старого образца.</p>
+            <p class="calculator-disclaimer">Для редких ингредиентов принят нулевой разброс. Их справочные силы, отмеченные знаком ≈, ещё уточняются. Перо феникса и жёлтая пылька рассчитываются отдельно.</p>
           </div>
           <span id="calculatorCount" class="count-pill">0 из 11</span>
         </div>
@@ -379,8 +381,9 @@
     <button type="button" id="footerAuthAction"></button>
   </footer>
   </div>
-  <script src="app.js?v=20261003-8" defer></script>
-  <script src="admin.js?v=20261003-2" defer></script>
+  <script src="value-model.js?v=20261006-stable1" defer></script>
+  <script src="app.js?v=20261006-stable1" defer></script>
+  <script src="admin.js?v=20261006-stable1" defer></script>
   <script src="editing.js?v=20261003-1" defer></script>
 </body>
 </html>

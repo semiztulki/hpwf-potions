@@ -79,7 +79,7 @@ function ingredientRow(x){
   const img=x.imageUrl?'<img class="catalog-icon" src="'+x.imageUrl+'" alt="">':'<span class="catalog-icon-placeholder">✦</span>';
   return '<tr><td><div class="catalog-name">'+img+'<span>'+esc(x.name)+'</span></div></td>'
     +'<td>'+x.level+'</td><td>'+labels.rarity[x.rarity]+'</td><td>'+(x.season?labels.season[x.season]:"—")+'</td>'
-    +'<td class="numeric">'+fmt(x.basePower)+'</td><td class="numeric">'+x.pauseSeconds+' сек.</td><td class="numeric">'+(x.approxQuestDropRate||"—")+'</td></tr>';
+    +'<td class="numeric" title="'+esc(x.powerNote||'Справочная оценка силы')+'">'+(x.basePowerStatus==='supported_by_observation'?'':'≈ ')+fmt(HpwfValueModel.powerOf(x))+'</td><td class="numeric">'+x.pauseSeconds+' сек.</td><td class="numeric">'+(x.approxQuestDropRate||"—")+'</td></tr>';
 }
 function renderIngredients(){
   const selected=name=>{const all=document.querySelector('input[name="'+name+'"][data-filter-all]');return all.checked?null:[...document.querySelectorAll('input[name="'+name+'"]:checked')].map(x=>x.value).filter(Boolean);};
@@ -156,15 +156,24 @@ function renderMoonStatus(){
   $("moonStatus").innerHTML='<p>'+text+'</p>';
 }
 function plural(n,one,few,many){const n10=n%10,n100=n%100;return n10===1&&n100!==11?one:n10>=2&&n10<=4&&(n100<12||n100>14)?few:many;}
-const calculatorPowers={"1-common":200,"1-seasonal":1000,"1-very_rare":5000,"2-common":550,"2-seasonal":2500,"2-very_rare":13500,"3-common":1500,"3-seasonal":7500,"3-very_rare":36000};
+function calculatorIngredientGroups(){
+  const groups=new Map();
+  for(const ingredient of state.ingredients){
+    const key=[ingredient.level,ingredient.rarity,HpwfValueModel.powerOf(ingredient),ingredient.basePowerStatus].join('-');
+    if(!groups.has(key))groups.set(key,{level:ingredient.level,rarity:ingredient.rarity,power:HpwfValueModel.powerOf(ingredient),ingredients:[]});
+    groups.get(key).ingredients.push(ingredient);
+  }
+  return [...groups.values()];
+}
+function calculatedValueText(estimate){
+  if(estimate.partial)return 'Не все компоненты описаны: ценность пока не рассчитана';
+  const range=estimate.minimum===estimate.maximum?'':' ('+fmt(estimate.minimum)+'–'+fmt(estimate.maximum)+')';
+  return '≈ '+fmt(estimate.nominal)+range;
+}
 const calculatorDurations={1:["5m","1h","5h","1w"],2:["1h","5h","1w","1mo"],3:["5h","1w","1mo","2mo"]};
 const calculatorDurationLabels={"5m":"5 минут","1h":"1 час","5h":"5 часов","1w":"1 неделя","1mo":"1 месяц","2mo":"2 месяца"};
 const calculatorLevelWords={1:"первого",2:"второго",3:"третьего"};
-const calculatorEffectDivisors={
-  1:{"1h":{concentration:25,efficiency:35,resistance:8},"5h":{concentration:40,efficiency:50,resistance:10},"1w":{concentration:130,efficiency:150,resistance:130}},
-  2:{"1h":{concentration:40,efficiency:50,resistance:10},"5h":{concentration:40,efficiency:50,resistance:10},"1w":{concentration:130,efficiency:150,resistance:130},"1mo":{concentration:400,efficiency:450,resistance:350}},
-  3:{"5h":{concentration:40,efficiency:50,resistance:10},"1w":{concentration:130,efficiency:150,resistance:130},"1mo":{concentration:400,efficiency:450,resistance:350},"2mo":{concentration:800,efficiency:800,resistance:800}}
-};
+const calculatorEffectDivisors={};
 const testBrewState={sequence:[],duration:"",finished:false,ready:false};
 const testBrewRarityOrder={common:0,seasonal:1,very_rare:2};
 const testBrewRarityLabels={common:"обычный",seasonal:"сезонный",very_rare:"особо редкий"};
@@ -229,10 +238,7 @@ function testBrewMatchingPotions(){
   return Object.values(state.potions).flat().filter(potion=>potionIds.has(potion.id));
 }
 function testBrewValueEstimate(){
-  const ingredients=Object.fromEntries(state.ingredients.map(x=>[x.id,x]));
-  const base=testBrewState.sequence.reduce((sum,item)=>sum+(item.type==="ingredient"?Number(ingredients[item.ref]?.basePower||0):0),0);
-  const moon=testBrewState.sequence.some(item=>item.type==="moon");
-  return {base,moon,nominal:base+(moon?225:0),minimum:Math.round(base*.85),maximum:Math.round(base*1.15)+(moon?450:0)};
+  return HpwfValueModel.sequence(testBrewState.sequence,state.ingredients,state.mechanics);
 }
 function testBrewLevels(){
   const ingredients=Object.fromEntries(state.ingredients.map(x=>[x.id,x])),actions=Object.fromEntries(state.actions.map(x=>[x.id,x]));
@@ -243,12 +249,13 @@ function testBrewLevels(){
 function testBrewEffectCards(level,duration,estimate,rollLevel=level){
   const divisors=calculatorEffectDivisors[rollLevel]?.[duration]||calculatorEffectDivisors[level]?.[duration];
   if(!duration)return "";
+  if(estimate.partial)return '<p class="calculator-effects-unavailable">Сначала нужно описать все компоненты рецепта.</p>';
   if(!divisors)return '<p class="calculator-effects-unavailable">Для этой длительности пока недостаточно данных для надёжного прогноза.</p>';
   return '<div class="calculator-effects-head"><span>Зелье '+calculatorLevelWords[level]+' уровня · '+calculatorDurationLabels[duration]+'</span><strong>Один из трёх возможных эффектов</strong></div><div class="calculator-effects-grid">'
     +[["concentration","Концентрация"],["efficiency","Эффективность"],["resistance","Устойчивость"]].map(([key,label])=>{
       const value=Math.ceil(estimate.nominal/divisors[key]),from=Math.ceil(estimate.minimum/divisors[key]),to=Math.ceil(estimate.maximum/divisors[key]);
       const prefix=key==="efficiency"?"":"+",suffix=key==="efficiency"?"%":"";
-      return '<div class="calculator-effect-card"><strong class="calculator-effect-label">'+label+'</strong><div class="calculator-effect-value"><span>'+prefix+'</span><strong>'+fmt(value)+'</strong><span class="calculator-effect-range"> ('+fmt(from)+'–'+fmt(to)+')</span><span>'+suffix+'</span></div></div>';
+      return '<div class="calculator-effect-card"><strong class="calculator-effect-label">'+label+'</strong><div class="calculator-effect-value"><span>'+prefix+'</span><strong>'+fmt(value)+'</strong>'+(from===to?'':'<span class="calculator-effect-range"> ('+fmt(from)+'–'+fmt(to)+')</span>')+'<span>'+suffix+'</span></div></div>';
     }).join('<span class="calculator-effect-or">или</span>')+'</div>';
 }
 function testBrewExpandedRecipe(){
@@ -260,7 +267,7 @@ function testBrewExistingResult(potions){
   const cards=potions.map(potion=>{
     const meta=[categoryLabels[potion.category],potion.level?potion.level+" уровень":null,potion.duration?(state.mechanics?.toxicity?.durationLabels?.[potion.duration]||calculatorDurationLabels[potion.duration]):null].filter(Boolean).join(" · ");
     const estimate=testBrewValueEstimate();
-    const value=potion.value!=null?'<p class="test-brew-observed-value">Ценность: '+fmt(potion.value)+'</p>':'<p class="test-brew-observed-value calculated">Расчётная ценность: '+fmt(estimate.base)+(estimate.moon?' + Луна 0–450':'')+'</p>';
+    const value=potion.value!=null?'<p class="test-brew-observed-value">Ценность: '+fmt(potion.value)+'</p>':'<p class="test-brew-observed-value calculated">Расчётная ценность: '+calculatedValueText(estimate)+'</p>';
     return '<article class="test-brew-match"><h4>'+esc(potionTitle(potion))+'</h4><p class="meta">'+esc(meta)+'</p>'
       +(potionEffectSummary(potion)?'<p class="potion-effect">'+esc(potionEffectSummary(potion))+'</p>':"")
       +(potion.author?'<p class="test-brew-author">Автор: '+esc(potion.author)+'</p>':"")+value+'</article>';
@@ -273,7 +280,7 @@ function testBrewNewResult(){
   const options=durations.map(duration=>'<option value="'+duration+'"'+(duration===testBrewState.duration?' selected':'')+'>'+calculatorDurationLabels[duration]+'</option>').join("");
   const levelWord=calculatorLevelWords[levels.potionLevel]||String(levels.potionLevel);
   $("testBrewResult").innerHTML=testBrewExpandedRecipe()+'<section class="test-brew-conclusion"><div class="test-brew-result-title new"><p class="eyebrow">Новый рецепт</p><h3>Такого рецепта в базе пока нет</h3><p>После варки стоит добавить его в базу.</p></div>'
-    +'<div class="test-brew-estimate"><h3>Предварительная оценка</h3><div class="test-brew-estimate-grid"><div><span>Уровень</span><strong>Зелье '+levelWord+' уровня</strong></div><div><span>Примерная ценность</span><strong>'+fmt(estimate.nominal)+'</strong><small>('+fmt(estimate.minimum)+'–'+fmt(estimate.maximum)+')</small></div></div>'
+    +'<div class="test-brew-estimate"><h3>Предварительная оценка</h3><div class="test-brew-estimate-grid"><div><span>Уровень</span><strong>Зелье '+levelWord+' уровня</strong></div><div><span>Примерная ценность</span><strong>'+calculatedValueText(estimate)+'</strong></div></div><p class="calculator-disclaimer">Разброс ±15% применяется только к обычным ингредиентам. Для редких принят нулевой разброс; часть справочных сил ещё требует сверки.</p>'
     +'<label class="field test-brew-duration"><span>Выбери длительность</span><select id="testBrewDuration"><option value="">Длительность не выбрана</option>'+options+'</select></label>'
     +'<div class="calculator-effects test-brew-effects"'+(testBrewState.duration?'':' hidden')+'>'+testBrewEffectCards(levels.potionLevel,testBrewState.duration,estimate,levels.rollLevel)+'</div></div></section>';
 }
@@ -307,7 +314,7 @@ function initTestBrew(){
 let calculatorLevel=null;
 function initValueCalculator(){
   const rarityNames={common:"Обычный",seasonal:"Сезонный редкий",very_rare:"Особо редкий"};
-  $("calculatorIngredients").innerHTML=Object.entries(calculatorPowers).map(([key,power])=>{const [level,rarity]=key.split("-");return '<label class="calculator-field"><span>'+level+' уровень · '+rarityNames[rarity]+'<small>'+fmt(power)+' силы</small></span><input class="calculator-quantity" type="text" inputmode="numeric" pattern="[0-9]*" value="0" data-power="'+power+'" data-level="'+level+'" aria-label="Количество: '+level+' уровень, '+rarityNames[rarity].toLowerCase()+'"></label>';}).join("");
+  $("calculatorIngredients").innerHTML=calculatorIngredientGroups().map(group=>{const {level,rarity,power,ingredients}=group,label=ingredients.length===1?ingredients[0].name:rarityNames[rarity];return '<label class="calculator-field"><span>'+level+' уровень · '+esc(label)+'<small>'+(ingredients[0].basePowerStatus==='supported_by_observation'?'':'≈ ')+fmt(power)+' силы</small></span><input class="calculator-quantity" type="text" inputmode="numeric" pattern="[0-9]*" value="0" data-ref="'+ingredients[0].id+'" data-rarity="'+rarity+'" data-level="'+level+'" aria-label="Количество: '+level+' уровень, '+esc(label.toLowerCase())+'"></label>';}).join("");
   document.querySelectorAll(".calculator-quantity").forEach(input=>input.addEventListener("input",updateValueCalculator));
   $("calculatorMoon").addEventListener("change",()=>updateValueCalculator());
   $("calculatorDuration").addEventListener("change",updateValueCalculator);
@@ -332,7 +339,7 @@ function renderCalculatorEffects(level,duration,nominal,minimum,maximum){
   const cards=[["concentration","Концентрация"],["efficiency","Эффективность"],["resistance","Устойчивость"]].map(([key,label])=>{
     const value=Math.ceil(nominal/divisors[key]),from=Math.ceil(minimum/divisors[key]),to=Math.ceil(maximum/divisors[key]);
     const prefix=key==="efficiency"?"":"+",suffix=key==="efficiency"?"%":"";
-    return '<div class="calculator-effect-card"><strong class="calculator-effect-label">'+label+'</strong><div class="calculator-effect-value"><span>'+prefix+'</span><strong>'+fmt(value)+'</strong><span class="calculator-effect-range"> ('+fmt(from)+'–'+fmt(to)+')</span><span>'+suffix+'</span></div></div>';
+    return '<div class="calculator-effect-card"><strong class="calculator-effect-label">'+label+'</strong><div class="calculator-effect-value"><span>'+prefix+'</span><strong>'+fmt(value)+'</strong>'+(from===to?'':'<span class="calculator-effect-range"> ('+fmt(from)+'–'+fmt(to)+')</span>')+'<span>'+suffix+'</span></div></div>';
   }).join('<span class="calculator-effect-or">или</span>');
   root.innerHTML='<div class="calculator-effects-head"><span>Зелье '+calculatorLevelWords[level]+' уровня · '+calculatorDurationLabels[duration]+'</span><strong>Один из трёх возможных эффектов</strong></div><div class="calculator-effects-grid">'+cards+'</div>';
 }
@@ -353,10 +360,11 @@ function updateValueCalculator(){
     $("calculatorEffects").innerHTML="";
     return;
   }
-  const base=inputs.reduce((sum,input)=>sum+Number(input.value)*Number(input.dataset.power),0),moon=$("calculatorMoon").checked;
-  const nominal=base+(moon?225:0),minimum=Math.round(base*.85),maximum=Math.round(base*1.15)+(moon?450:0);
+  const ingredients=Object.fromEntries(state.ingredients.map(x=>[x.id,x]));
+  const estimate=HpwfValueModel.estimate(inputs.map(input=>({ingredient:ingredients[input.dataset.ref],count:Number(input.value)})),$("calculatorMoon").checked,state.mechanics);
+  const {nominal,minimum,maximum}=estimate;
   $("calculatorResult").className="calculator-result";
-  $("calculatorResult").innerHTML=total?'<span>Примерная ценность</span><div class="calculator-value-line"><strong>'+fmt(nominal)+'</strong><span class="calculator-value-range">('+fmt(minimum)+'–'+fmt(maximum)+')</span></div>':'<span>Примерная ценность</span><strong>—</strong><small>Добавь ингредиенты, чтобы увидеть расчёт</small>';
+  $("calculatorResult").innerHTML=total?'<span>Примерная ценность</span><div class="calculator-value-line"><strong>'+calculatedValueText(estimate)+'</strong></div>':'<span>Примерная ценность</span><strong>—</strong><small>Добавь ингредиенты, чтобы увидеть расчёт</small>';
   renderCalculatorEffects(level,$("calculatorDuration").value,nominal,minimum,maximum);
 }
 function renderMechanics(){
@@ -375,7 +383,8 @@ function renderMechanics(){
     return '<tr><td>'+x.level+'</td><td>'+fmt(x.thresholdXp)+'</td><td>'+esc(prizeText)+'</td><td>'+difficulty+'</td><td>'+dropText+'</td></tr>';
   }).join("");
   $("mechanicsContent").innerHTML=
-    '<article class="mechanic-card wide"><h3>Какая токсикация у зелий</h3><p>'+m.toxicity.rule+'</p><div class="table-wrap"><table><thead><tr><th>Длительность</th><th>1 уровень</th><th>2 уровень</th><th>3 уровень</th></tr></thead><tbody>'+toxRows+'</tbody></table></div></article>'
+    '<article class="mechanic-card wide"><h3>Ценность и величина эффекта</h3><p>Принятая модель: сезонные и особо редкие ингредиенты имеют постоянную силу. Разброс ±15% применяется только к сумме сил обычных ингредиентов. Свет полной луны отдельно добавляет 0–450.</p><p>Величина эффекта получается делением итоговой ценности на коэффициент для выбранных длительности и вида эффекта с округлением вверх. Для двух месяцев коэффициент равен 800. Справочные силы со знаком ≈ ещё требуют сверки; отдельные именные карточки также требуют проверки.</p></article>'
+    +'<article class="mechanic-card wide"><h3>Какая токсикация у зелий</h3><p>'+m.toxicity.rule+'</p><div class="table-wrap"><table><thead><tr><th>Длительность</th><th>1 уровень</th><th>2 уровень</th><th>3 уровень</th></tr></thead><tbody>'+toxRows+'</tbody></table></div></article>'
     +'<article class="mechanic-card wide"><h3>Опыт зельеварения</h3><p class="callout">'+m.brewingExperienceNote+'</p><div class="table-wrap"><table><thead><tr><th>Уровень зельевара</th><th>Порог опыта</th><th>Ингредиент 1 уровня</th><th>Ингредиент 2 уровня</th><th>Ингредиент 3 уровня</th></tr></thead><tbody>'
       +m.brewingExperience.map(x=>'<tr><td>'+x.brewerLevel+'</td><td>'+x.thresholdXp+'</td><td>'+(x.xpPerIngredient["1"]==null?"—":formatXp(x.xpPerIngredient["1"]))+'</td><td>'+(x.xpPerIngredient["2"]==null?"—":formatXp(x.xpPerIngredient["2"]))+'</td><td>'+(x.xpPerIngredient["3"]==null?"—":formatXp(x.xpPerIngredient["3"]))+'</td></tr>').join("")
       +'</tbody></table></div></article>'
@@ -423,13 +432,7 @@ function recipeItems(r){
   }).join('<span class="recipe-plus"> + </span>');
 }
 function nominalRecipeValue(r){
-  const im=Object.fromEntries(state.ingredients.map(x=>[x.id,x]));
-  let total=0,moon=false;
-  for(const item of (r.sequence||[])){
-    if(item.type==="ingredient") total+=Number(im[item.ref]?.basePower||0);
-    if(item.type==="moon") moon=true;
-  }
-  return {total,moon};
+  return HpwfValueModel.sequence(r.sequence,state.ingredients,state.mechanics);
 }
 function recipesForPotion(potionId){
   return Object.values(state.recipes).flat().filter(r=>r.potionId===potionId);
@@ -561,7 +564,7 @@ function renderPotionCard(p){
   const imageHtml=p.imageUrl?'<img class="potion-icon" src="'+esc(p.imageUrl)+'" alt="">':"";
   const recipeHtml=rs.map(r=>{
     const est=nominalRecipeValue(r);
-    const estimate=!observed?'<div class="recipe-estimate">Расчётная ценность: '+fmt(est.total)+(est.moon?' + Луна 0–450':'')+'</div>':"";
+    const estimate=p.category!=='standard_old'&&p.category!=='mana'?'<div class="recipe-estimate">Расчётная ценность состава: '+calculatedValueText(est)+'</div>':"";
     return '<div class="recipe-line"><div class="recipe-sequence">'+recipeItems(r)+'</div>'+estimate
       +(typeof canEditPotions==="function"&&canEditPotions()?'<button type="button" class="potion-edit-link" data-edit-recipe="'+esc(r.id)+'">Изменить рецепт</button>':"")+'</div>';
   }).join("");
@@ -724,10 +727,11 @@ async function loadPrivateData(password){
 
 async function load(){
   try{
-    const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20260910-1"),fetch("data/actions.json?v=20260918-1"),fetch("data/mechanics.json?v=20261003-6")]);
+    const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20261006-stable1"),fetch("data/actions.json?v=20260918-1"),fetch("data/mechanics.json?v=20261006-stable1")]);
     if(![i,a,m].every(r=>r.ok)) throw new Error("load");
     state.ingredients=await i.json(); state.actions=await a.json(); state.mechanics=await m.json();
-    renderIngredients();renderActions();renderMechanics();initTestBrew();
+    Object.assign(calculatorEffectDivisors,state.mechanics.value.effectDivisors);
+    renderIngredients();renderActions();renderMechanics();initValueCalculator();initTestBrew();
     if(Object.values(state.potions).some(list=>list.length)){updateRecipeFilterControls();renderRecipeBrowser();}
     document.dispatchEvent(new CustomEvent("hpwf:data-ready"));
   }catch(e){$("dataStatus").title="Не удалось загрузить справочник";}
@@ -784,4 +788,4 @@ document.querySelectorAll(".recipe-view-btn").forEach(btn=>btn.addEventListener(
   updateRecipeFilterControls();
   renderRecipeBrowser();
 }));
-initTabs();initValueCalculator();load();
+initTabs();load();

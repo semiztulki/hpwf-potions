@@ -8,7 +8,9 @@
     "basePower": 200,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/ingr_aconite.png"
+    "imageUrl": "assets/catalog/ingr_aconite.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-002",
@@ -19,7 +21,9 @@
     "basePower": 200,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/ingr_baneberry.png"
+    "imageUrl": "assets/catalog/ingr_baneberry.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-003",
@@ -30,7 +34,9 @@
     "basePower": 200,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/ingr_verbena.png"
+    "imageUrl": "assets/catalog/ingr_verbena.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-004",
@@ -41,7 +47,9 @@
     "basePower": 200,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/ingr_fern.png"
+    "imageUrl": "assets/catalog/ingr_fern.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-005",
@@ -52,7 +60,9 @@
     "basePower": 200,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/ingr_caterpillar.png"
+    "imageUrl": "assets/catalog/ingr_caterpillar.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-006",
@@ -63,7 +73,9 @@
     "basePower": 1000,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "assets/catalog/maple-leaf.png"
+    "imageUrl": "assets/catalog/maple-leaf.png",
+    "basePowerStatus": "supported_by_observation",
+    "powerNote": "1000 согласуется с карточками составов из 11 одинаковых сезонных ингредиентов первого уровня."
   },
   {
     "id": "ing-007",
@@ -74,7 +86,9 @@
     "basePower": 1000,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "assets/catalog/giacint.png"
+    "imageUrl": "assets/catalog/giacint.png",
+    "basePowerStatus": "supported_by_observation",
+    "powerNote": "1000 согласуется с карточками составов из 11 одинаковых сезонных ингредиентов первого уровня."
   },
   {
     "id": "ing-008",
@@ -85,7 +99,9 @@
     "basePower": 1000,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "assets/catalog/snowflake.png"
+    "imageUrl": "assets/catalog/snowflake.png",
+    "basePowerStatus": "supported_by_observation",
+    "powerNote": "1000 согласуется с карточками составов из 11 одинаковых сезонных ингредиентов первого уровня."
   },
   {
     "id": "ing-009",
@@ -96,7 +112,9 @@
     "basePower": 1000,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "assets/catalog/egg.png"
+    "imageUrl": "assets/catalog/egg.png",
+    "basePowerStatus": "supported_by_observation",
+    "powerNote": "1000 согласуется с карточками составов из 11 одинаковых сезонных ингредиентов первого уровня."
   },
   {
     "id": "ing-010",
@@ -107,7 +125,9 @@
     "basePower": 5000,
     "pauseSeconds": 45,
     "approxQuestDropRate": "1/2000",
-    "imageUrl": "assets/catalog/lilshroom.png"
+    "imageUrl": "assets/catalog/lilshroom.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-011",
@@ -118,7 +138,9 @@
     "basePower": 5000,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/2000",
-    "imageUrl": "assets/catalog/hippogryf-pen.png"
+    "imageUrl": "assets/catalog/hippogryf-pen.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-012",
@@ -129,7 +151,9 @@
     "basePower": 550,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/mint.gif"
+    "imageUrl": "assets/catalog/mint.gif",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-013",
@@ -140,7 +164,9 @@
     "basePower": 550,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/juniper.gif"
+    "imageUrl": "assets/catalog/juniper.gif",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-014",
@@ -151,7 +177,9 @@
     "basePower": 550,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/bugs.png"
+    "imageUrl": "assets/catalog/bugs.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-015",
@@ -162,7 +190,9 @@
     "basePower": 550,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/lavender.png"
+    "imageUrl": "assets/catalog/lavender.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-016",
@@ -173,7 +203,9 @@
     "basePower": 550,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/garlic.gif"
+    "imageUrl": "assets/catalog/garlic.gif",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-017",
@@ -184,7 +216,9 @@
     "basePower": 2500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "assets/catalog/acorn.png"
+    "imageUrl": "assets/catalog/acorn.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-018",
@@ -195,7 +229,9 @@
     "basePower": 2500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "assets/catalog/scorpion.png"
+    "imageUrl": "assets/catalog/scorpion.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-019",
@@ -206,7 +242,9 @@
     "basePower": 2500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "assets/catalog/dandelion.png"
+    "imageUrl": "assets/catalog/dandelion.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-020",
@@ -217,7 +255,9 @@
     "basePower": 2500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "assets/catalog/privet.png"
+    "imageUrl": "assets/catalog/privet.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-021",
@@ -228,7 +268,9 @@
     "basePower": 13500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/2000",
-    "imageUrl": "assets/catalog/unicorn-hair.gif"
+    "imageUrl": "assets/catalog/unicorn-hair.gif",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-022",
@@ -239,7 +281,9 @@
     "basePower": 13500,
     "pauseSeconds": 45,
     "approxQuestDropRate": "1/2000",
-    "imageUrl": "assets/catalog/leafy.png"
+    "imageUrl": "assets/catalog/leafy.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-023",
@@ -250,7 +294,9 @@
     "basePower": 1500,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/beladonna.gif"
+    "imageUrl": "assets/catalog/beladonna.gif",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-024",
@@ -261,7 +307,9 @@
     "basePower": 1500,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/snake-eye.gif"
+    "imageUrl": "assets/catalog/snake-eye.gif",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-025",
@@ -272,7 +320,9 @@
     "basePower": 1500,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/drop.gif"
+    "imageUrl": "assets/catalog/drop.gif",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-026",
@@ -283,7 +333,9 @@
     "basePower": 1500,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/mimbulus.gif"
+    "imageUrl": "assets/catalog/mimbulus.gif",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-027",
@@ -294,7 +346,9 @@
     "basePower": 1500,
     "pauseSeconds": 30,
     "approxQuestDropRate": null,
-    "imageUrl": "assets/catalog/fir-inflorescence.png"
+    "imageUrl": "assets/catalog/fir-inflorescence.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-028",
@@ -305,7 +359,9 @@
     "basePower": 7500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "assets/catalog/lighting.png"
+    "imageUrl": "assets/catalog/lighting.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-029",
@@ -316,7 +372,9 @@
     "basePower": 7500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "assets/catalog/north.png"
+    "imageUrl": "assets/catalog/north.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-030",
@@ -327,7 +385,9 @@
     "basePower": 7500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "assets/catalog/mavka-hair.png"
+    "imageUrl": "assets/catalog/mavka-hair.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-031",
@@ -338,7 +398,9 @@
     "basePower": 7500,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/100",
-    "imageUrl": "assets/catalog/sunny.png"
+    "imageUrl": "assets/catalog/sunny.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-032",
@@ -349,7 +411,9 @@
     "basePower": 36000,
     "pauseSeconds": 45,
     "approxQuestDropRate": "1/2000",
-    "imageUrl": "assets/catalog/goldendust.png"
+    "imageUrl": "assets/catalog/goldendust.png",
+    "basePowerStatus": "provisional",
+    "powerNote": "Справочная оценка; точная сила пока не восстановлена из согласованных наблюдений."
   },
   {
     "id": "ing-033",
@@ -357,9 +421,15 @@
     "level": 3,
     "rarity": "very_rare",
     "season": null,
-    "basePower": 36000,
+    "basePower": 36945.27272727273,
     "pauseSeconds": 30,
     "approxQuestDropRate": "1/2000",
-    "imageUrl": "assets/catalog/phoenix-pen.png"
+    "imageUrl": "assets/catalog/phoenix-pen.png",
+    "basePowerStatus": "conditional_calibration",
+    "powerNote": "Калибровка при принятой постоянной силе: 406398 / 11. Восстановлена из одного состава; требует проверки независимой варкой.",
+    "powerFraction": {
+      "numerator": 406398,
+      "denominator": 11
+    }
   }
 ]
