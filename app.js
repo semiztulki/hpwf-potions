@@ -79,7 +79,7 @@ function ingredientRow(x){
   const img=x.imageUrl?'<img class="catalog-icon" src="'+x.imageUrl+'" alt="">':'<span class="catalog-icon-placeholder">✦</span>';
   return '<tr><td><div class="catalog-name">'+img+'<span>'+esc(x.name)+'</span></div></td>'
     +'<td>'+x.level+'</td><td>'+labels.rarity[x.rarity]+'</td><td>'+(x.season?labels.season[x.season]:"—")+'</td>'
-    +'<td class="numeric" title="'+esc(x.powerNote||'Справочная оценка силы')+'">'+(x.basePowerStatus==='supported_by_observation'?'':'≈ ')+fmt(HpwfValueModel.powerOf(x))+'</td><td class="numeric">'+x.pauseSeconds+' сек.</td><td class="numeric">'+(x.approxQuestDropRate||"—")+'</td></tr>';
+    +'<td class="numeric" title="'+esc(x.powerNote||'Справочная оценка силы')+'">'+fmt(Math.round(HpwfValueModel.powerOf(x)))+'</td><td class="numeric">'+x.pauseSeconds+' сек.</td><td class="numeric">'+(x.approxQuestDropRate||"—")+'</td></tr>';
 }
 function renderIngredients(){
   const selected=name=>{const all=document.querySelector('input[name="'+name+'"][data-filter-all]');return all.checked?null:[...document.querySelectorAll('input[name="'+name+'"]:checked')].map(x=>x.value).filter(Boolean);};
@@ -314,7 +314,7 @@ function initTestBrew(){
 let calculatorLevel=null;
 function initValueCalculator(){
   const rarityNames={common:"Обычный",seasonal:"Сезонный редкий",very_rare:"Особо редкий"};
-  $("calculatorIngredients").innerHTML=calculatorIngredientGroups().map(group=>{const {level,rarity,power,ingredients}=group,label=rarityNames[rarity];return '<label class="calculator-field"><span>'+level+' уровень · '+esc(label)+'<small>'+(ingredients[0].basePowerStatus==='supported_by_observation'?'':'≈ ')+fmt(power)+' силы</small></span><input class="calculator-quantity" type="text" inputmode="numeric" pattern="[0-9]*" value="0" data-ref="'+ingredients[0].id+'" data-rarity="'+rarity+'" data-level="'+level+'" aria-label="Количество: '+level+' уровень, '+esc(label.toLowerCase())+'"></label>';}).join("");
+  $("calculatorIngredients").innerHTML=calculatorIngredientGroups().map(group=>{const {level,rarity,power,ingredients}=group,label=rarityNames[rarity];return '<label class="calculator-field"><span>'+level+' уровень · '+esc(label)+'<small>'+fmt(Math.round(power))+'</small></span><input class="calculator-quantity" type="text" inputmode="numeric" pattern="[0-9]*" value="0" data-ref="'+ingredients[0].id+'" data-rarity="'+rarity+'" data-level="'+level+'" aria-label="Количество: '+level+' уровень, '+esc(label.toLowerCase())+'"></label>';}).join("");
   document.querySelectorAll(".calculator-quantity").forEach(input=>input.addEventListener("input",updateValueCalculator));
   $("calculatorMoon").addEventListener("change",()=>updateValueCalculator());
   $("calculatorDuration").addEventListener("change",updateValueCalculator);
