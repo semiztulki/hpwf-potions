@@ -378,7 +378,7 @@ function renderMechanics(){
   const gatheringRows=m.gatheringLevels.map(x=>{
     const rewards=x.rewards||[],prize=rewards.find(r=>r.startsWith("Приз:")),drops=rewards.filter(r=>!r.startsWith("Приз:"));
     const prizeText=prize?prize.replace(/^Приз:\s*/,""):"—";
-    const difficulty=x.questDifficulty?"×"+String(x.questDifficulty).replace(".",","):"—";
+    const difficulty=x.questDifficulty?String(x.questDifficulty).replace(".",",")+"-е":"—";
     const dropText=drops.length?'<div class="mechanics-lines">'+drops.map(r=>'<span>'+esc(r)+'</span>').join("")+'</div>':"—";
     return '<tr><td>'+x.level+'</td><td>'+fmt(x.thresholdXp)+'</td><td>'+esc(prizeText)+'</td><td>'+difficulty+'</td><td>'+dropText+'</td></tr>';
   }).join("");
@@ -388,7 +388,7 @@ function renderMechanics(){
     +'<article class="mechanic-card wide"><h3>Опыт зельеварения</h3><p class="callout">'+m.brewingExperienceNote+'</p><div class="table-wrap"><table><thead><tr><th>Уровень зельевара</th><th>Порог опыта</th><th>Ингредиент 1 уровня</th><th>Ингредиент 2 уровня</th><th>Ингредиент 3 уровня</th></tr></thead><tbody>'
       +m.brewingExperience.map(x=>'<tr><td>'+x.brewerLevel+'</td><td>'+x.thresholdXp+'</td><td>'+(x.xpPerIngredient["1"]==null?"—":formatXp(x.xpPerIngredient["1"]))+'</td><td>'+(x.xpPerIngredient["2"]==null?"—":formatXp(x.xpPerIngredient["2"]))+'</td><td>'+(x.xpPerIngredient["3"]==null?"—":formatXp(x.xpPerIngredient["3"]))+'</td></tr>').join("")
       +'</tbody></table></div></article>'
-    +'<article class="mechanic-card wide"><h3>Уровни сбора ингредиентов</h3><div class="table-wrap"><table class="gathering-table"><thead><tr><th>Уровень</th><th>Опыт</th><th>Приз за уровень</th><th>Сложность ВП</th><th>Ингредиенты и шансы выпадения</th></tr></thead><tbody>'+gatheringRows+'</tbody></table></div></article>';
+    +'<article class="mechanic-card wide"><h3>Система уровней сбора ингредиентов</h3><p>'+esc(m.gatheringNote)+'</p><div class="table-wrap"><table class="gathering-table"><thead><tr><th>Уровень</th><th>Опыт</th><th>Приз за уровень</th><th>Усложнение квеста ВП</th><th>Ингредиенты и шансы выпадения</th></tr></thead><tbody>'+gatheringRows+'</tbody></table></div></article>';
 }
 
 function potionTitle(p){
@@ -727,7 +727,7 @@ async function loadPrivateData(password){
 
 async function load(){
   try{
-    const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20261006-groups1"),fetch("data/actions.json?v=20260918-1"),fetch("data/mechanics.json?v=20261006-groups1")]);
+    const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20261006-groups1"),fetch("data/actions.json?v=20260918-1"),fetch("data/mechanics.json?v=20261008-gathering1")]);
     if(![i,a,m].every(r=>r.ok)) throw new Error("load");
     state.ingredients=await i.json(); state.actions=await a.json(); state.mechanics=await m.json();
     Object.assign(calculatorEffectDivisors,state.mechanics.value.effectDivisors);
