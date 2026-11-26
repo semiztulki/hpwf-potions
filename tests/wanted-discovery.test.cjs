@@ -51,3 +51,37 @@ test('guest and first-level password cannot render discovery or open target calc
   assert.equal($('wantedCards').innerHTML,'');assert.deepEqual(calls,[]);
  }
 });
+
+test('estimated chance uses interval widths, including partial edge bins',()=>{
+ const scenes=[{duration:'x',type:'efficiency',divisor:100,weight:1,known:[2]}];
+ const c={minimum:150,maximum:350};
+ const score=wanted.coverage(c,scenes,true);
+ assert.equal(score.unknown,2);assert.equal(score.total,3);
+ assert.equal(score.probability,.75); // Only 150..200 is known; the rest is new.
+ assert.deepEqual(score.outcomes[0].gaps,[[3,4]]);
+});
+test('type/duration filters keep unconditional chance instead of overstating it',()=>{
+ const m={value:{effectDivisors:{1:{a:{concentration:100,efficiency:100,resistance:100},b:{concentration:100,efficiency:100,resistance:100}}}}};
+ const scenes=wanted.scenarios(m,[],{level:1,duration:'a',type:'efficiency'});
+ assert.equal(scenes.length,1);assert.equal(wanted.coverage({minimum:100,maximum:200},scenes).probability,1/6);
+ const all=wanted.scenarios(m,[],{level:1,duration:'all',type:'all'});
+ assert.ok(Math.abs(wanted.coverage({minimum:100,maximum:200},all).probability-1)<1e-12);
+});
+test('zero-width values, duplicate known cards, and gap annotations behave consistently',()=>{
+ const scenes=[{duration:'x',type:'efficiency',divisor:100,weight:1,known:[2]}];
+ assert.equal(wanted.coverage({minimum:200,maximum:200},scenes).probability,0);
+ assert.equal(wanted.coverage({minimum:201,maximum:201},scenes).probability,1);
+ const rows=[1,2,3,5].map(value=>({level:3,duration:'2mo',type:'efficiency',value}));
+ const annotated=wanted.annotate(rows,[[800,2400]],[[800,4000]],mechanics);
+ assert.deepEqual(annotated.map(q=>q.gap),[3,3,3,1]);assert.deepEqual(annotated.map(q=>q.tier),[0,0,0,1]);
+});
+test('composition ranking uses rarity first or approximate chance, as selected',()=>{
+ const m={value:{effectDivisors:{1:{a:{concentration:100,efficiency:100,resistance:100}}},modifierModel:{byRarity:{common:{relativeSpread:.15},seasonal:{relativeSpread:.05},very_rare:{relativeSpread:.01}}}}};
+ const ing=[{id:'c',level:1,rarity:'common',basePower:100},{id:'s',level:1,rarity:'seasonal',basePower:200},{id:'r',level:1,rarity:'very_rare',basePower:500}];
+ const q={level:1,duration:'all',type:'all'};
+ const r=wanted.compositions(planner,ing,m,[],q,'rare','all',10);
+ assert.ok(r.candidates.length);assert.equal(r.candidates[0].rareN,0);assert.equal(r.candidates[0].seasonalN,0);
+ const common=wanted.compositions(planner,ing,m,[],q,'coverage','common',10);
+ assert.ok(common.candidates.every(c=>c.rareN===0&&c.seasonalN===0));
+ for(const c of common.candidates)assert.ok(Math.abs(c.probability-1)<1e-12);
+});

@@ -64,6 +64,6 @@
     return candidates.filter(c=>(allowed.seasonal!==false||c.seasonalN===0)&&(allowed.veryRare!==false||c.rareN===0))
       .sort((a,b)=>order==="close"?a.distance-b.distance||rarity(a,b):rarity(a,b)||a.distance-b.distance);
   }
-  const api={target,groups,solve,rank,valueRanges};
+  const api={target,groups,solve,rank,valueRanges,eachComposition};
   if(typeof module!=="undefined"&&module.exports)module.exports=api;else root.HpwfEffectPlanner=api;
 })(typeof globalThis!=="undefined"?globalThis:this);
