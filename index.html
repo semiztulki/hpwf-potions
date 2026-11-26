@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261126-planner-recipes4">
+  <link rel="stylesheet" href="style.css?v=20261126-wanted-discovery1">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -386,11 +386,14 @@
         <div><p class="eyebrow">Редактор базы</p><h2>Wanted</h2></div>
         <span id="wantedCount" class="count-pill">0</span>
       </div>
-      <div id="wantedFilters" class="wanted-filters" role="group" aria-label="Группы зелий">
-        <label><input type="checkbox" name="wanted-kind" value="special" checked> Именные/особые</label>
-        <label><input type="checkbox" name="wanted-kind" value="other" checked> Остальные</label>
+      <p class="meta">Цели для пробных варок нового образца, ещё не отмеченные в базе.</p>
+      <div id="wantedFilters" class="planner-fields wanted-discovery-filters">
+        <label class="field"><span>Уровень</span><select id="wantedLevel"><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3" selected>3 уровень</option></select></label>
+        <label class="field"><span>Длительность</span><select id="wantedDuration"></select></label>
+        <label class="field"><span>Вид эффекта</span><select id="wantedType"><option value="all">Все эффекты</option><option value="concentration">Концентрация</option><option value="efficiency">Эффективность</option><option value="resistance">Устойчивость</option></select></label>
       </div>
       <div id="wantedCards" class="wanted-grid"></div>
+      <button id="wantedMore" type="button" class="admin-secondary-btn" hidden>Показать ещё</button>
     </section>
   </main>
   <footer class="wrap footer" aria-label="Служебные ссылки">
@@ -402,10 +405,12 @@
   </footer>
   </div>
   <script src="value-model.js?v=20261126-rare-spread1" defer></script>
-  <script src="app.js?v=20261126-planner-recipes4" defer></script>
-  <script src="admin.js?v=20261126-potion-identity1" defer></script>
-  <script src="effect-planner.js?v=20261126-planner-recipes4" defer></script>
-  <script src="effect-planner-ui.js?v=20261126-planner-recipes4" defer></script>
+  <script src="app.js?v=20261126-wanted-discovery1" defer></script>
+  <script src="admin.js?v=20261126-wanted-discovery1" defer></script>
+  <script src="effect-planner.js?v=20261126-wanted-discovery1" defer></script>
+  <script src="effect-planner-ui.js?v=20261126-wanted-discovery1" defer></script>
+  <script src="wanted-planner.js?v=20261126-wanted-discovery1" defer></script>
+  <script src="wanted-ui.js?v=20261126-wanted-discovery1" defer></script>
   <script src="editing.js?v=20261003-1" defer></script>
 </body>
 </html>

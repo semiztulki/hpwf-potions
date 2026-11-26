@@ -1,4 +1,4 @@
-const state={ingredients:[],actions:[],mechanics:null,potions:{},recipes:{},wanted:[]};
+const state={ingredients:[],actions:[],mechanics:null,potions:{},recipes:{},wanted:[],catalogPotions:[]};
 const $=id=>document.getElementById(id);
 const labels={rarity:{common:"Обычный",seasonal:"Сезонный редкий",very_rare:"Особо редкий"},season:{winter:"Зима",spring:"Весна",summer:"Лето",autumn:"Осень"}};
 const fmt=n=>new Intl.NumberFormat("ru-RU").format(n);
@@ -689,18 +689,7 @@ function renderRecipeBrowser(){
 }
 
 function renderWanted(){
-  const selected=new Set([...document.querySelectorAll('input[name="wanted-kind"]:checked')].map(input=>input.value));
-  const list=(state.wanted||[]).filter(p=>selected.has(["special","mana"].includes(p.category)?"special":"other")).sort(comparePotions);
-  $("wantedCount").textContent=String(list.length);
-  $("wantedCards").innerHTML=list.length?list.map(p=>{
-    const meta=[p.level?p.level+" уровень":null,state.mechanics?.toxicity?.durationLabels?.[p.duration]||p.duration].filter(Boolean);
-    return '<article class="panel wanted-card">'
-      +'<div class="wanted-card-main"><img class="wanted-image" src="'+esc(p.imageUrl)+'" alt="">'
-      +'<div><h3>'+esc(potionTitle(p))+'</h3><p class="potion-effect">'+esc(potionEffectSummary(p)||"Эффект пока не указан")+'</p>'
-      +(meta.length?'<div class="badges">'+meta.map(x=>'<span class="badge">'+esc(x)+'</span>').join("")+'</div>':"")+'</div></div>'
-      +'<button type="button" class="wanted-add-link" data-wanted-add="'+esc(p.id)+'">Добавить рецепт</button>'
-      +(typeof canEditPotions==="function"&&canEditPotions()?'<button type="button" class="potion-edit-link" data-edit-potion="'+esc(p.id)+'">Изменить данные зелья</button>':"")+'</article>';
-  }).join(""):'<div class="panel empty-state">'+(!selected.size?"Выбери хотя бы одну группу зелий.":(state.wanted||[]).length?"В выбранных группах нет зелий без рецепта.":"Все зелья с картинками уже имеют рецепты.")+'</div>';
+  if(typeof renderDiscoveryWanted==="function")renderDiscoveryWanted();
 }
 
 async function loadPrivateData(password){
@@ -722,7 +711,7 @@ async function loadPrivateData(password){
   }
   const recipePotionIds=new Set(Object.values(recipes).flat().map(r=>r.potionId));
   for(const key of Object.keys(allPotions)) potions[key]=allPotions[key].filter(p=>!p.draft||recipePotionIds.has(p.id));
-  state.potions=potions;state.recipes=recipes;
+  state.potions=potions;state.recipes=recipes;state.catalogPotions=Object.values(allPotions).flat();
   state.wanted=Object.values(allPotions).flat().filter(p=>p.imageUrl&&!recipePotionIds.has(p.id));
   updateRecipeFilterControls();
   renderRecipeBrowser();
@@ -769,11 +758,6 @@ document.addEventListener("click",e=>{if(!e.target.closest(".check-select"))docu
 $("moonInfoToggle").addEventListener("click",()=>{const panel=$("moonStatus"),show=panel.hidden;panel.hidden=!show;$("moonInfoToggle").setAttribute("aria-expanded",String(show));if(show)renderMoonStatus();});
 window.setInterval(()=>{if(!$("moonStatus").hidden)renderMoonStatus();},60000);
 $("recipeSearch").addEventListener("input",renderRecipeBrowser);
-$("wantedFilters").addEventListener("change",renderWanted);
-$("wantedCards").addEventListener("click",e=>{
-  const btn=e.target.closest("[data-wanted-add]");
-  if(btn&&typeof adminOpenWantedPotion==="function") adminOpenWantedPotion(btn.dataset.wantedAdd);
-});
 document.querySelectorAll('input[name="recipe-era"]').forEach(input=>input.addEventListener("change",()=>{recipeFilterState.rangeKey="";updateRecipeFilterControls();renderRecipeBrowser();}));
 for(const group of ["recipe-rarity","recipe-moon"]){
   document.querySelectorAll('input[name="'+group+'"]').forEach(input=>input.addEventListener("change",()=>{

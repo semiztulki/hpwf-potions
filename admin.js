@@ -424,7 +424,7 @@ async function databaseLogin(){
 function adminLogout(){
   adminState.password="";
   adminState.writePassword="";
-  state.potions={};state.recipes={};state.wanted=[];
+  state.potions={};state.recipes={};state.wanted=[];state.catalogPotions=[];
   sessionStorage.removeItem("hpwf-editor-password");
   sessionStorage.removeItem("hpwf-add-recipe-password");
   adminRenderAuth();
@@ -449,7 +449,7 @@ function adminRenderAuth(){
   if(recipeCount) recipeCount.hidden=!logged;
   const wantedNav=a$("wantedNavButton");
   if(wantedNav) wantedNav.hidden=!editorLogged;
-  if(editorLogged&&typeof renderWanted==="function") renderWanted();
+  if(typeof renderWanted==="function") renderWanted();
   if(!editorLogged&&a$("wanted")?.classList.contains("active")) openFunctionalTab("potions");
   if(databaseStatus&&logged) databaseStatus.textContent="";
   if(typeof hpwfEditAuthChanged==="function") hpwfEditAuthChanged();
