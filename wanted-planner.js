@@ -1,13 +1,48 @@
 (function(root){
   'use strict';
   function key(p,type,value){return [Number(p.level),p.duration,type,Number(value)].join('|');}
+  function singleKnownEffect(p,level){
+    if(!['standard_new','special'].includes(p.category))return null;
+    const effects=p.effects||[];
+    if(effects.length!==1)return null;
+    const e=effects[0];
+    if(!['concentration','efficiency','resistance'].includes(e.type)||!Number.isFinite(Number(e.value))||Number(e.value)<=0)return null;
+    const recorded=Number(p.level);
+    if(recorded!==level&&!(p.category==='special'&&![1,2,3].includes(recorded)))return null;
+    return e;
+  }
+  function catalog(potions,recipes,ingredients,mechanics){
+    const im=new Map(ingredients.map(i=>[i.id,Number(i.level)])),levels=new Map();
+    for(const r of recipes){
+      const refs=(r.sequence||[]).filter(x=>x.type==='ingredient').map(x=>im.get(x.ref));
+      if(!refs.length||refs.some(l=>![1,2,3].includes(l)))continue;
+      if(!levels.has(r.potionId))levels.set(r.potionId,new Set());
+      levels.get(r.potionId).add(Math.max(...refs));
+    }
+    return potions.flatMap(p=>{
+      if(p.category!=='special'||[1,2,3].includes(Number(p.level)))return [p];
+      let candidates=[...(levels.get(p.id)||[])];
+      if(!candidates.length&&mechanics){
+        candidates=[1,2,3].filter(level=>mechanics.value?.effectDivisors?.[level]?.[p.duration]);
+        const e=p.effects?.length===1?p.effects[0]:null,value=Number(p.value);
+        if(e&&value>0&&Number.isFinite(value)){
+          const fitted=candidates.filter(level=>{
+            const divisor=mechanics.value.effectDivisors[level][p.duration][e.type];
+            return divisor>0&&Math.ceil(value/divisor)===Number(e.value);
+          });
+          if(fitted.length)candidates=fitted;
+        }
+      }
+      return candidates.length?candidates.map(level=>({...p,level})):[p];
+    });
+  }
   function missing(ranges,mechanics,potions,query){
     const {level,duration,type}=query,divisors=mechanics.value?.effectDivisors?.[level]?.[duration];
     if(!divisors)return [];
     const known=new Set();
     for(const p of potions){
-      if(p.category!=='standard_new')continue;
-      for(const e of p.effects||[])known.add(key(p,e.type,e.value));
+      const e=singleKnownEffect(p,level);
+      if(e)known.add(key({level,duration:p.duration},e.type,e.value));
     }
     const result=[];
     for(const effect of ['concentration','efficiency','resistance']){
@@ -36,7 +71,8 @@
   }
   function scenarios(mechanics,potions,query){
     const byKey=new Map();
-    for(const p of potions)if(p.category==='standard_new'&&Number(p.level)===query.level)for(const e of p.effects||[]){
+    for(const p of potions){
+      const e=singleKnownEffect(p,query.level);if(!e)continue;
       const k=p.duration+'|'+e.type;if(!byKey.has(k))byKey.set(k,new Set());byKey.get(k).add(Number(e.value));
     }
     const rows=[],durationCount=Object.keys(mechanics.value.effectDivisors[query.level]||{}).length;
@@ -84,6 +120,6 @@
     for(const c of best)c.outcomes=coverage(c,scenes,true).outcomes;
     return {groups,candidates:best};
   }
-  const api={missing,key,annotate,scenarios,coverage,compositions};
+  const api={missing,key,catalog,singleKnownEffect,annotate,scenarios,coverage,compositions};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.HpwfWantedPlanner=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

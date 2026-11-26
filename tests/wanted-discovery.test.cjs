@@ -85,3 +85,49 @@ test('composition ranking uses rarity first or approximate chance, as selected',
  assert.ok(common.candidates.every(c=>c.rareN===0&&c.seasonalN===0));
  for(const c of common.candidates)assert.ok(Math.abs(c.probability-1)<1e-12);
 });
+
+test('named single-effect potions exclude the same target and reduce discovery chance',()=>{
+ const named=potion(2,{category:'special',name:'Весенний суп',draft:true});
+ const query={level:3,duration:'2mo',type:'efficiency'};
+ const rows=wanted.missing([[800,2400]],mechanics,[named],query);
+ assert.deepEqual(rows.map(r=>r.value),[1,3]);
+ const scenes=wanted.scenarios(mechanics,[named],query);
+ assert.deepEqual(scenes[0].known,[2]);
+ const score=wanted.coverage({minimum:800,maximum:2400},scenes);
+ assert.equal(score.probability,scenes[0].weight*.5);
+});
+test('mixed named effects never block any individual single-effect potion',()=>{
+ const mixed=potion(2,{category:'special',effects:[{type:'efficiency',value:2},{type:'resistance',value:3}]});
+ const rows=wanted.missing([[800,2400]],mechanics,[mixed],{level:3,duration:'2mo',type:'all'});
+ assert.ok(rows.some(q=>q.type==='efficiency'&&q.value===2));
+ assert.ok(rows.some(q=>q.type==='resistance'&&q.value===3));
+ assert.ok(wanted.scenarios(mechanics,[mixed],{level:3,duration:'2mo',type:'all'}).every(s=>!s.known.length));
+});
+test('named levels use recipe ingredients, without mutating original records',()=>{
+ const p=potion(2,{category:'special',level:null});
+ const records=wanted.catalog([p],[{potionId:p.id,sequence:[{type:'ingredient',ref:'a'},{type:'action',ref:'high-level-action'}]}],[{id:'a',level:2}]);
+ assert.equal(records[0].level,2);assert.equal(p.level,null);
+ assert.equal(wanted.singleKnownEffect(records[0],3),null);
+ assert.ok(wanted.singleKnownEffect(records[0],2));
+});
+test('unknown named level is conservatively treated as known on matching effect/duration',()=>{
+ const p=potion(2,{category:'special',level:null});
+ for(const level of [1,2,3])assert.ok(wanted.singleKnownEffect(p,level));
+ const rows=wanted.missing([[800,2400]],mechanics,[p],{level:3,duration:'2mo',type:'efficiency'});
+ assert.ok(!rows.some(q=>q.value===2));
+ assert.ok(wanted.missing([[800,2400]],mechanics,[{...p,duration:'1mo'}],{level:3,duration:'2mo',type:'efficiency'}).some(q=>q.value===2));
+});
+
+test('named level can be estimated from value, effect and duration without inventing a unique level',()=>{
+ const card=potion(9,{category:'special',level:null,duration:'1h',value:300});
+ const estimated=wanted.catalog([card],[],[],mechanics);
+ assert.deepEqual(estimated.map(p=>p.level),[1]);
+});
+
+test('ambiguous duration-only estimates retain all compatible levels and recipes take priority',()=>{
+ const card=potion(10,{category:'special',level:null,duration:'1mo',value:null});
+ assert.deepEqual(wanted.catalog([card],[],[],mechanics).map(p=>p.level),[2,3]);
+ const r=[{potionId:card.id,sequence:[{type:'ingredient',ref:'one'}]}];
+ assert.deepEqual(wanted.catalog([card],r,[{id:'one',level:1}],mechanics).map(p=>p.level),[1]);
+ assert.equal(card.level,null);
+});

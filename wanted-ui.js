@@ -29,7 +29,7 @@ function renderDiscoveryWanted(){
     if(revision!==wantedDiscovery.revision||!wantedEditorAccess())return;
     if(wantedDiscovery.ingredients!==state.ingredients||wantedDiscovery.mechanics!==state.mechanics){wantedDiscovery.cache.clear();wantedDiscovery.ingredients=state.ingredients;wantedDiscovery.mechanics=state.mechanics;}
     if(!wantedDiscovery.cache.has(query.level))wantedDiscovery.cache.set(query.level,HpwfEffectPlanner.valueRanges(query.level,state.ingredients,state.mechanics));
-    const known=[...(state.catalogPotions||[]),...Object.values(state.potions).flat(),...(state.wanted||[])];
+    const known=HpwfWantedPlanner.catalog([...(state.catalogPotions||[]),...Object.values(state.potions).flat(),...(state.wanted||[])],Object.values(state.recipes).flat(),state.ingredients,state.mechanics);
     if($('wantedMode').value==='compositions'){
       wantedDiscovery.compositionResult=HpwfWantedPlanner.compositions(HpwfEffectPlanner,state.ingredients,state.mechanics,known,query,$('wantedOrder').value,$('wantedRarity').value);
     }else{
