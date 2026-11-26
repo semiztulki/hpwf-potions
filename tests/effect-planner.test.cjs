@@ -20,7 +20,19 @@ for(const c of result.candidates){
   assert.equal(Math.max(...items.filter(i=>i.count).map(i=>i.ingredient.level)),3);
   const key=c.counts.join(',');assert.ok(!identities.has(key));identities.add(key);
 }
-const sorted=planner.rank(result.candidates,'count');assert.equal(sorted[0].count,Math.min(...sorted.map(c=>c.count)));
+const sample=[
+  {id:'rare',rareN:1,seasonalN:0,count:1,distance:0},
+  {id:'seasonal',rareN:0,seasonalN:1,count:1,distance:2},
+  {id:'ordinary',rareN:0,seasonalN:0,count:11,distance:4},
+  {id:'seasonal-many',rareN:0,seasonalN:2,count:2,distance:1}
+];
+assert.deepEqual(planner.rank(sample).map(c=>c.id),['ordinary','seasonal','seasonal-many','rare']);
+assert.deepEqual(planner.rank(sample,'close').map(c=>c.id),['rare','seasonal-many','seasonal','ordinary']);
+assert.deepEqual(planner.rank(sample,'rare',{veryRare:false}).map(c=>c.id),['ordinary','seasonal','seasonal-many']);
+assert.deepEqual(planner.rank(sample,'close',{seasonal:false,veryRare:false}).map(c=>c.id),['ordinary']);
+assert.deepEqual(planner.rank(sample,'rare',{seasonal:false}).map(c=>c.id),['ordinary','rare']);
+assert.equal(sample[0].id,'rare');
+assert.equal(planner.rank(result.candidates,'rare',{veryRare:false}).length,0);
 assert.throws(()=>planner.solve({...query,value:0},ingredients,mechanics));
 assert.throws(()=>planner.solve({...query,value:1.5},ingredients,mechanics));
 assert.throws(()=>planner.solve({...query,duration:'5m'},ingredients,mechanics));

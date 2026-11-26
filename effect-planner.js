@@ -42,8 +42,10 @@
     visit(0,11,0,0,0,0,0,0);
     return {...range,groups:gs,candidates:matches};
   }
-  function rank(candidates,order="rare"){
-    return candidates.slice().sort((a,b)=>order==="count"?a.count-b.count||a.rareN-b.rareN||a.distance-b.distance:order==="close"?a.distance-b.distance||a.rareN-b.rareN||a.count-b.count:a.rareN-b.rareN||a.seasonalN-b.seasonalN||a.distance-b.distance||a.count-b.count);
+  function rank(candidates,order="rare",allowed={}){
+    const rarity=(a,b)=>a.rareN-b.rareN||a.seasonalN-b.seasonalN;
+    return candidates.filter(c=>(allowed.seasonal!==false||c.seasonalN===0)&&(allowed.veryRare!==false||c.rareN===0))
+      .sort((a,b)=>order==="close"?a.distance-b.distance||rarity(a,b):rarity(a,b)||a.distance-b.distance);
   }
   const api={target,groups,solve,rank};
   if(typeof module!=="undefined"&&module.exports)module.exports=api;else root.HpwfEffectPlanner=api;

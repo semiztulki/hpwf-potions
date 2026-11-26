@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261126-mobile-planner1">
+  <link rel="stylesheet" href="style.css?v=20261126-planner-filters2">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -200,7 +200,8 @@
       <div id="plannerFound" hidden><h3>Найдено в базе</h3><div id="plannerFoundCards" class="planner-found-cards"></div></div>
       <div id="plannerOutput" hidden>
         <p id="plannerTarget" class="callout"></p>
-        <div class="planner-results-head"><h3>Подходящие составы <span id="plannerCount" class="count-pill"></span></h3><label class="field"><span>Показывать сначала</span><select id="plannerSort"><option value="rare">Меньше особо редких</option><option value="count">Меньше ингредиентов</option><option value="close">Ближе к нужной ценности</option></select></label></div>
+        <div class="planner-results-head"><h3>Подходящие составы <span id="plannerCount" class="count-pill"></span></h3><label class="field"><span>Показывать сначала</span><select id="plannerSort"><option value="rare">Наименее редкие ингредиенты</option><option value="close">Ближе к нужному диапазону</option></select></label></div>
+        <fieldset class="planner-filters"><legend>Можно использовать</legend><label><input id="plannerSeasonal" type="checkbox" checked> Сезонные</label><label><input id="plannerRare" type="checkbox" checked> Особо редкие</label></fieldset>
         <div id="plannerCompositions" class="planner-compositions"></div>
         <button id="plannerMore" type="button" class="admin-secondary-btn" hidden>Показать ещё</button>
       </div>
@@ -401,10 +402,10 @@
   </footer>
   </div>
   <script src="value-model.js?v=20261126-rare-spread1" defer></script>
-  <script src="app.js?v=20261126-mobile-planner1" defer></script>
+  <script src="app.js?v=20261126-planner-filters2" defer></script>
   <script src="admin.js?v=20261126-potion-identity1" defer></script>
-  <script src="effect-planner.js?v=20261126-mobile-planner1" defer></script>
-  <script src="effect-planner-ui.js?v=20261126-mobile-planner1" defer></script>
+  <script src="effect-planner.js?v=20261126-planner-filters2" defer></script>
+  <script src="effect-planner-ui.js?v=20261126-planner-filters2" defer></script>
   <script src="editing.js?v=20261003-1" defer></script>
 </body>
 </html>
