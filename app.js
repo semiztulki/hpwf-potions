@@ -17,6 +17,7 @@ let accessMode="locked";
 
 function showPortalScreen(id){
   for(const screenId of ["accessScreen","homeScreen","functionalScreen"]) $(screenId).hidden=screenId!==id;
+  document.dispatchEvent(new CustomEvent("hpwf:access-changed"));
 }
 function updateAccessChrome(){
   const authenticated=accessMode==="authenticated";
@@ -40,10 +41,10 @@ function showAccessScreen(){
   $("entryLoginStatus").textContent="";
 }
 function openFunctionalTab(id){
-  if(["potions","test-brew","effect-planner","add-recipe","wanted"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
+  if(["potions","test-brew","add-recipe","wanted"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
   if(id==="wanted"&&!adminState?.writePassword) return openFunctionalTab("potions");
   document.querySelectorAll(".tab,.tab-panel").forEach(x=>x.classList.remove("active"));
-  const navButton=document.querySelector('.tab[data-tab="'+(id==="effect-planner"?"test-brew":id)+'"]');
+  const navButton=document.querySelector('.tab[data-tab="'+id+'"]');
   if(navButton) navButton.classList.add("active");
   $(id).classList.add("active");
   updateAccessChrome();

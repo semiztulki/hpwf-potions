@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261126-planner-filters2">
+  <link rel="stylesheet" href="style.css?v=20261126-planner-guest3">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -38,7 +38,7 @@
         <button type="button" data-home-anchor="moonStatus">Узнать, когда полнолуние</button>
         <button type="button" data-home-tab="potions" data-auth-only>Рецепты</button>
         <button type="button" data-home-tab="test-brew" data-auth-only>Виртуальный котёл</button>
-        <button type="button" data-home-tab="effect-planner" data-auth-only>Хочу сварить зелье с определенным эффектом</button>
+        <button type="button" data-home-tab="effect-planner">Хочу сварить зелье с нужным эффектом</button>
         <button type="button" data-home-tab="ingredients">Каталог ингредиентов</button>
         <button type="button" data-home-anchor="valueCalculator">Калькулятор ценности</button>
         <button type="button" data-home-tab="mechanics">Советы и секреты</button>
@@ -65,6 +65,7 @@
     <button type="button" class="tab home-tab" id="stickyHomeButton">Главная</button>
     <button class="tab" data-tab="potions" data-auth-only>Рецепты</button>
     <button class="tab" data-tab="test-brew" data-auth-only>Виртуальный котёл</button>
+    <button class="tab" data-tab="effect-planner">Хочу сварить</button>
     <button class="tab active" data-tab="ingredients">Каталог ингредиентов</button>
     <button type="button" class="tab" data-home-anchor="valueCalculator">Калькулятор ценности</button>
     <button class="tab" data-tab="mechanics">Советы и секреты</button>
@@ -158,7 +159,6 @@
       <div id="mechanicsContent" class="mechanics-grid"></div>
     </section>
     <section id="test-brew" class="tab-panel">
-      <button type="button" class="admin-secondary-btn planner-entry" data-home-tab="effect-planner">Хочу сварить зелье с определенным эффектом</button>
       <div class="section-heading test-brew-heading">
         <div><p class="eyebrow">Закрытый инструмент</p><h2>Тестовая варка зелья</h2></div>
         <span id="testBrewIngredientCount" class="count-pill">0 из 11</span>
@@ -186,7 +186,7 @@
       </div>
     </section>
     <section id="effect-planner" class="tab-panel">
-      <div class="section-heading"><div><p class="eyebrow">Виртуальный котёл</p><h2>Хочу сварить зелье с определенным эффектом</h2></div></div>
+      <div class="section-heading"><div><p class="eyebrow">Подбор ингредиентов</p><h2>Хочу сварить зелье с нужным эффектом</h2></div></div>
       <form id="plannerForm" class="panel planner-form">
         <div class="planner-fields">
           <label class="field"><span>Уровень зелья</span><select id="plannerLevel"><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3" selected>3 уровень</option></select></label>
@@ -200,7 +200,7 @@
       <div id="plannerFound" hidden><h3>Найдено в базе</h3><div id="plannerFoundCards" class="planner-found-cards"></div></div>
       <div id="plannerOutput" hidden>
         <p id="plannerTarget" class="callout"></p>
-        <div class="planner-results-head"><h3>Подходящие составы <span id="plannerCount" class="count-pill"></span></h3><label class="field"><span>Показывать сначала</span><select id="plannerSort"><option value="rare">Наименее редкие ингредиенты</option><option value="close">Ближе к нужному диапазону</option></select></label></div>
+        <div class="planner-results-head"><h3>Сочетания типов ингредиентов <span id="plannerCount" class="count-pill"></span></h3><label class="field"><span>Показывать сначала</span><select id="plannerSort"><option value="rare">Наименее редкие ингредиенты</option><option value="close">Ближе к нужному диапазону</option></select></label></div>
         <fieldset class="planner-filters"><legend>Можно использовать</legend><label><input id="plannerSeasonal" type="checkbox" checked> Сезонные</label><label><input id="plannerRare" type="checkbox" checked> Особо редкие</label></fieldset>
         <div id="plannerCompositions" class="planner-compositions"></div>
         <button id="plannerMore" type="button" class="admin-secondary-btn" hidden>Показать ещё</button>
@@ -402,10 +402,10 @@
   </footer>
   </div>
   <script src="value-model.js?v=20261126-rare-spread1" defer></script>
-  <script src="app.js?v=20261126-planner-filters2" defer></script>
+  <script src="app.js?v=20261126-planner-guest3" defer></script>
   <script src="admin.js?v=20261126-potion-identity1" defer></script>
-  <script src="effect-planner.js?v=20261126-planner-filters2" defer></script>
-  <script src="effect-planner-ui.js?v=20261126-planner-filters2" defer></script>
+  <script src="effect-planner.js?v=20261126-planner-guest3" defer></script>
+  <script src="effect-planner-ui.js?v=20261126-planner-guest3" defer></script>
   <script src="editing.js?v=20261003-1" defer></script>
 </body>
 </html>
