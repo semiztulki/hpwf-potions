@@ -96,10 +96,15 @@ function adminSameEffectValues(a,b){
   }
   return true;
 }
+function adminMatchesEffectType(d,p){
+  if(d.category!=="standard_new"||!d.effects?.length||!p.effects?.length) return true;
+  const types=effects=>[...new Set(effects.map(e=>e.type))].sort().join(",");
+  return types(d.effects)===types(p.effects);
+}
 function adminIdentityCandidates(d,potions){
   if(d.category==="standard_new"||d.category==="standard_old"){
     if(!d.level||d.number==null) return [];
-    return potions.filter(p=>p.category===d.category&&Number(p.level)===Number(d.level)&&Number(p.number)===Number(d.number));
+    return potions.filter(p=>p.category===d.category&&Number(p.level)===Number(d.level)&&Number(p.number)===Number(d.number)&&adminMatchesEffectType(d,p));
   }
   if(d.category==="special"){
     if(!d.name) return [];
@@ -141,7 +146,8 @@ function adminLocalMatch(){
   return adminFindPotion(d,potions);
 }
 function adminPotionsForKey(key){
-  return [...(state.potions?.[key]||[]),...(state.wanted||[]).filter(p=>adminStateKey(p.category)===key)];
+  const potions=[...(state.potions?.[key]||[]),...(state.wanted||[]).filter(p=>adminStateKey(p.category)===key)];
+  return [...new Map(potions.map(p=>[p.id,p])).values()];
 }
 function adminSetField(id,value,overwrite=false){
   const input=a$(id);
@@ -185,7 +191,7 @@ function adminSuggestionPotions(){
   }
   const numberText=a$("adminNumber").value.trim();
   if(!numberText) return [];
-  return potions.filter(p=>(!d.level||Number(p.level)===Number(d.level))&&String(p.number??"").includes(numberText)).sort((a,b)=>Number(a.number)-Number(b.number)||comparePotions(a,b)).slice(0,8);
+  return potions.filter(p=>(!d.level||Number(p.level)===Number(d.level))&&String(p.number??"").includes(numberText)&&adminMatchesEffectType(d,p)).sort((a,b)=>Number(a.number)-Number(b.number)||comparePotions(a,b)).slice(0,8);
 }
 function adminRenderSuggestions(){
   const box=a$("adminPotionSuggestions");
@@ -512,7 +518,7 @@ function initAdmin(){
   ["adminCategory","adminLevel","adminNumber","adminName","adminDuration","adminObservedValue","adminConcentration","adminResistance","adminEfficiency","adminUniqueEffectToggle","adminUniqueEffect","adminUniqueToxicity","adminDescription","adminAuthor"]
     .forEach(id=>a$(id).addEventListener("input",()=>{
       if(id==="adminCategory"||id==="adminUniqueEffectToggle") adminSyncEffectMode();
-      if(["adminCategory","adminLevel","adminNumber","adminName"].includes(id)){
+      if(["adminCategory","adminLevel","adminNumber","adminName","adminConcentration","adminResistance","adminEfficiency"].includes(id)){
         adminState.selectedPotionId=null;
         adminState.confirmedPotionId=null;
       }
