@@ -44,8 +44,8 @@ test('how-to button fills every planner field, resets rarity filters and submits
  assert.equal($('plannerLevel').value,'2');assert.equal($('plannerDuration').value,'1mo');assert.equal($('plannerType').value,'resistance');assert.equal($('plannerValue').value,'31');
  assert.ok($('plannerSeasonal').checked&&$('plannerRare').checked);
 });
-test('guest and first-level password cannot render discovery or open target calculations',()=>{
- for(const mode of ['guest','reader']){
+test('guest cannot render discovery or open target calculations',()=>{
+ for(const mode of ['guest']){
   const {c,$,calls,run}=uiFixture();if(mode==='guest')c.accessMode='guest';else c.adminState.writePassword='';
   run(`wantedDiscovery.rows=[{level:3,duration:'2mo',type:'efficiency',value:200}];renderDiscoveryWanted();wantedOpenCalculation(0);`);
   assert.equal($('wantedCards').innerHTML,'');assert.deepEqual(calls,[]);
@@ -130,4 +130,23 @@ test('ambiguous duration-only estimates retain all compatible levels and recipes
  const r=[{potionId:card.id,sequence:[{type:'ingredient',ref:'one'}]}];
  assert.deepEqual(wanted.catalog([card],r,[{id:'one',level:1}],mechanics).map(p=>p.level),[1]);
  assert.equal(card.level,null);
+});
+
+test('faculty password opens calculations without editor password',()=>{
+ const {c,$,calls,run}=uiFixture();c.adminState.writePassword='';
+ run(`wantedDiscovery.rows=[{level:1,duration:'1w',type:'efficiency',value:2}];wantedOpenCalculation(0);`);
+ assert.deepEqual(calls,['effect-planner','durations','reset','submit']);
+});
+test('Moon supplies a separate 0..450 bonus and is retained for exhausted single ingredients',()=>{
+ const ing=[{id:'c',level:1,rarity:'common',basePower:100}];
+ const m={value:{effectDivisors:{1:{a:{efficiency:100}}},modifierModel:{byRarity:{common:{relativeSpread:0}}}}};
+ const q={level:1,duration:'a',type:'efficiency',value:5};
+ const r=planner.solve(q,ing,m);
+ const moon=r.candidates.find(c=>c.count===1&&c.moon);assert.ok(moon);assert.equal(moon.minimum,100);assert.equal(moon.maximum,550);assert.equal(moon.base,325);
+ assert.ok(!r.candidates.some(c=>c.count===1&&!c.moon));
+ const actions=[{id:'stir',kind:'action'}],recipes=[{sequence:[{type:'ingredient',ref:'c'}]},{sequence:[{type:'ingredient',ref:'c'},{type:'action',ref:'stir'}]}];
+ const exhausted=wanted.exhaustedSingles(ing,actions,recipes);assert.ok(exhausted.has('1-common'));
+ const seen=[];planner.eachComposition(1,ing,m,c=>seen.push({...c}),wanted.enumerationOptions(exhausted));
+ assert.ok(!seen.some(c=>c.count===1&&!c.moon));assert.ok(seen.some(c=>c.count===1&&c.moon));
+ assert.equal(wanted.exhaustedSingles(ing,actions,recipes.slice(0,1)).size,0);
 });

@@ -16,7 +16,7 @@
     }
     return [...map.values()].filter(g=>Number.isFinite(g.power)&&g.power>0).sort((a,b)=>a.level-b.level||["common","seasonal","very_rare"].indexOf(a.rarity)-["common","seasonal","very_rare"].indexOf(b.rarity));
   }
-  function eachComposition(levelWanted,ingredients,mechanics,accept){
+  function eachComposition(levelWanted,ingredients,mechanics,accept,options={}){
     const gs=groups(ingredients,levelWanted),counts=gs.map(()=>0);
     const modifiers=mechanics.value?.modifierModel;
     const spreads={common:modifiers?.byRarity?.common?.relativeSpread??.15,seasonal:modifiers?.byRarity?.seasonal?.relativeSpread??.05,very_rare:modifiers?.byRarity?.very_rare?.relativeSpread??.01};
@@ -27,7 +27,10 @@
         const empirical=modifiers?.mixedRareEmpirical?.relativeSpread;
         if(commonN===0&&seasonalN>0&&rareN>0&&Number.isFinite(empirical))width=base*empirical;
         const minimum=base-width,maximum=base+width;
-        accept({counts,count,commonN,seasonalN,rareN,base,minimum,maximum});
+        for(const moon of options.moon==='all'?[false,true]:[options.moon===true]){
+          const candidate={counts,count,commonN,seasonalN,rareN,base:base+(moon?225:0),minimum,maximum:maximum+(moon?450:0),moon};
+          if(!options.exclude?.(candidate,gs))accept(candidate);
+        }
         return;
       }
       const g=gs[index];
@@ -45,12 +48,12 @@
     const gs=eachComposition(query.level,ingredients,mechanics,c=>{
       if(c.maximum<=range.low||c.minimum>range.high)return;
       matches.push({...c,counts:c.counts.slice(),from:Math.ceil(c.minimum/range.divisor),to:Math.ceil(c.maximum/range.divisor),distance:Math.abs(c.base-(range.low+range.high)/2),nominalHit:Math.ceil(c.base/range.divisor)===query.value});
-    });
+    },{moon:query.moon??'all'});
     return {...range,groups:gs,candidates:matches};
   }
-  function valueRanges(level,ingredients,mechanics){
+  function valueRanges(level,ingredients,mechanics,options={}){
     const ranges=[];
-    eachComposition(level,ingredients,mechanics,c=>ranges.push([c.minimum,c.maximum]));
+    eachComposition(level,ingredients,mechanics,c=>ranges.push([c.minimum,c.maximum]),options);
     ranges.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);
     const merged=[];
     for(const range of ranges){

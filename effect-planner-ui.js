@@ -16,7 +16,7 @@ function plannerRender(){
   const result=effectPlannerState.result,q=effectPlannerState.query;if(!result)return;
   const sorted=HpwfEffectPlanner.rank(result.candidates,$("plannerSort").value,{seasonal:$("plannerSeasonal").checked,veryRare:$("plannerRare").checked});
   $("plannerCount").textContent=fmt(sorted.length);
-  $("plannerCompositions").innerHTML=sorted.slice(0,effectPlannerState.limit).map(c=>'<article class="panel planner-option"><div class="planner-option-head"><h3>'+c.count+' '+plural(c.count,"ингредиент","ингредиента","ингредиентов")+'</h3><span class="meta">'+(c.rareN?'Особо редких: '+c.rareN:'Без особо редких')+'</span></div><div class="planner-groups">'+result.groups.map((g,i)=>c.counts[i]?plannerGroupTile(g,c.counts[i]):"").join("")+'</div><p class="planner-value">Ценность: '+fmt(Math.round(c.base))+' <span class="meta">('+fmt(Math.round(c.minimum))+'–'+fmt(Math.round(c.maximum))+')</span></p><p class="potion-effect">Значение эффекта: '+c.from+'–'+c.to+'</p></article>').join("");
+  $("plannerCompositions").innerHTML=sorted.slice(0,effectPlannerState.limit).map(c=>'<article class="panel planner-option"><div class="planner-option-head"><h3>'+c.count+' '+plural(c.count,"ингредиент","ингредиента","ингредиентов")+'</h3><span class="meta">'+(c.rareN?'Особо редких: '+c.rareN:'Без особо редких')+'</span></div><div class="planner-groups">'+result.groups.map((g,i)=>c.counts[i]?plannerGroupTile(g,c.counts[i]):"").join("")+(c.moon?plannerMoonTile():'')+'</div><p class="planner-value">Ценность: '+fmt(Math.round(c.base))+' <span class="meta">('+fmt(Math.round(c.minimum))+'–'+fmt(Math.round(c.maximum))+')</span></p><p class="potion-effect">Значение эффекта: '+c.from+'–'+c.to+'</p></article>').join("");
   if(!sorted.length)$("plannerCompositions").innerHTML='<div class="panel empty-state">Подходящих составов нет. Попробуй изменить фильтры или параметры зелья.</div>';
   $("plannerMore").hidden=effectPlannerState.limit>=sorted.length;
 }
@@ -69,3 +69,5 @@ function initEffectPlanner(){
   if(state.mechanics)plannerDurations();
 }
 initEffectPlanner();
+
+function plannerMoonTile(){return '<div class="planner-group" tabindex="0" role="group" aria-label="Свет полной луны"><div class="planner-group-picture"><img src="assets/catalog/full-moon.png" width="56" height="56" alt="Свет полной луны"><strong>×1</strong></div><span class="planner-group-label">Свет полной луны</span><div class="planner-tip" role="tooltip">Добавь до 11-го ингредиента. Бонус к ценности: 0–450.</div></div>';}

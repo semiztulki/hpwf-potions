@@ -105,7 +105,18 @@
     }
     return {unknown,total,probability,outcomes};
   }
-  function compositions(planner,ingredients,mechanics,potions,query,order='rare',rarity='all',limit=60){
+  function exhaustedSingles(ingredients,actions,recipes){
+    const signatures=new Set(recipes.filter(r=>r.sequence?.length).map(r=>JSON.stringify(r.sequence.map(x=>[x.type,x.ref]))));
+    const groups=new Map();
+    for(const i of ingredients){const k=i.level+'-'+i.rarity;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(i);}
+    const exhausted=new Set();
+    for(const [key,items] of groups)if(items.every(i=>[null,...actions.filter(a=>a.kind==='action')].every(a=>signatures.has(JSON.stringify([['ingredient',i.id],...(a?[['action',a.id]]:[])])))))exhausted.add(key);
+    return exhausted;
+  }
+  function enumerationOptions(exhausted=new Set()){
+    return {moon:'all',exclude:(c,groups)=>!c.moon&&c.count===1&&groups.some((g,i)=>c.counts[i]&&exhausted.has(g.key))};
+  }
+  function compositions(planner,ingredients,mechanics,potions,query,order='rare',rarity='all',limit=60,options={}){
     const scenes=scenarios(mechanics,potions,query),best=[];
     const selected=ingredients.filter(i=>rarity==='common'?i.rarity==='common':rarity==='seasonal'?i.rarity!=='very_rare':true);
     const compare=(a,b)=>order==='coverage'?b.probability-a.probability||b.unknown-a.unknown||a.rareN-b.rareN||a.seasonalN-b.seasonalN:a.rareN-b.rareN||a.seasonalN-b.seasonalN||b.probability-a.probability||b.unknown-a.unknown;
@@ -116,10 +127,10 @@
       candidate.counts=c.counts.slice();
       let at=0;while(at<best.length&&compare(best[at],candidate)<=0)at++;
       best.splice(at,0,candidate);if(best.length>limit)best.pop();
-    });
+    },options);
     for(const c of best)c.outcomes=coverage(c,scenes,true).outcomes;
     return {groups,candidates:best};
   }
-  const api={missing,key,catalog,singleKnownEffect,annotate,scenarios,coverage,compositions};
+  const api={missing,key,catalog,singleKnownEffect,exhaustedSingles,enumerationOptions,annotate,scenarios,coverage,compositions};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.HpwfWantedPlanner=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

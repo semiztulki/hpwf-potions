@@ -448,9 +448,9 @@ function adminRenderAuth(){
   const recipeCount=a$("recipeCount");
   if(recipeCount) recipeCount.hidden=!logged;
   const wantedNav=a$("wantedNavButton");
-  if(wantedNav) wantedNav.hidden=!editorLogged;
+  if(wantedNav) wantedNav.hidden=!logged;
   if(typeof renderWanted==="function") renderWanted();
-  if(!editorLogged&&a$("wanted")?.classList.contains("active")) openFunctionalTab("potions");
+  if(!logged&&a$("wanted")?.classList.contains("active")) openFunctionalTab("potions");
   if(databaseStatus&&logged) databaseStatus.textContent="";
   if(typeof hpwfEditAuthChanged==="function") hpwfEditAuthChanged();
 }
