@@ -40,10 +40,10 @@ function showAccessScreen(){
   $("entryLoginStatus").textContent="";
 }
 function openFunctionalTab(id){
-  if(["potions","test-brew","add-recipe","wanted"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
+  if(["potions","test-brew","effect-planner","add-recipe","wanted"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
   if(id==="wanted"&&!adminState?.writePassword) return openFunctionalTab("potions");
   document.querySelectorAll(".tab,.tab-panel").forEach(x=>x.classList.remove("active"));
-  const navButton=document.querySelector('.tab[data-tab="'+id+'"]');
+  const navButton=document.querySelector('.tab[data-tab="'+(id==="effect-planner"?"test-brew":id)+'"]');
   if(navButton) navButton.classList.add("active");
   $(id).classList.add("active");
   updateAccessChrome();
@@ -75,6 +75,9 @@ function openCatalogTool(id){
     }
   });
 }
+function responsiveRow(html,labels){
+  let index=0;return html.replace(/<td(?=[ >])/g,()=>'<td data-label="'+esc(labels[index++])+'"');
+}
 function ingredientRow(x){
   const img=x.imageUrl?'<img class="catalog-icon" src="'+x.imageUrl+'" alt="">':'<span class="catalog-icon-placeholder">✦</span>';
   return '<tr><td><div class="catalog-name">'+img+'<span>'+esc(x.name)+'</span></div></td>'
@@ -86,7 +89,7 @@ function renderIngredients(){
   const levels=selected("ingredient-level"),rarities=selected("ingredient-rarity"),seasons=selected("ingredient-season");
   const list=state.ingredients.filter(x=>(levels===null||levels.includes(String(x.level)))&&(rarities===null||rarities.includes(x.rarity))&&(x.rarity!=="seasonal"||seasons===null||seasons.includes(x.season)));
   $("ingredientCount").textContent=list.length+" из "+state.ingredients.length;
-  $("ingredientCards").innerHTML=list.length?'<table class="catalog-table"><thead><tr><th>Ингредиент</th><th>Уровень</th><th>Категория</th><th>Сезон</th><th>Сила</th><th>Усвоение</th><th>Шанс выпадения</th></tr></thead><tbody>'+list.map(ingredientRow).join("")+'</tbody></table>':'<div class="panel empty-state">По этим фильтрам ингредиентов нет.</div>';
+  $("ingredientCards").innerHTML=list.length?'<table class="catalog-table"><thead><tr><th>Ингредиент</th><th>Уровень</th><th>Категория</th><th>Сезон</th><th>Сила</th><th>Усвоение</th><th>Шанс выпадения</th></tr></thead><tbody>'+list.map(x=>responsiveRow(ingredientRow(x),["Ингредиент","Уровень","Категория","Сезон","Сила","Усвоение","Шанс выпадения"])).join("")+'</tbody></table>':'<div class="panel empty-state">По этим фильтрам ингредиентов нет.</div>';
 }
 function actionRow(x){
   const img=x.imageUrl?'<img class="catalog-icon" src="'+x.imageUrl+'" alt="">':'<span class="catalog-icon-placeholder">✦</span>';
@@ -95,7 +98,7 @@ function actionRow(x){
     +'<td>'+x.level+'</td><td class="numeric">'+x.pauseSeconds+' сек.</td></tr>';
 }
 function renderActions(){
-  $("actionCards").innerHTML='<table class="catalog-table action-table"><thead><tr><th>Действие</th><th>Уровень</th><th>Усвоение</th></tr></thead><tbody>'+state.actions.map(actionRow).join("")+'</tbody></table>';
+  $("actionCards").innerHTML='<table class="catalog-table action-table"><thead><tr><th>Действие</th><th>Уровень</th><th>Усвоение</th></tr></thead><tbody>'+state.actions.map(x=>responsiveRow(actionRow(x),["Действие","Уровень","Усвоение"])).join("")+'</tbody></table>';
 }
 
 // Астрономический расчёт по формулам SunCalc; сетевых запросов не требует.
