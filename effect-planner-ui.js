@@ -28,10 +28,11 @@ function plannerExisting(q){
     if(seen.has(p.id))return false;seen.add(p.id);
     return p.category==="standard_new"&&Number(p.level)===q.level&&p.duration===q.duration&&p.effects?.length===1&&p.effects[0].type===q.type&&Number(p.effects[0].value)===q.value;
   });
-  $("plannerFound").hidden=!potions.length;
-  $("plannerFoundCards").innerHTML=potions.map(p=>{
-    const recipes=Object.values(state.recipes).flat().filter(r=>r.potionId===p.id);
-    return '<article class="panel"><h3>'+esc(potionTitle(p))+'</h3><p class="potion-effect">'+esc(potionEffectSummary(p))+'</p>'+recipes.map(r=>'<div class="recipe-sequence">'+recipeItems(r)+'</div>').join("")+'</article>';
+  const matches=potions.map(p=>({p,recipes:Object.values(state.recipes).flat().filter(r=>r.potionId===p.id&&r.sequence?.length)}))
+    .sort((a,b)=>Number(b.recipes.length>0)-Number(a.recipes.length>0));
+  $("plannerFound").hidden=!matches.length;
+  $("plannerFoundCards").innerHTML=matches.map(({p,recipes})=>{
+    return '<article class="panel"><h3>'+esc(potionTitle(p))+'</h3><p class="potion-effect">'+esc(potionEffectSummary(p))+'</p>'+(recipes.length?'<div class="potion-recipes"><p class="recipe-label">'+(recipes.length===1?'Рецепт':'Рецепты')+'</p>'+recipes.map((r,i)=>'<div class="recipe-line"><div class="recipe-sequence"><span class="recipe-number">'+(i+1)+'.</span> '+recipeItems(r)+'</div></div>').join("")+'</div>':'<p class="meta planner-missing-recipe">Рецепт ещё не добавлен в базу.</p>')+'</article>';
   }).join("");
 }
 function plannerReset(){

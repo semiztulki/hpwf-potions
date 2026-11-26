@@ -12,7 +12,7 @@ function fixture(){
  const app=fs.readFileSync(require.resolve('../app.js'),'utf8');
  vm.runInContext(app.slice(0,app.indexOf('function initTabs()')),c);
  vm.runInContext(fs.readFileSync(require.resolve('../effect-planner-ui.js'),'utf8'),c);
- vm.runInContext(`state.potions={new:[{id:'private-potion',category:'standard_new',level:3,duration:'2mo',effects:[{type:'efficiency',value:200}]}]};state.recipes={new:[{potionId:'private-potion'}]};`,c);
+ vm.runInContext(`state.potions={new:[{id:'private-potion',category:'standard_new',level:3,duration:'2mo',effects:[{type:'efficiency',value:200}]}]};state.recipes={new:[{potionId:'private-potion',sequence:[{type:'ingredient',ref:'test-ingredient'}]}]};`,c);
  return {c,node,tabs,run:s=>vm.runInContext(s,c)};
 }
 test('guest can open planner with its own highlighted tab, while cauldron stays locked',()=>{
@@ -40,4 +40,34 @@ test('guest navigation is visible and names ingredient combinations accurately',
  assert.match(html,/<button class="tab" data-tab="effect-planner">Хочу сварить<\/button>/);
  assert.match(html,/data-home-tab="effect-planner">Хочу сварить зелье с нужным эффектом/);
  assert.match(html,/Сочетания типов ингредиентов <span id="plannerCount"/);
+});
+
+test('catalogue records without recipes are labelled instead of showing an empty recipe',()=>{
+ const {node,run}=fixture();
+ run(`accessMode='authenticated';state.recipes={};plannerExisting({level:3,duration:'2mo',type:'efficiency',value:200});`);
+ assert.equal(node('plannerFound').hidden,false);
+ assert.match(node('plannerFoundCards').innerHTML,/Рецепт ещё не добавлен в базу/);
+ assert.doesNotMatch(node('plannerFoundCards').innerHTML,/private-recipe/);
+});
+test('all saved recipe sequences render, including ingredient and action order',()=>{
+ const {node,run}=fixture();
+ const app=fs.readFileSync(require.resolve('../app.js'),'utf8');
+ run(app.slice(app.indexOf('function recipeItems('),app.indexOf('function nominalRecipeValue(')));
+ run(`accessMode='authenticated';state.ingredients=[{id:'test-ingredient',name:'Тестовый ингредиент'}];state.actions=[{id:'stir',name:'Помешать'}];
+ state.recipes={new:[{potionId:'private-potion',sequence:[{type:'ingredient',ref:'test-ingredient'},{type:'action',ref:'stir'}]},{potionId:'private-potion',sequence:[{type:'action',ref:'stir'},{type:'ingredient',ref:'test-ingredient'}]}]};
+ plannerExisting({level:3,duration:'2mo',type:'efficiency',value:200});`);
+ const html=node('plannerFoundCards').innerHTML;
+ assert.equal((html.match(/class="recipe-line"/g)||[]).length,2);
+ assert.match(html,/Тестовый ингредиент.*Помешать.*Помешать.*Тестовый ингредиент/);
+ assert.doesNotMatch(html,/Рецепт ещё не добавлен/);
+});
+test('potions with recipes come before catalogue-only matches and empty sequences are not recipes',()=>{
+ const {node,run}=fixture();
+ run(`accessMode='authenticated';state.potions.new.unshift({...state.potions.new[0],id:'no-recipe'});
+ state.recipes.new.push({potionId:'no-recipe',sequence:[]});
+ plannerExisting({level:3,duration:'2mo',type:'efficiency',value:200});`);
+ const html=node('plannerFoundCards').innerHTML;
+ assert.ok(html.indexOf('private-potion')<html.indexOf('no-recipe'));
+ assert.equal((html.match(/private-recipe/g)||[]).length,1);
+ assert.match(html,/Рецепт ещё не добавлен/);
 });
