@@ -362,9 +362,10 @@ function updateValueCalculator(){
   }
   const ingredients=Object.fromEntries(state.ingredients.map(x=>[x.id,x]));
   const estimate=HpwfValueModel.estimate(inputs.map(input=>({ingredient:ingredients[input.dataset.ref],count:Number(input.value)})),$("calculatorMoon").checked,state.mechanics);
-  const {nominal,minimum,maximum}=estimate;
+  const finalEstimate=estimate.empirical?{...estimate,...estimate.empirical}:estimate;
+  const {nominal,minimum,maximum}=finalEstimate;
   $("calculatorResult").className="calculator-result";
-  $("calculatorResult").innerHTML=total?'<span>Примерная ценность</span><div class="calculator-value-line"><strong>'+calculatedValueText(estimate)+'</strong></div>':'<span>Примерная ценность</span><strong>—</strong><small>Добавь ингредиенты, чтобы увидеть расчёт</small>';
+  $("calculatorResult").innerHTML=total?'<span>Примерная ценность</span><div class="calculator-value-line"><strong>'+calculatedValueText(finalEstimate)+'</strong></div>':'<span>Примерная ценность</span><strong>—</strong><small>Добавь ингредиенты, чтобы увидеть расчёт</small>';
   renderCalculatorEffects(level,$("calculatorDuration").value,nominal,minimum,maximum);
 }
 function renderMechanics(){
@@ -383,7 +384,7 @@ function renderMechanics(){
     return '<tr><td>'+x.level+'</td><td>'+fmt(x.thresholdXp)+'</td><td>'+esc(prizeText)+'</td><td>'+difficulty+'</td><td>'+dropText+'</td></tr>';
   }).join("");
   $("mechanicsContent").innerHTML=
-    '<article class="mechanic-card wide"><h3>Ценность и величина эффекта</h3><p>Принятая модель: сезонные и особо редкие ингредиенты имеют постоянную силу. Разброс ±15% применяется только к сумме сил обычных ингредиентов. Свет полной луны отдельно добавляет 0–450.</p><p>Величина эффекта получается делением итоговой ценности на коэффициент для выбранных длительности и вида эффекта с округлением вверх. Для двух месяцев коэффициент равен 800.</p></article>'
+    '<article class="mechanic-card wide"><h3>Ценность и величина эффекта</h3><p>Расчёт учитывает состав и возможный разброс силы ингредиентов. Свет полной луны даёт дополнительный бонус к ценности.</p><p>Величина эффекта получается делением итоговой ценности на коэффициент для выбранных длительности и вида эффекта с округлением вверх. Для двух месяцев коэффициент равен 800.</p></article>'
     +'<article class="mechanic-card wide"><h3>Какая токсикация у зелий</h3><p>'+m.toxicity.rule+'</p><div class="table-wrap"><table><thead><tr><th>Длительность</th><th>1 уровень</th><th>2 уровень</th><th>3 уровень</th></tr></thead><tbody>'+toxRows+'</tbody></table></div></article>'
     +'<article class="mechanic-card wide"><h3>Опыт зельеварения</h3><p class="callout">'+m.brewingExperienceNote+'</p><div class="table-wrap"><table><thead><tr><th>Уровень зельевара</th><th>Порог опыта</th><th>Ингредиент 1 уровня</th><th>Ингредиент 2 уровня</th><th>Ингредиент 3 уровня</th></tr></thead><tbody>'
       +m.brewingExperience.map(x=>'<tr><td>'+x.brewerLevel+'</td><td>'+x.thresholdXp+'</td><td>'+(x.xpPerIngredient["1"]==null?"—":formatXp(x.xpPerIngredient["1"]))+'</td><td>'+(x.xpPerIngredient["2"]==null?"—":formatXp(x.xpPerIngredient["2"]))+'</td><td>'+(x.xpPerIngredient["3"]==null?"—":formatXp(x.xpPerIngredient["3"]))+'</td></tr>').join("")

@@ -12,12 +12,12 @@ const check=(actual,expected)=>assert.ok(Math.abs(actual-expected)<1e-8,`${actua
 
 // The known control must reproduce both its value and its rounded effect.
 const heart=model.estimate(items({'ing-033':11}),false,mechanics);
-assert.equal(Math.round(heart.base),406398);check(heart.minimum,heart.base);check(heart.maximum,heart.base);
+assert.equal(Math.round(heart.base),406398);check(heart.minimum,heart.base*.99);check(heart.maximum,heart.base*1.01);
 assert.equal(model.effect(heart.nominal,800),508);
 const seasonal=model.estimate(items({'ing-006':11}),false,mechanics);
-assert.equal(seasonal.minimum,11000);assert.equal(seasonal.maximum,11000);
+check(seasonal.minimum,10450);check(seasonal.maximum,11550);
 const mixed=model.estimate(items({'ing-001':5,'ing-006':4,'ing-017':1,'ing-021':1}),false,mechanics);
-assert.equal(Math.round(mixed.nominal),21310);check(mixed.minimum,mixed.nominal-150);check(mixed.maximum,mixed.nominal+150);
+assert.equal(Math.round(mixed.nominal),21310);const mixedRadius=150+(4000+I["ing-017"].basePower)*.05+I["ing-021"].basePower*.01;check(mixed.minimum,mixed.nominal-mixedRadius);check(mixed.maximum,mixed.nominal+mixedRadius);
 const moon=model.estimate(items({'ing-001':5,'ing-006':4,'ing-017':1,'ing-021':1}),true,mechanics);
 check(moon.nominal,mixed.nominal+225);check(moon.minimum,mixed.minimum);check(moon.maximum,mixed.maximum+450);
 const common=model.estimate(items({'ing-012':11}),false,mechanics);
@@ -34,7 +34,7 @@ for(const ingredient of ingredients){
 const pollen=model.estimate(items({'ing-032':11}),false,mechanics);
 check(pollen.base,heart.base);
 assert.equal(model.effect(pollen.base,800),508);
-assert.equal(model.effect(model.estimate(items({'ing-032':11}),true,mechanics).maximum,800),509);
+assert.equal(model.effect(model.estimate(items({'ing-032':11}),true,mechanics).maximum,800),514);
 // Independent card values for pure seasonal and mixed rare controls.
 assert.equal(Math.round(model.estimate(items({'ing-017':11}),false,mechanics).base),29901);
 assert.equal(Math.round(model.estimate(items({'ing-028':11}),false,mechanics).base),81280);
@@ -72,7 +72,7 @@ assert.equal(node('calculatorEffects').hidden,true);
 assert.ok(node('calculatorResult').textContent.includes('больше 11'));
 context.recipe={sequence:[{type:'ingredient',ref:'ing-033'}]};
 const recipeEstimate=vm.runInContext('nominalRecipeValue(recipe)',context);
-check(recipeEstimate.minimum,heart.base/11);check(recipeEstimate.maximum,heart.base/11);
+check(recipeEstimate.minimum,heart.minimum/11);check(recipeEstimate.maximum,heart.maximum/11);
 context.potion={id:'control',category:'special',name:'Control',duration:'2mo',value:406398,effects:[{type:'efficiency',value:508,unit:'percent'}]};
 vm.runInContext("state.recipes={special:[{potionId:'control',sequence:Array.from({length:11},()=>({type:'ingredient',ref:'ing-033'}))}]}",context);
 const card=vm.runInContext('renderPotionCard(potion)',context);
@@ -80,3 +80,16 @@ assert.ok(card.includes('Расчётная ценность: '));
 assert.ok(card.includes('Ценность:'));
 assert.ok(card.includes('508'));
 console.log('Value model and calculator integration checks passed.');
+
+// A mixed rare recipe gets a separate aggregate estimate only without commons.
+const blend=model.estimate(items({'ing-006':5,'ing-021':1}),false,mechanics);
+check(blend.empirical.minimum,blend.base*.99);check(blend.empirical.maximum,blend.base*1.01);
+check(blend.minimum,5000*.95+I['ing-021'].basePower*.99);
+assert.equal(mixed.empirical,null);assert.equal(seasonal.empirical,null);assert.equal(heart.empirical,null);
+const blendMoon=model.estimate(items({'ing-006':5,'ing-021':1}),true,mechanics);
+check(blendMoon.empirical.minimum,blend.empirical.minimum);check(blendMoon.empirical.maximum,blend.empirical.maximum+450);
+setCounts({'ing-006':5,'ing-021':1});node('calculatorDuration').value='1mo';vm.runInContext('updateValueCalculator()',context);
+assert.ok(node('calculatorResult').innerHTML.includes(new Intl.NumberFormat('ru-RU').format(Math.round(blend.empirical.minimum))));
+assert.ok(!/наблюден|ориентир|±|предварительн|Полный расчёт/.test(node('calculatorResult').innerHTML));
+assert.ok(node('calculatorEffects').innerHTML.includes('calculator-effect-range'));
+console.log('Rare spread and clean calculator output checks passed.');
