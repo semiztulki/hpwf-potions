@@ -120,35 +120,46 @@
     for(const [key,items] of groups)if(items.every(i=>[null,...actions.filter(a=>a.kind==='action')].every(a=>signatures.has(JSON.stringify([['ingredient',i.id],...(a?[['action',a.id]]:[])])))))exhausted.add(key);
     return exhausted;
   }
-  function compositionKey(counts,moon){
-    return JSON.stringify([!!moon,Object.entries(counts).filter(([,n])=>n).sort(([a],[b])=>a.localeCompare(b))]);
-  }
   function sequenceAvailability(ingredients,actions,recipes){
     const im=new Map(ingredients.map(i=>[i.id,i])),actionIds=new Set(actions.filter(a=>a.kind==='action').map(a=>a.id));
     const moonIds=new Set(actions.filter(a=>a.kind==='moon').map(a=>a.id));
+    // At most 11 ingredients per group: base-12 digits cannot carry into another group.
+    // The nine level/rarity groups fit exactly in a Number; the low bit marks Moon.
+    const groupCodes=new Map(),codesByGroups=new WeakMap();let nextCode=2;
+    for(const i of ingredients){
+      const key=i.level+'-'+i.rarity;
+      if(!groupCodes.has(key)){groupCodes.set(key,nextCode);nextCode*=12;}
+    }
+    function compositionKey(c,groups){
+      let codes=codesByGroups.get(groups);
+      if(!codes){codes=groups.map(g=>groupCodes.get(g.key));codesByGroups.set(groups,codes);}
+      let key=c.moon?1:0;
+      for(let i=0;i<codes.length;i++)key+=codes[i]*(c.counts[i]||0);
+      return key;
+    }
     const seen=new Set(),known=new Map(),cache=new Map();
     for(const recipe of recipes){
       const seq=recipe.sequence;if(!seq?.length||seq.length>23||seq[0].type==='action')continue;
-      const counts={};let n=0,moons=0,valid=true;
+      let key=0,n=0,moons=0,valid=true;
       for(let at=0;at<seq.length;at++){
         const x=seq[at];
         if(x.type==='ingredient'){
           const i=im.get(x.ref);if(!i){valid=false;break;}
-          const key=i.level+'-'+i.rarity;counts[key]=(counts[key]||0)+1;
+          key+=groupCodes.get(i.level+'-'+i.rarity);
           if(++n>11||(n===11&&at!==seq.length-1)){valid=false;break;}
         }else if(x.type==='action'){
           if(!actionIds.has(x.ref)||seq[at-1]?.type==='action'){valid=false;break;}
         }else if(x.type==='moon'){
           if(!moonIds.has(x.ref)||++moons>1){valid=false;break;}
+          key++;
         }else{valid=false;break;}
       }
       if(!valid||!n)continue;
       const signature=JSON.stringify(seq.map(x=>[x.type,x.ref]));if(seen.has(signature))continue;seen.add(signature);
-      const key=compositionKey(counts,moons);known.set(key,(known.get(key)||0)+1);
+      known.set(key,(known.get(key)||0)+1);
     }
-    return (c,groups)=>{
-      const counts=Object.fromEntries(groups.map((g,i)=>[g.key,c.counts[i]]));
-      const key=compositionKey(counts,c.moon);if(cache.has(key))return cache.get(key);
+    function calculate(c,groups,key){
+      if(cache.has(key))return cache.get(key);
       // Ordered group slots, concrete ingredient choices (repetition allowed), then actions/Moon.
       let orders=1,used=0;
       groups.forEach((g,i)=>{
@@ -161,10 +172,21 @@
       const total=orders*templates,recorded=known.get(key)||0;
       const result={total,known:recorded,remaining:Math.max(0,total-recorded),fraction:total>0?Math.max(0,1-recorded/total):0};
       cache.set(key,result);return result;
+    }
+    const availability=(c,groups)=>calculate(c,groups,compositionKey(c,groups));
+    // Most compositions have no recorded sequences: no denominator is needed for them.
+    availability.fraction=(c,groups)=>{
+      const key=compositionKey(c,groups);
+      return known.has(key)?calculate(c,groups,key).fraction:1;
     };
+    availability.exhausted=(c,groups)=>{
+      const key=compositionKey(c,groups);
+      return known.has(key)?calculate(c,groups,key).remaining===0:false;
+    };
+    return availability;
   }
   function enumerationOptions(exhausted=new Set(),availability){
-    return {moon:'all',availability,exclude:(c,groups)=>availability?availability(c,groups).remaining===0:!c.moon&&c.count===1&&groups.some((g,i)=>c.counts[i]&&exhausted.has(g.key))};
+    return {moon:'all',availability,exclude:(c,groups)=>availability?(availability.exhausted?.(c,groups)??(availability(c,groups).remaining===0)):!c.moon&&c.count===1&&groups.some((g,i)=>c.counts[i]&&exhausted.has(g.key))};
   }
   function compositions(planner,ingredients,mechanics,potions,query,order='rare',rarity='all',limit=60,options={}){
     const scenes=scenarios(mechanics,potions,query),best=[];
@@ -173,8 +195,10 @@
     const gs=planner.groups(selected,query.level);
     const groups=planner.eachComposition(query.level,selected,mechanics,c=>{
       const score=coverage(c,scenes);if(!score.unknown||score.probability<=0)return;
-      const available=options.availability?.(c,gs);
-      if(available){score.probability*=available.fraction;if(score.probability<=0)return;}
+      if(options.availability){
+        const fraction=options.availability.fraction?.(c,gs)??options.availability(c,gs).fraction;
+        score.probability*=fraction;if(score.probability<=0)return;
+      }
       const candidate={...c,unknown:score.unknown,total:score.total,probability:score.probability};
       if(best.length===limit&&compare(candidate,best.at(-1))>=0)return;
       candidate.counts=c.counts.slice();

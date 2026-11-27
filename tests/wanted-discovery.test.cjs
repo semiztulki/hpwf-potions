@@ -227,3 +227,48 @@ test('ingredient repetition, group ordering, and the 11th-ingredient boundary ar
  const invalid=[...Array.from({length:11},()=>step('ingredient','a')),step('moon','moon')];
  assert.equal(wanted.sequenceAvailability([fixtureIngredients[0]],fixtureActions,[{sequence:invalid}])({count:11,counts:[11],moon:true},single).known,0);
 });
+
+test('unrecorded compositions skip sequence totals in exclusion and probability paths',()=>{
+ const availability=wanted.sequenceAvailability(fixtureIngredients,fixtureActions,[]);
+ const groups=[{key:'1-common',get ingredients(){throw new Error('Sequence total must not be calculated');}}];
+ const options=wanted.enumerationOptions(new Set(),availability);
+ for(const moon of [false,true])for(const count of [1,2,11]){
+  const c={count,counts:[count],moon};
+  assert.equal(options.exclude(c,groups),false);
+  assert.equal(availability.fraction(c,groups),1);
+ }
+});
+test('exclusion and scoring share sequence totals for a recorded composition',()=>{
+ let reads=0;
+ const groups=[{key:'1-common',get ingredients(){reads++;return fixtureIngredients;}}];
+ const availability=wanted.sequenceAvailability(fixtureIngredients,fixtureActions,[{sequence:[step('ingredient','a')]}]);
+ const c={count:1,counts:[1],moon:false},options=wanted.enumerationOptions(new Set(),availability);
+ assert.equal(options.exclude(c,groups),false);assert.equal(reads,1);
+ assert.equal(availability.fraction(c,groups),5/6);assert.equal(reads,1);
+ assert.equal(availability(c,groups).known,1);assert.equal(reads,1);
+});
+test('composition keys preserve group identity, count, Moon, subset and reordered group lists',()=>{
+ const ing=[];for(const level of [1,2,3])for(const rarity of ['common','seasonal','very_rare'])ing.push({id:level+'-'+rarity,level,rarity,basePower:100});
+ const availability=wanted.sequenceAvailability(ing,fixtureActions,[
+  {sequence:[step('ingredient','3-very_rare'),step('moon','moon')]},
+  {sequence:Array.from({length:11},()=>step('ingredient','1-common'))}
+ ]);
+ const groups=planner.groups(ing,3),single=key=>groups.map(g=>Number(g.key===key));
+ for(const list of [groups,[...groups].reverse()]){
+  const counts=list.map(g=>Number(g.key==='3-very_rare')),c={count:1,counts,moon:true};
+  assert.equal(availability(c,list).known,1);
+  assert.equal(availability.exhausted(c,list),false);
+  assert.equal(availability({...c,moon:false},list).known,0);
+ }
+ const subset=groups.filter(g=>g.key==='3-very_rare');
+ assert.equal(availability({count:1,counts:[1],moon:true},subset).known,1);
+ assert.equal(availability({count:1,counts:single('2-common'),moon:true},groups).known,0);
+ assert.equal(availability({count:11,counts:single('1-common').map(n=>11*n),moon:false},groups).known,1);
+ assert.equal(availability.fraction({count:1,counts:single('1-seasonal'),moon:false},groups),1);
+});
+test('custom availability functions without fast paths remain supported',()=>{
+ const availability=()=>({remaining:0,fraction:0});
+ assert.equal(wanted.enumerationOptions(new Set(),availability).exclude({},[]),true);
+ const m={value:{effectDivisors:{1:{x:{concentration:100}}}}};
+ assert.equal(wanted.compositions(planner,fixtureIngredients,m,[],{level:1,duration:'all',type:'all'},'rare','all',60,{availability}).candidates.length,0);
+});
