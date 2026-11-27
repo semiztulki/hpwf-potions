@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261127-wanted-words1">
+  <link rel="stylesheet" href="style.css?v=20261127-select-help1">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -79,24 +79,24 @@
           <span id="ingredientCount" class="count-pill">0</span>
         </div>
         <div class="filter-grid catalog-filter-grid">
-          <div class="field"><span>Уровень</span><details class="check-select" data-filter-group="ingredient-level"><summary data-filter-summary>Все</summary><div class="check-select-menu">
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-level" value="" data-filter-all checked> Все</label>
+          <div class="field"><span>Уровень</span><details class="check-select" data-filter-group="ingredient-level"><summary data-filter-summary>все</summary><div class="check-select-menu">
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-level" value="" data-filter-all checked> все</label>
             <label><input class="ingredient-filter" type="checkbox" name="ingredient-level" value="1"> 1 уровень</label>
             <label><input class="ingredient-filter" type="checkbox" name="ingredient-level" value="2"> 2 уровень</label>
             <label><input class="ingredient-filter" type="checkbox" name="ingredient-level" value="3"> 3 уровень</label>
           </div></details></div>
-          <div class="field"><span>Категория</span><details class="check-select" data-filter-group="ingredient-rarity"><summary data-filter-summary>Все</summary><div class="check-select-menu">
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="" data-filter-all checked> Все</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="common"> Обычные</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="seasonal"> Сезонные редкие</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="very_rare"> Особо редкие</label>
+          <div class="field"><span>Категория</span><details class="check-select" data-filter-group="ingredient-rarity"><summary data-filter-summary>все</summary><div class="check-select-menu">
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="" data-filter-all checked> все</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="common"> обычные</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="seasonal"> сезонные редкие</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-rarity" value="very_rare"> особо редкие</label>
           </div></details></div>
-          <div class="field"><span>Сезон</span><details class="check-select is-disabled" data-filter-group="ingredient-season" aria-disabled="true"><summary data-filter-summary>Все</summary><div class="check-select-menu">
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="" data-filter-all checked disabled> Все</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="winter" disabled> Зима</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="spring" disabled> Весна</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="summer" disabled> Лето</label>
-            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="autumn" disabled> Осень</label>
+          <div class="field"><span>Сезон</span><details class="check-select is-disabled" data-filter-group="ingredient-season" aria-disabled="true"><summary data-filter-summary>все</summary><div class="check-select-menu">
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="" data-filter-all checked disabled> все</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="winter" disabled> зима</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="spring" disabled> весна</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="summer" disabled> лето</label>
+            <label><input class="ingredient-filter" type="checkbox" name="ingredient-season" value="autumn" disabled> осень</label>
           </div></details></div>
         </div>
         <div id="ingredientCards" class="table-wrap catalog-table-wrap"></div>
@@ -146,7 +146,7 @@
               <label class="field calculator-duration-field">
                 <span>Длительность зелья</span>
                 <select id="calculatorDuration" disabled>
-                  <option value="">Сначала добавь ингредиенты</option>
+                  <option value="">сначала добавь ингредиенты</option>
                 </select>
               </label>
             </div>
@@ -191,7 +191,7 @@
         <div class="planner-fields">
           <label class="field"><span>Уровень зелья</span><select id="plannerLevel"><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3" selected>3 уровень</option></select></label>
           <label class="field"><span>Длительность</span><select id="plannerDuration" required></select></label>
-          <label class="field"><span>Вид эффекта</span><select id="plannerType"><option value="concentration">Концентрация</option><option value="efficiency">Эффективность, %</option><option value="resistance">Устойчивость</option></select></label>
+          <label class="field"><span>Вид эффекта</span><select id="plannerType"><option value="concentration">концентрация</option><option value="efficiency">эффективность, %</option><option value="resistance">устойчивость</option></select></label>
           <label class="field"><span>Значение эффекта</span><input id="plannerValue" type="number" min="1" max="1000000" step="1" inputmode="numeric" required placeholder="Например, 200"></label>
         </div>
         <button type="submit" id="plannerSubmit" class="admin-primary-btn">Подобрать составы</button>
@@ -200,7 +200,7 @@
       <div id="plannerFound" hidden><h3>Найдено в базе</h3><div id="plannerFoundCards" class="planner-found-cards"></div></div>
       <div id="plannerOutput" hidden>
         <p id="plannerTarget" class="callout"></p>
-        <div class="planner-results-head"><h3>Сочетания типов ингредиентов <span id="plannerCount" class="count-pill"></span></h3><label class="field"><span>Показывать сначала</span><select id="plannerSort"><option value="rare">Наименее редкие ингредиенты</option><option value="close">Ближе к нужному диапазону</option></select></label></div>
+        <div class="planner-results-head"><h3>Сочетания типов ингредиентов <span id="plannerCount" class="count-pill"></span></h3><label class="field"><span>Показывать сначала</span><select id="plannerSort"><option value="rare">наименее редкие ингредиенты</option><option value="close">ближе к нужному диапазону</option></select></label></div>
         <fieldset class="planner-filters"><legend>Можно использовать</legend><label><input id="plannerSeasonal" type="checkbox" checked> Сезонные</label><label><input id="plannerRare" type="checkbox" checked> Особо редкие</label></fieldset>
         <div id="plannerCompositions" class="planner-compositions"></div>
         <button id="plannerMore" type="button" class="admin-secondary-btn" hidden>Показать ещё</button>
@@ -256,17 +256,17 @@
               <div class="field recipe-moon-filter">
                 <span>Полнолуние</span>
                 <details class="check-select recipe-moon-select">
-                  <summary data-recipe-moon-summary>Все варианты</summary>
+                  <summary data-recipe-moon-summary>все варианты</summary>
                   <div class="check-select-menu">
-                    <label><input type="checkbox" name="recipe-moon" value="without" checked> Без луны</label>
-                    <label><input type="checkbox" name="recipe-moon" value="with" checked> С луной</label>
+                    <label><input type="checkbox" name="recipe-moon" value="without" checked> без луны</label>
+                    <label><input type="checkbox" name="recipe-moon" value="with" checked> с луной</label>
                   </div>
                 </details>
               </div>
             </div>
             <div id="newPotionFilters" class="recipe-new-filter-row" hidden>
-              <label class="field"><span>Длительность</span><select id="recipeDurationFilter"><option value="">Все длительности</option></select></label>
-              <label class="field"><span>Эффект</span><select id="recipeEffectFilter"><option value="">Все эффекты</option></select></label>
+              <label class="field"><span>Длительность</span><select id="recipeDurationFilter"><option value="">все длительности</option></select></label>
+              <label class="field"><span>Эффект</span><select id="recipeEffectFilter"><option value="">все эффекты</option></select></label>
               <div id="recipeEffectRange" class="recipe-range-filter" hidden>
                 <div class="recipe-range-head"><span>Значение эффекта</span><output id="recipeRangeOutput"></output></div>
                 <div id="recipeDualRange" class="recipe-dual-range">
@@ -311,15 +311,15 @@
           <p class="meta">Укажи номер или название. Если зелье уже есть в базе, подтверди совпадение: форма подставит известные свойства, а пустые поля можно будет заполнить.</p>
           <div class="admin-grid">
             <label class="field"><span>Раздел</span><select id="adminCategory">
-              <option value="standard_new">Нового образца</option>
-              <option value="standard_old">Старого образца</option>
-              <option value="special">Именное или особое</option>
+              <option value="standard_new">нового образца</option>
+              <option value="standard_old">старого образца</option>
+              <option value="special">именное или особое</option>
             </select></label>
-            <label class="field"><span>Уровень</span><select id="adminLevel"><option value="">Не указан</option><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3">3 уровень</option></select></label>
+            <label class="field"><span>Уровень</span><select id="adminLevel"><option value="">не указан</option><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3">3 уровень</option></select></label>
             <label id="adminNumberField" class="field"><span>Номер</span><input id="adminNumber" type="number" min="0" step="1" placeholder="Например: 108"></label>
             <label id="adminNameField" class="field" hidden><span>Название</span><input id="adminName" type="text" placeholder="Название зелья"></label>
             <label class="field"><span>Длительность</span><select id="adminDuration">
-              <option value="">Не указана</option><option value="5m">5 минут</option><option value="1h">1 час</option><option value="5h">5 часов</option><option value="1w">1 неделя</option><option value="1mo">1 месяц</option><option value="2mo">2 месяца</option>
+              <option value="">не указана</option><option value="5m">5 минут</option><option value="1h">1 час</option><option value="5h">5 часов</option><option value="1w">1 неделя</option><option value="1mo">1 месяц</option><option value="2mo">2 месяца</option>
             </select></label>
             <label class="field"><span>Наблюдаемая ценность</span><input id="adminObservedValue" type="number" min="0" step="1" placeholder="Можно оставить пустым"></label>
           </div>
@@ -387,11 +387,30 @@
         <span id="wantedCount" class="count-pill">0</span>
       </div>
       <p class="wanted-intro">разыскиваются новые (и даже именные!) зелья<br>не забудь опубликовать новые рецепты <a href="https://harrypotter.com.ua/index.php?showtopic=49167" target="_blank" rel="noopener noreferrer">в этой теме</a><br>пусть великий рандом будет на твоей стороне!</p>
-      <div class="wanted-filters"><label class="desktop-tip" id="wantedModeTip">Показывать <select id="wantedMode"><option value="targets">Неизвестные зелья</option><option value="compositions">что смешивать</option></select></label><label class="desktop-tip" id="wantedOrderTip">Сначала <select id="wantedOrder"><option value="rare">Доступнее ингредиенты</option><option value="coverage">больший шанс наварить кросивое</option></select></label><label>Ингредиенты <select id="wantedRarity"><option value="all">Любые</option><option value="seasonal">Без особо редких</option><option value="common">Только обычные</option></select></label><label class="desktop-tip wanted-moon-filter" data-tooltip="не каждый день у нас полнолуние..."><input id="wantedNoMoon" type="checkbox"> не показывать Луну</label></div>
+      <div class="wanted-filters">
+        <div class="wanted-filter-control">
+          <label for="wantedMode">Показывать</label>
+          <button type="button" class="info-button" aria-label="Пояснение к выбору режима" aria-expanded="false" aria-controls="wantedModeTip">i</button>
+          <p id="wantedModeTip" class="control-help" hidden>этого эффекта нет в факультетской базе</p>
+          <select id="wantedMode"><option value="targets">неизвестные зелья</option><option value="compositions">что смешивать</option></select>
+        </div>
+        <div class="wanted-filter-control">
+          <label for="wantedOrder">Сначала</label>
+          <button type="button" class="info-button" aria-label="Пояснение к порядку результатов" aria-expanded="false" aria-controls="wantedOrderTip">i</button>
+          <p id="wantedOrderTip" class="control-help" hidden>меньше и дешевле :)</p>
+          <select id="wantedOrder"><option value="rare">доступнее ингредиенты</option><option value="coverage">больший шанс наварить кросивое</option></select>
+        </div>
+        <label>Ингредиенты <select id="wantedRarity"><option value="all">любые</option><option value="seasonal">без особо редких</option><option value="common">только обычные</option></select></label>
+        <div class="wanted-filter-control wanted-moon-control">
+          <label class="wanted-moon-filter"><input id="wantedNoMoon" type="checkbox"> не показывать Луну</label>
+          <button type="button" class="info-button" aria-label="Пояснение к фильтру Луны" aria-expanded="false" aria-controls="wantedMoonTip">i</button>
+          <p id="wantedMoonTip" class="control-help" hidden>не каждый день у нас полнолуние...</p>
+        </div>
+      </div>
       <div id="wantedFilters" class="planner-fields wanted-discovery-filters">
-        <label class="field"><span>Уровень</span><select id="wantedLevel"><option value="all" selected>Все уровни</option><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3">3 уровень</option></select></label>
+        <label class="field"><span>Уровень</span><select id="wantedLevel"><option value="all" selected>все уровни</option><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3">3 уровень</option></select></label>
         <label class="field" id="wantedDurationField"><span>Длительность</span><select id="wantedDuration"></select></label>
-        <label class="field" id="wantedTypeField"><span>Вид эффекта</span><select id="wantedType"><option value="all">Все эффекты</option><option value="concentration">Концентрация</option><option value="efficiency">Эффективность</option><option value="resistance">Устойчивость</option></select></label>
+        <label class="field" id="wantedTypeField"><span>Вид эффекта</span><select id="wantedType"><option value="all">все эффекты</option><option value="concentration">концентрация</option><option value="efficiency">эффективность</option><option value="resistance">устойчивость</option></select></label>
       </div>
       <div id="wantedCards" class="wanted-grid"></div>
       <button id="wantedMore" type="button" class="admin-secondary-btn" hidden>Показать ещё</button>
@@ -406,12 +425,12 @@
   </footer>
   </div>
   <script src="value-model.js?v=20261126-rare-spread1" defer></script>
-  <script src="app.js?v=20261127-wanted-words1" defer></script>
-  <script src="admin.js?v=20261127-wanted-words1" defer></script>
-  <script src="effect-planner.js?v=20261127-wanted-words1" defer></script>
-  <script src="effect-planner-ui.js?v=20261127-wanted-words1" defer></script>
-  <script src="wanted-planner.js?v=20261127-wanted-words1" defer></script>
-  <script src="wanted-ui.js?v=20261127-wanted-words1" defer></script>
-  <script src="editing.js?v=20261003-1" defer></script>
+  <script src="app.js?v=20261127-select-help1" defer></script>
+  <script src="admin.js?v=20261127-select-help1" defer></script>
+  <script src="effect-planner.js?v=20261127-select-help1" defer></script>
+  <script src="effect-planner-ui.js?v=20261127-select-help1" defer></script>
+  <script src="wanted-planner.js?v=20261127-select-help1" defer></script>
+  <script src="wanted-ui.js?v=20261127-select-help1" defer></script>
+  <script src="editing.js?v=20261127-select-help1" defer></script>
 </body>
 </html>

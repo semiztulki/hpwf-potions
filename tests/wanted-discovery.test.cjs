@@ -32,8 +32,8 @@ test('discovery and calculator use identical attainable ranges on each level',()
 });
 function uiFixture(){
  const nodes=new Map(),events=new Map(),calls=[];
- const $=id=>{if(!nodes.has(id))nodes.set(id,{value:'',checked:false,innerHTML:'',dataset:{},addEventListener(){},requestSubmit(){calls.push('submit');}});return nodes.get(id);};
- const c={$,accessMode:'authenticated',adminState:{password:'test',writePassword:'test'},state:{mechanics:null,ingredients:[],potions:{},wanted:[]},document:{addEventListener(type,fn){events.set(type,fn);}},openFunctionalTab:id=>calls.push(id),plannerDurations:()=>calls.push('durations'),plannerReset:()=>calls.push('reset')};
+ const $=id=>{if(!nodes.has(id))nodes.set(id,{value:'',checked:false,innerHTML:'',dataset:{},setAttribute(name,value){this[name]=value;},addEventListener(){},requestSubmit(){calls.push('submit');}});return nodes.get(id);};
+ const c={$,accessMode:'authenticated',adminState:{password:'test',writePassword:'test'},state:{mechanics:null,ingredients:[],potions:{},wanted:[]},document:{querySelectorAll(){return [];},querySelector(){return $('wantedOrderInfo');},addEventListener(type,fn){events.set(type,fn);}},openFunctionalTab:id=>calls.push(id),plannerDurations:()=>calls.push('durations'),plannerReset:()=>calls.push('reset')};
  vm.createContext(c);vm.runInContext(fs.readFileSync(require.resolve('../wanted-ui.js'),'utf8'),c);
  return {c,$,calls,run:s=>vm.runInContext(s,c)};
 }
@@ -159,5 +159,5 @@ test('entering Wanted resets all filters and hides unused composition fields',()
  assert.equal($('wantedMode').value,'targets');assert.equal($('wantedNoMoon').checked,false);
  $('wantedMode').value='compositions';run('wantedControlLabels();');
  assert.equal($('wantedDurationField').hidden,true);assert.equal($('wantedTypeField').hidden,true);
- assert.match($('wantedModeTip').dataset.tooltip,/лучшие сочетания/);
+ assert.match($('wantedModeTip').textContent,/лучшие сочетания/);
 });

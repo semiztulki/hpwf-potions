@@ -39,8 +39,8 @@ function editPotionForm(p){
   return '<div class="edit-fields">'
     +editField("name","Название",p.name)
     +editField("number","Номер",p.number,"number",'min="1" step="1"'+(standard?' required':''))
-    +'<label class="field"><span>Уровень</span><select name="level"'+(standard?' required':'')+'><option value="">Не указан</option>'+[1,2,3].map(n=>'<option value="'+n+'"'+(p.level===n?' selected':'')+'>'+n+'</option>').join("")+'</select></label>'
-    +'<label class="field"><span>Длительность</span><select name="duration"><option value="">Не указана</option>'+[...new Set([...durationOrder,...(p.duration?[p.duration]:[])])].map(d=>'<option value="'+esc(d)+'"'+(p.duration===d?' selected':'')+'>'+esc(state.mechanics?.toxicity?.durationLabels?.[d]||d)+'</option>').join("")+'</select></label>'
+    +'<label class="field"><span>Уровень</span><select name="level"'+(standard?' required':'')+'><option value="">не указан</option>'+[1,2,3].map(n=>'<option value="'+n+'"'+(p.level===n?' selected':'')+'>'+n+'</option>').join("")+'</select></label>'
+    +'<label class="field"><span>Длительность</span><select name="duration"><option value="">не указана</option>'+[...new Set([...durationOrder,...(p.duration?[p.duration]:[])])].map(d=>'<option value="'+esc(d)+'"'+(p.duration===d?' selected':'')+'>'+esc(lowerInitial(state.mechanics?.toxicity?.durationLabels?.[d]||d))+'</option>').join("")+'</select></label>'
     +editField("toxicity","Токсикация",p.toxicity,"number",'step="any"')
     +editField("value","Ценность",p.value,"number",'min="0" step="any"')
     +editEffectTypes.map(type=>editField("effect-"+type,effectLabels[type],effects[type],"number",'step="any"')).join("")

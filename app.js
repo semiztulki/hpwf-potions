@@ -285,7 +285,7 @@ function testBrewNewResult(){
   const levelWord=calculatorLevelWords[levels.potionLevel]||String(levels.potionLevel);
   $("testBrewResult").innerHTML=testBrewExpandedRecipe()+'<section class="test-brew-conclusion"><div class="test-brew-result-title new"><p class="eyebrow">Новый рецепт</p><h3>Такого рецепта в базе пока нет</h3><p>После варки стоит добавить его в базу.</p></div>'
     +'<div class="test-brew-estimate"><h3>Предварительная оценка</h3><div class="test-brew-estimate-grid"><div><span>Уровень</span><strong>Зелье '+levelWord+' уровня</strong></div><div><span>Примерная ценность</span><strong>'+calculatedValueText(estimate)+'</strong></div></div>'
-    +'<label class="field test-brew-duration"><span>Выбери длительность</span><select id="testBrewDuration"><option value="">Длительность не выбрана</option>'+options+'</select></label>'
+    +'<label class="field test-brew-duration"><span>Выбери длительность</span><select id="testBrewDuration"><option value="">длительность не выбрана</option>'+options+'</select></label>'
     +'<div class="calculator-effects test-brew-effects"'+(testBrewState.duration?'':' hidden')+'>'+testBrewEffectCards(levels.potionLevel,testBrewState.duration,estimate,levels.rollLevel)+'</div></div></section>';
 }
 function testBrewFinish(){
@@ -329,7 +329,7 @@ function updateCalculatorDurations(level){
   const select=$("calculatorDuration"),previous=select.value,durations=calculatorDurations[level]||[];
   calculatorLevel=level;
   select.disabled=!level;
-  select.innerHTML='<option value="">'+(level?"Выбери длительность":"Сначала добавь ингредиенты")+'</option>'+durations.map(duration=>'<option value="'+duration+'">'+calculatorDurationLabels[duration]+'</option>').join("");
+  select.innerHTML='<option value="">'+(level?"выбери длительность":"сначала добавь ингредиенты")+'</option>'+durations.map(duration=>'<option value="'+duration+'">'+calculatorDurationLabels[duration]+'</option>').join("");
   if(durations.includes(previous))select.value=previous;
 }
 function renderCalculatorEffects(level,duration,nominal,minimum,maximum){
@@ -457,7 +457,7 @@ function selectedRecipeMoonModes(){
 function updateRecipeMoonSummary(){
   const selected=selectedRecipeMoonModes(),summary=document.querySelector("[data-recipe-moon-summary]");
   if(!summary)return;
-  summary.textContent=selected.size===2?"Все варианты":selected.has("with")?"С луной":"Без луны";
+  summary.textContent=selected.size===2?"все варианты":selected.has("with")?"с луной":"без луны";
 }
 function recipeMatchesRarities(r,allowed){
   if(allowed.size===3)return true;
@@ -512,9 +512,10 @@ function syncRecipeRange(changed){
   }
   updateRecipeRangeVisual();
 }
+function lowerInitial(text){return String(text).replace(/^./u,letter=>letter.toLocaleLowerCase("ru-RU"));}
 function setRecipeFilterOptions(select,items,emptyLabel){
   const previous=select.value;
-  select.innerHTML='<option value="">'+emptyLabel+'</option>'+items.map(([value,label])=>'<option value="'+esc(value)+'">'+esc(label)+'</option>').join("");
+  select.innerHTML='<option value="">'+lowerInitial(emptyLabel)+'</option>'+items.map(([value,label])=>'<option value="'+esc(value)+'">'+esc(lowerInitial(label))+'</option>').join("");
   if(items.some(([value])=>value===previous))select.value=previous;
 }
 function updateRecipeFilterControls(){
@@ -737,7 +738,7 @@ function updateCheckSelect(input){
   if(input!==all&&input.checked) all.checked=false;
   const chosen=specific.filter(x=>x.checked);
   if(!chosen.length) all.checked=true;
-  root.querySelector("[data-filter-summary]").textContent=all.checked?"Все":chosen.length===1?chosen[0].parentElement.textContent.trim():"Выбрано: "+chosen.length;
+  root.querySelector("[data-filter-summary]").textContent=all.checked?"все":chosen.length===1?chosen[0].parentElement.textContent.trim():"выбрано: "+chosen.length;
 }
 function updateSeasonFilterAvailability(){
   const root=document.querySelector('[data-filter-group="ingredient-season"]'),rarityAll=document.querySelector('input[name="ingredient-rarity"][data-filter-all]'),seasonal=document.querySelector('input[name="ingredient-rarity"][value="seasonal"]');
@@ -748,7 +749,7 @@ function updateSeasonFilterAvailability(){
   if(!enabled){
     root.open=false;
     root.querySelectorAll("input").forEach(input=>input.checked=input.hasAttribute("data-filter-all"));
-    root.querySelector("[data-filter-summary]").textContent="Все";
+    root.querySelector("[data-filter-summary]").textContent="все";
   }
 }
 document.querySelectorAll(".ingredient-filter").forEach(input=>input.addEventListener("change",()=>{updateCheckSelect(input);if(input.name==="ingredient-rarity")updateSeasonFilterAvailability();renderIngredients();}));
