@@ -17,11 +17,7 @@ function wantedControlLabels(){
   const compositions=$('wantedMode').value==='compositions';
   $('wantedDurationField').hidden=compositions;$('wantedTypeField').hidden=compositions;
   if($('wantedOrder').options)$('wantedOrder').options[1].textContent='больший шанс наварить кросивое';
-  $('wantedModeTip').textContent=compositions?'лучшие сочетания ингредиентов для твоих будущих открытий':'этого эффекта нет в факультетской базе';
-  const orderHelp=$('wantedOrder').value==='rare';
-  const orderButton=document.querySelector('[aria-controls="wantedOrderTip"]');
-  orderButton.hidden=!orderHelp;
-  if(!orderHelp){orderButton.setAttribute('aria-expanded','false');$('wantedOrderTip').hidden=true;}
+
 }
 function wantedRenderPage(){
   if(!wantedEditorAccess())return;
@@ -106,23 +102,3 @@ function wantedRenderCompositions(){
   $('wantedCards').innerHTML=r.candidates.slice(0,wantedDiscovery.limit).map((c,i)=>'<article class="panel wanted-card"><h3 title="Оценка при равных шансах видов эффекта и доступных длительностей, равномерной ценности внутри расчётного диапазона.">Шанс сварить что-то новенькое: ≈'+new Intl.NumberFormat('ru-RU',{style:'percent',maximumFractionDigits:1}).format(c.probability)+'</h3><p class="meta">'+c.level+' уровень</p><div class="planner-groups">'+c.groups.map((g,j)=>c.counts[j]?plannerGroupTile(g,c.counts[j]):'').join('')+(c.moon?plannerMoonTile():'')+'</div><p class="meta">Ценность: '+fmt(Math.round(c.minimum))+'–'+fmt(Math.round(c.maximum))+'</p><details class="wanted-outcomes"><summary>Какие зелья мы пытаемся сварить</summary>'+c.outcomes.map((o,j)=>'<div><strong>'+esc(calculatorDurationLabels[o.duration])+' · '+esc(effectLabels[o.type])+'</strong><p>'+o.gaps.map(([a,b])=>a===b?String(a):a+'–'+b).join(', ')+(o.type==='efficiency'?'%':'')+'</p><button type="button" class="wanted-add-link" data-wanted-outcome="'+i+':'+j+'">Как сварить?</button></div>').join('')+'</details></article>').join('')||'<div class="panel empty-state">Для этих фильтров нет новых целей.</div>';
   $('wantedMore').hidden=wantedDiscovery.limit>=r.candidates.length;
 }
-
-function wantedCloseHelp(except){
-  document.querySelectorAll('.info-button[aria-controls]').forEach(button=>{
-    if(button===except)return;
-    button.setAttribute('aria-expanded','false');
-    $(button.getAttribute('aria-controls')).hidden=true;
-  });
-}
-document.querySelectorAll('.info-button[aria-controls]').forEach(button=>{
-  button.addEventListener('click',()=>{
-    const open=button.getAttribute('aria-expanded')!=='true';
-    wantedCloseHelp();
-    button.setAttribute('aria-expanded',String(open));
-    $(button.getAttribute('aria-controls')).hidden=!open;
-  });
-});
-for(const eventName of ['pointerdown','focusin'])document.addEventListener(eventName,event=>{
-  if(!event.target.closest('.info-button'))wantedCloseHelp();
-});
-document.addEventListener('keydown',event=>{if(event.key==='Escape')wantedCloseHelp();});

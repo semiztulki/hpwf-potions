@@ -159,5 +159,4 @@ test('entering Wanted resets all filters and hides unused composition fields',()
  assert.equal($('wantedMode').value,'targets');assert.equal($('wantedNoMoon').checked,false);
  $('wantedMode').value='compositions';run('wantedControlLabels();');
  assert.equal($('wantedDurationField').hidden,true);assert.equal($('wantedTypeField').hidden,true);
- assert.match($('wantedModeTip').textContent,/лучшие сочетания/);
 });

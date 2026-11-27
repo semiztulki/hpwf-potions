@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261127-select-help1">
+  <link rel="stylesheet" href="style.css?v=20261127-no-filter-help1">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -390,21 +390,15 @@
       <div class="wanted-filters">
         <div class="wanted-filter-control">
           <label for="wantedMode">Показывать</label>
-          <button type="button" class="info-button" aria-label="Пояснение к выбору режима" aria-expanded="false" aria-controls="wantedModeTip">i</button>
-          <p id="wantedModeTip" class="control-help" hidden>этого эффекта нет в факультетской базе</p>
           <select id="wantedMode"><option value="targets">неизвестные зелья</option><option value="compositions">что смешивать</option></select>
         </div>
         <div class="wanted-filter-control">
           <label for="wantedOrder">Сначала</label>
-          <button type="button" class="info-button" aria-label="Пояснение к порядку результатов" aria-expanded="false" aria-controls="wantedOrderTip">i</button>
-          <p id="wantedOrderTip" class="control-help" hidden>меньше и дешевле :)</p>
           <select id="wantedOrder"><option value="rare">доступнее ингредиенты</option><option value="coverage">больший шанс наварить кросивое</option></select>
         </div>
         <label>Ингредиенты <select id="wantedRarity"><option value="all">любые</option><option value="seasonal">без особо редких</option><option value="common">только обычные</option></select></label>
         <div class="wanted-filter-control wanted-moon-control">
           <label class="wanted-moon-filter"><input id="wantedNoMoon" type="checkbox"> не показывать Луну</label>
-          <button type="button" class="info-button" aria-label="Пояснение к фильтру Луны" aria-expanded="false" aria-controls="wantedMoonTip">i</button>
-          <p id="wantedMoonTip" class="control-help" hidden>не каждый день у нас полнолуние...</p>
         </div>
       </div>
       <div id="wantedFilters" class="planner-fields wanted-discovery-filters">
@@ -425,12 +419,12 @@
   </footer>
   </div>
   <script src="value-model.js?v=20261126-rare-spread1" defer></script>
-  <script src="app.js?v=20261127-select-help1" defer></script>
-  <script src="admin.js?v=20261127-select-help1" defer></script>
-  <script src="effect-planner.js?v=20261127-select-help1" defer></script>
-  <script src="effect-planner-ui.js?v=20261127-select-help1" defer></script>
-  <script src="wanted-planner.js?v=20261127-select-help1" defer></script>
-  <script src="wanted-ui.js?v=20261127-select-help1" defer></script>
-  <script src="editing.js?v=20261127-select-help1" defer></script>
+  <script src="app.js?v=20261127-no-filter-help1" defer></script>
+  <script src="admin.js?v=20261127-no-filter-help1" defer></script>
+  <script src="effect-planner.js?v=20261127-no-filter-help1" defer></script>
+  <script src="effect-planner-ui.js?v=20261127-no-filter-help1" defer></script>
+  <script src="wanted-planner.js?v=20261127-no-filter-help1" defer></script>
+  <script src="wanted-ui.js?v=20261127-no-filter-help1" defer></script>
+  <script src="editing.js?v=20261127-no-filter-help1" defer></script>
 </body>
 </html>
