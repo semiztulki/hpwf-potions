@@ -11,23 +11,28 @@
   "sections": [
     {
       "title": "колонка куратора",
-      "image": "heading-curator.png"
+      "image": "heading-curator.png",
+      "display_title": "КОЛОНКА КУРАТОРА"
     },
     {
       "title": "достижения в области зельеварения и прикладной алхимии",
-      "image": "heading-alchemy.png"
+      "image": "heading-alchemy.png",
+      "display_title": "ДОСТИЖЕНИЯ В ОБЛАСТИ ЗЕЛЬЕВАРЕНИЯ И ПРИКЛАДНОЙ АЛХИМИИ"
     },
     {
       "title": "кладовая ингредиентов",
-      "image": "heading-ingredients.png"
+      "image": "heading-ingredients.png",
+      "display_title": "КЛАДОВАЯ ИНГРЕДИЕНТОВ"
     },
     {
       "title": "бонжур сова",
-      "image": "heading-owl.png"
+      "image": "heading-owl.png",
+      "display_title": "БОНЖУР СОВА"
     },
     {
       "title": "юные мастера зелий",
-      "image": "heading-young-masters.png"
+      "image": "heading-young-masters.png",
+      "display_title": "ЮНЫЕ МАСТЕРА ЗЕЛИЙ"
     }
   ],
   "post_width": 720,
@@ -36,5 +41,13 @@
     "repository": "semiztulki/hpwf-potions",
     "branch": "main",
     "directory": "assets/hufflepuff-news"
+  },
+  "section_heading_style": {
+    "case": "uppercase",
+    "font": "thin upright sans-serif",
+    "background": "transparent",
+    "side_ornaments": "middle dots",
+    "width": 664,
+    "height": 221
   }
 }
