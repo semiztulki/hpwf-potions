@@ -722,7 +722,7 @@ async function loadPrivateData(password){
 
 async function load(){
   try{
-    const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20261006-groups1"),fetch("data/actions.json?v=20260918-1"),fetch("data/mechanics.json?v=20261126-rare-spread1")]);
+    const [i,a,m]=await Promise.all([fetch("data/ingredients.json?v=20261006-groups1"),fetch("data/actions.json?v=20260918-1"),fetch("data/mechanics.json?v=20261128-wanted-probability1")]);
     if(![i,a,m].every(r=>r.ok)) throw new Error("load");
     state.ingredients=await i.json(); state.actions=await a.json(); state.mechanics=await m.json();
     Object.assign(calculatorEffectDivisors,state.mechanics.value.effectDivisors);

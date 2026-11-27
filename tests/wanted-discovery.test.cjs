@@ -160,3 +160,70 @@ test('entering Wanted resets all filters and hides unused composition fields',()
  $('wantedMode').value='compositions';run('wantedControlLabels();');
  assert.equal($('wantedDurationField').hidden,true);assert.equal($('wantedTypeField').hidden,true);
 });
+
+test('empirical duration weights include named outcomes, keep effect thirds and do not renormalize filters',()=>{
+ const q={level:1,duration:'all',type:'all'},s=wanted.scenarios(mechanics,[],q);
+ assert.ok(Math.abs(s.reduce((n,x)=>n+x.weight,0)-1)<1e-12);
+ const week=s.filter(x=>x.duration==='1w');
+ assert.ok(week.reduce((n,x)=>n+x.weight,0)>.73);
+ assert.equal(week[0].weight,week[1].weight);
+ const filtered=wanted.scenarios(mechanics,[],{...q,duration:'1w',type:'resistance'});
+ assert.equal(filtered[0].weight,week.find(x=>x.type==='resistance').weight);
+ const l3=wanted.scenarios(mechanics,[],{...q,level:3});
+ assert.ok(l3.find(x=>x.duration==='5h').weight>0); // No observations is not an impossible duration.
+});
+test('scripted and mixed potions never close ordinary effects; renamed single effects do',()=>{
+ const q={level:3,duration:'2mo',type:'efficiency'};
+ const named=potion(2,{category:'special',name:'Авторское зелье'});
+ for(const card of [{...named,scripted:true},{...named,discoveryExcluded:true},{...named,generation:'scripted'},potion(2,{category:'mana'}),potion(2,{category:'standard_old'})]){
+  assert.ok(wanted.missing([[1600,1600]],mechanics,[card],q).length);
+ }
+ assert.equal(wanted.missing([[1600,1600]],mechanics,[named],q).length,0);
+});
+const fixtureIngredients=[{id:'a',level:1,rarity:'common',basePower:100},{id:'b',level:1,rarity:'common',basePower:100}];
+const fixtureActions=[{id:'stir',kind:'action'},{id:'spell',kind:'action'},{id:'moon',kind:'moon'}];
+const step=(type,ref)=>({type,ref});
+test('counts agree with exhaustive ordered sequences, including actions around Moon',()=>{
+ const sequences=[];
+ function visit(seq,n,moon){
+  if(n===2)sequences.push(seq);
+  if(seq.length>=6)return;
+  if(n<2)for(const i of fixtureIngredients)visit([...seq,step('ingredient',i.id)],n+1,moon);
+  if(seq.length&&seq.at(-1).type!=='action')for(const a of fixtureActions.filter(a=>a.kind==='action'))visit([...seq,step('action',a.id)],n,moon);
+  if(!moon)visit([...seq,step('moon','moon')],n,true);
+ }
+ visit([],0,false);
+ const groups=planner.groups(fixtureIngredients,1),available=wanted.sequenceAvailability(fixtureIngredients,fixtureActions,[]);
+ for(const moon of [false,true]){
+  const matching=sequences.filter(s=>s.some(x=>x.type==='moon')===moon);
+  const c={count:2,counts:[2],moon};
+  assert.equal(available(c,groups).total,matching.length);
+  const records=matching.map(sequence=>({sequence}));
+  const closed=wanted.sequenceAvailability(fixtureIngredients,fixtureActions,[...records,...records]);
+  assert.equal(closed(c,groups).known,matching.length);
+  assert.equal(closed(c,groups).remaining,0);
+ }
+});
+test('partial exhaustion discounts one-ingredient scores; all potion categories block exact sequences',()=>{
+ const groups=planner.groups(fixtureIngredients,1),c={count:1,counts:[1],moon:false};
+ const records=[{potionId:'old',sequence:[step('ingredient','a')]},{potionId:'soup',sequence:[step('ingredient','b'),step('action','stir')]}];
+ const availability=wanted.sequenceAvailability(fixtureIngredients,fixtureActions,[...records,records[0]]);
+ assert.deepEqual(availability(c,groups),{total:6,known:2,remaining:4,fraction:1-2/6});
+ assert.equal(availability({...c,moon:true},groups).known,0);
+ const m={value:{effectDivisors:{1:{x:{concentration:100,efficiency:100,resistance:100}}}}};
+ const result=wanted.compositions(planner,fixtureIngredients,m,[],{level:1,duration:'all',type:'all'},'coverage','all',100,wanted.enumerationOptions(new Set(),availability));
+ const one=result.candidates.find(x=>x.count===1&&!x.moon);
+ assert.ok(Math.abs(one.probability-2/3)<1e-12);
+ const more=wanted.sequenceAvailability(fixtureIngredients,fixtureActions,[...records,{sequence:[step('ingredient','a'),step('action','spell')]}]);
+ assert.ok(more(c,groups).fraction<availability(c,groups).fraction);
+});
+test('ingredient repetition, group ordering, and the 11th-ingredient boundary are counted',()=>{
+ const gs=planner.groups([...fixtureIngredients,{id:'s',level:1,rarity:'seasonal',basePower:1000}],1);
+ const a=wanted.sequenceAvailability([...fixtureIngredients,{id:'s',level:1,rarity:'seasonal'}],fixtureActions,[]);
+ assert.equal(a({count:3,counts:[2,1],moon:false},gs).total,3*4*27);
+ const single=planner.groups([fixtureIngredients[0]],1),available=wanted.sequenceAvailability([fixtureIngredients[0]],fixtureActions,[]);
+ assert.equal(available({count:11,counts:[11],moon:false},single).total,3**10);
+ assert.equal(available({count:11,counts:[11],moon:true},single).total,11*3**11);
+ const invalid=[...Array.from({length:11},()=>step('ingredient','a')),step('moon','moon')];
+ assert.equal(wanted.sequenceAvailability([fixtureIngredients[0]],fixtureActions,[{sequence:invalid}])({count:11,counts:[11],moon:true},single).known,0);
+});

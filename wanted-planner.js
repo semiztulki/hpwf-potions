@@ -1,8 +1,11 @@
 (function(root){
   'use strict';
   function key(p,type,value){return [Number(p.level),p.duration,type,Number(value)].join('|');}
+  function ordinaryOutcome(p){
+    return ['standard_new','special'].includes(p.category)&&!p.scripted&&!p.discoveryExcluded&&p.generation!=='scripted';
+  }
   function singleKnownEffect(p,level){
-    if(!['standard_new','special'].includes(p.category))return null;
+    if(!ordinaryOutcome(p))return null;
     const effects=p.effects||[];
     if(effects.length!==1)return null;
     const e=effects[0];
@@ -75,10 +78,14 @@
       const e=singleKnownEffect(p,query.level);if(!e)continue;
       const k=p.duration+'|'+e.type;if(!byKey.has(k))byKey.set(k,new Set());byKey.get(k).add(Number(e.value));
     }
-    const rows=[],durationCount=Object.keys(mechanics.value.effectDivisors[query.level]||{}).length;
+    const rows=[],durations=Object.keys(mechanics.value.effectDivisors[query.level]||{});
+    const calibration=mechanics.value.discoveryDurationModel,counts=calibration?.counts?.[query.level];
+    const prior=calibration?.pseudocount??0;
+    const mass=durations.reduce((sum,d)=>sum+(counts?Math.max(0,Number(counts[d])||0)+prior:1),0);
+    const durationWeight=d=>mass>0?(counts?Math.max(0,Number(counts[d])||0)+prior:1)/mass:1/durations.length;
     for(const [duration,divisors] of Object.entries(mechanics.value.effectDivisors[query.level]||{})){
       if(query.duration!=='all'&&query.duration!==duration)continue;
-      for(const type of ['concentration','efficiency','resistance'])if((query.type==='all'||type===query.type)&&divisors[type]>0)rows.push({duration,type,divisor:divisors[type],weight:1/durationCount/Object.values(divisors).filter(d=>d>0).length,known:[...(byKey.get(duration+'|'+type)||[])].sort((a,b)=>a-b)});
+      for(const type of ['concentration','efficiency','resistance'])if((query.type==='all'||type===query.type)&&divisors[type]>0)rows.push({duration,type,divisor:divisors[type],weight:durationWeight(duration)/Object.values(divisors).filter(d=>d>0).length,known:[...(byKey.get(duration+'|'+type)||[])].sort((a,b)=>a-b)});
     }
     return rows;
   }
@@ -113,15 +120,61 @@
     for(const [key,items] of groups)if(items.every(i=>[null,...actions.filter(a=>a.kind==='action')].every(a=>signatures.has(JSON.stringify([['ingredient',i.id],...(a?[['action',a.id]]:[])])))))exhausted.add(key);
     return exhausted;
   }
-  function enumerationOptions(exhausted=new Set()){
-    return {moon:'all',exclude:(c,groups)=>!c.moon&&c.count===1&&groups.some((g,i)=>c.counts[i]&&exhausted.has(g.key))};
+  function compositionKey(counts,moon){
+    return JSON.stringify([!!moon,Object.entries(counts).filter(([,n])=>n).sort(([a],[b])=>a.localeCompare(b))]);
+  }
+  function sequenceAvailability(ingredients,actions,recipes){
+    const im=new Map(ingredients.map(i=>[i.id,i])),actionIds=new Set(actions.filter(a=>a.kind==='action').map(a=>a.id));
+    const moonIds=new Set(actions.filter(a=>a.kind==='moon').map(a=>a.id));
+    const seen=new Set(),known=new Map(),cache=new Map();
+    for(const recipe of recipes){
+      const seq=recipe.sequence;if(!seq?.length||seq.length>23||seq[0].type==='action')continue;
+      const counts={};let n=0,moons=0,valid=true;
+      for(let at=0;at<seq.length;at++){
+        const x=seq[at];
+        if(x.type==='ingredient'){
+          const i=im.get(x.ref);if(!i){valid=false;break;}
+          const key=i.level+'-'+i.rarity;counts[key]=(counts[key]||0)+1;
+          if(++n>11||(n===11&&at!==seq.length-1)){valid=false;break;}
+        }else if(x.type==='action'){
+          if(!actionIds.has(x.ref)||seq[at-1]?.type==='action'){valid=false;break;}
+        }else if(x.type==='moon'){
+          if(!moonIds.has(x.ref)||++moons>1){valid=false;break;}
+        }else{valid=false;break;}
+      }
+      if(!valid||!n)continue;
+      const signature=JSON.stringify(seq.map(x=>[x.type,x.ref]));if(seen.has(signature))continue;seen.add(signature);
+      const key=compositionKey(counts,moons);known.set(key,(known.get(key)||0)+1);
+    }
+    return (c,groups)=>{
+      const counts=Object.fromEntries(groups.map((g,i)=>[g.key,c.counts[i]]));
+      const key=compositionKey(counts,c.moon);if(cache.has(key))return cache.get(key);
+      // Ordered group slots, concrete ingredient choices (repetition allowed), then actions/Moon.
+      let orders=1,used=0;
+      groups.forEach((g,i)=>{
+        const count=c.counts[i];
+        for(let j=1;j<=count;j++)orders*=(used+j)/j;
+        used+=count;orders*=Math.pow(g.ingredients.length,count);
+      });
+      const slots=c.count===11?10:c.count,choices=actionIds.size+1;
+      const templates=c.moon?(slots+1)*Math.pow(choices,slots+1):Math.pow(choices,slots);
+      const total=orders*templates,recorded=known.get(key)||0;
+      const result={total,known:recorded,remaining:Math.max(0,total-recorded),fraction:total>0?Math.max(0,1-recorded/total):0};
+      cache.set(key,result);return result;
+    };
+  }
+  function enumerationOptions(exhausted=new Set(),availability){
+    return {moon:'all',availability,exclude:(c,groups)=>availability?availability(c,groups).remaining===0:!c.moon&&c.count===1&&groups.some((g,i)=>c.counts[i]&&exhausted.has(g.key))};
   }
   function compositions(planner,ingredients,mechanics,potions,query,order='rare',rarity='all',limit=60,options={}){
     const scenes=scenarios(mechanics,potions,query),best=[];
     const selected=ingredients.filter(i=>rarity==='common'?i.rarity==='common':rarity==='seasonal'?i.rarity!=='very_rare':true);
     const compare=(a,b)=>order==='coverage'?b.probability-a.probability||b.unknown-a.unknown||a.rareN-b.rareN||a.seasonalN-b.seasonalN:a.rareN-b.rareN||a.seasonalN-b.seasonalN||b.probability-a.probability||b.unknown-a.unknown;
+    const gs=planner.groups(selected,query.level);
     const groups=planner.eachComposition(query.level,selected,mechanics,c=>{
-      const score=coverage(c,scenes);if(!score.unknown)return;
+      const score=coverage(c,scenes);if(!score.unknown||score.probability<=0)return;
+      const available=options.availability?.(c,gs);
+      if(available){score.probability*=available.fraction;if(score.probability<=0)return;}
       const candidate={...c,unknown:score.unknown,total:score.total,probability:score.probability};
       if(best.length===limit&&compare(candidate,best.at(-1))>=0)return;
       candidate.counts=c.counts.slice();
@@ -131,6 +184,6 @@
     for(const c of best)c.outcomes=coverage(c,scenes,true).outcomes;
     return {groups,candidates:best};
   }
-  const api={missing,key,catalog,singleKnownEffect,exhaustedSingles,enumerationOptions,annotate,scenarios,coverage,compositions};
+  const api={ordinaryOutcome,sequenceAvailability,missing,key,catalog,singleKnownEffect,exhaustedSingles,enumerationOptions,annotate,scenarios,coverage,compositions};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.HpwfWantedPlanner=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

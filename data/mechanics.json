@@ -148,6 +148,31 @@
       "method": "Сезонные: 1000 × exp(level−1); особо редкие: 5000 × exp(level−1).",
       "note": "Эмпирическая закономерность по составам базы, а не подтверждённая формула игрового движка. Есть противоречащие записи. Силы всех членов группы равны; требуются контрольные варки.",
       "referenceValueComparison": "Для сравнения с целыми наблюдаемыми ценностями округляется только итоговая сумма до ближайшего целого. В калькуляторе сохраняется полная точность."
+    },
+    "discoveryDurationModel": {
+      "counts": {
+        "1": {
+          "1h": 104,
+          "5h": 208,
+          "1w": 863
+        },
+        "2": {
+          "1h": 4,
+          "5h": 85,
+          "1w": 184,
+          "1mo": 809
+        },
+        "3": {
+          "5h": 0,
+          "1w": 62,
+          "1mo": 133,
+          "2mo": 534
+        }
+      },
+      "pseudocount": 0.5,
+      "sourceCommit": "2365ee429115babee90a16a3148c43f181a7632f",
+      "sample": "2986 distinct known sequences; new-style and single-effect named potions; grouped by potion level, without action-level duration shifts",
+      "status": "empirical_recipe_sample"
     }
   },
   "brewingExperience": [
