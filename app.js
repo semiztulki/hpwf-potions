@@ -42,6 +42,7 @@ function showAccessScreen(){
 }
 function openFunctionalTab(id){
   if(["potions","test-brew","add-recipe","wanted"].includes(id)&&accessMode!=="authenticated") return showAccessScreen();
+  if(id==="wanted"&&typeof wantedResetFilters==="function")wantedResetFilters();
   document.querySelectorAll(".tab,.tab-panel").forEach(x=>x.classList.remove("active"));
   const navButton=document.querySelector('.tab[data-tab="'+id+'"]');
   if(navButton) navButton.classList.add("active");

@@ -32,7 +32,7 @@ test('discovery and calculator use identical attainable ranges on each level',()
 });
 function uiFixture(){
  const nodes=new Map(),events=new Map(),calls=[];
- const $=id=>{if(!nodes.has(id))nodes.set(id,{value:'',checked:false,innerHTML:'',addEventListener(){},requestSubmit(){calls.push('submit');}});return nodes.get(id);};
+ const $=id=>{if(!nodes.has(id))nodes.set(id,{value:'',checked:false,innerHTML:'',dataset:{},addEventListener(){},requestSubmit(){calls.push('submit');}});return nodes.get(id);};
  const c={$,accessMode:'authenticated',adminState:{password:'test',writePassword:'test'},state:{mechanics:null,ingredients:[],potions:{},wanted:[]},document:{addEventListener(type,fn){events.set(type,fn);}},openFunctionalTab:id=>calls.push(id),plannerDurations:()=>calls.push('durations'),plannerReset:()=>calls.push('reset')};
  vm.createContext(c);vm.runInContext(fs.readFileSync(require.resolve('../wanted-ui.js'),'utf8'),c);
  return {c,$,calls,run:s=>vm.runInContext(s,c)};
@@ -149,4 +149,15 @@ test('Moon supplies a separate 0..450 bonus and is retained for exhausted single
  const seen=[];planner.eachComposition(1,ing,m,c=>seen.push({...c}),wanted.enumerationOptions(exhausted));
  assert.ok(!seen.some(c=>c.count===1&&!c.moon));assert.ok(seen.some(c=>c.count===1&&c.moon));
  assert.equal(wanted.exhaustedSingles(ing,actions,recipes.slice(0,1)).size,0);
+});
+
+test('entering Wanted resets all filters and hides unused composition fields',()=>{
+ const {$,run}=uiFixture();
+ for(const id of ['wantedLevel','wantedDuration','wantedType','wantedMode','wantedOrder','wantedRarity'])$(id).value='changed';
+ $('wantedNoMoon').checked=true;run('wantedResetFilters();wantedControlLabels();');
+ for(const id of ['wantedLevel','wantedDuration','wantedType','wantedRarity'])assert.equal($(id).value,'all');
+ assert.equal($('wantedMode').value,'targets');assert.equal($('wantedNoMoon').checked,false);
+ $('wantedMode').value='compositions';run('wantedControlLabels();');
+ assert.equal($('wantedDurationField').hidden,true);assert.equal($('wantedTypeField').hidden,true);
+ assert.match($('wantedModeTip').dataset.tooltip,/лучшие сочетания/);
 });

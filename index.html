@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261126-wanted-moon4">
+  <link rel="stylesheet" href="style.css?v=20261127-wanted-words1">
 </head>
 <body>
   <section id="accessScreen" class="portal-screen">
@@ -383,15 +383,15 @@
     </section>
     <section id="wanted" class="tab-panel">
       <div class="section-heading">
-        <div><p class="eyebrow">Факультетская база</p><h2>Wanted</h2></div>
+        <div><h2>Wanted</h2></div>
         <span id="wantedCount" class="count-pill">0</span>
       </div>
-      <p class="meta">Цели для пробных варок нового образца, ещё не отмеченные в базе.</p>
-      <div class="wanted-filters"><label>Показывать <select id="wantedMode"><option value="targets">Неизвестные зелья</option><option value="compositions">Составы для открытий</option></select></label><label>Сначала <select id="wantedOrder"><option value="rare">Доступнее ингредиенты</option><option value="coverage">Больше новых целей</option></select></label><label>Ингредиенты <select id="wantedRarity"><option value="all">Любые</option><option value="seasonal">Без особо редких</option><option value="common">Только обычные</option></select></label></div>
+      <p class="wanted-intro">разыскиваются новые (и даже именные!) зелья<br>не забудь опубликовать новые рецепты <a href="https://harrypotter.com.ua/index.php?showtopic=49167" target="_blank" rel="noopener noreferrer">в этой теме</a><br>пусть великий рандом будет на твоей стороне!</p>
+      <div class="wanted-filters"><label class="desktop-tip" id="wantedModeTip">Показывать <select id="wantedMode"><option value="targets">Неизвестные зелья</option><option value="compositions">что смешивать</option></select></label><label class="desktop-tip" id="wantedOrderTip">Сначала <select id="wantedOrder"><option value="rare">Доступнее ингредиенты</option><option value="coverage">больший шанс наварить кросивое</option></select></label><label>Ингредиенты <select id="wantedRarity"><option value="all">Любые</option><option value="seasonal">Без особо редких</option><option value="common">Только обычные</option></select></label><label class="desktop-tip wanted-moon-filter" data-tooltip="не каждый день у нас полнолуние..."><input id="wantedNoMoon" type="checkbox"> не показывать Луну</label></div>
       <div id="wantedFilters" class="planner-fields wanted-discovery-filters">
-        <label class="field"><span>Уровень</span><select id="wantedLevel"><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3" selected>3 уровень</option></select></label>
-        <label class="field"><span>Длительность</span><select id="wantedDuration"></select></label>
-        <label class="field"><span>Вид эффекта</span><select id="wantedType"><option value="all">Все эффекты</option><option value="concentration">Концентрация</option><option value="efficiency">Эффективность</option><option value="resistance">Устойчивость</option></select></label>
+        <label class="field"><span>Уровень</span><select id="wantedLevel"><option value="all" selected>Все уровни</option><option value="1">1 уровень</option><option value="2">2 уровень</option><option value="3">3 уровень</option></select></label>
+        <label class="field" id="wantedDurationField"><span>Длительность</span><select id="wantedDuration"></select></label>
+        <label class="field" id="wantedTypeField"><span>Вид эффекта</span><select id="wantedType"><option value="all">Все эффекты</option><option value="concentration">Концентрация</option><option value="efficiency">Эффективность</option><option value="resistance">Устойчивость</option></select></label>
       </div>
       <div id="wantedCards" class="wanted-grid"></div>
       <button id="wantedMore" type="button" class="admin-secondary-btn" hidden>Показать ещё</button>
@@ -406,12 +406,12 @@
   </footer>
   </div>
   <script src="value-model.js?v=20261126-rare-spread1" defer></script>
-  <script src="app.js?v=20261126-wanted-moon4" defer></script>
-  <script src="admin.js?v=20261126-wanted-moon4" defer></script>
-  <script src="effect-planner.js?v=20261126-wanted-moon4" defer></script>
-  <script src="effect-planner-ui.js?v=20261126-wanted-moon4" defer></script>
-  <script src="wanted-planner.js?v=20261126-wanted-moon4" defer></script>
-  <script src="wanted-ui.js?v=20261126-wanted-moon4" defer></script>
+  <script src="app.js?v=20261127-wanted-words1" defer></script>
+  <script src="admin.js?v=20261127-wanted-words1" defer></script>
+  <script src="effect-planner.js?v=20261127-wanted-words1" defer></script>
+  <script src="effect-planner-ui.js?v=20261127-wanted-words1" defer></script>
+  <script src="wanted-planner.js?v=20261127-wanted-words1" defer></script>
+  <script src="wanted-ui.js?v=20261127-wanted-words1" defer></script>
   <script src="editing.js?v=20261003-1" defer></script>
 </body>
 </html>

@@ -10,7 +10,7 @@ function plannerGroupTile(group,count){
   const kind={common:"Обычный",seasonal:"Сезонный",very_rare:"Особо редкий"}[group.rarity];
   const label=kind+" ингредиент "+group.level+" уровня";
   const first=group.ingredients[0].imageUrl||"",gif="assets/groups/"+group.key+".gif";
-  return '<div class="planner-group" tabindex="0" role="group" aria-label="'+esc(label)+', '+count+' шт."><div class="planner-group-picture"><picture><source media="(prefers-reduced-motion: reduce)" srcset="'+esc(first)+'"><img src="'+gif+'" width="56" height="56" alt="'+esc(label)+'" loading="lazy"></picture><strong>×'+count+'</strong></div><span class="planner-group-label">'+esc(kind)+' · '+group.level+' ур.</span><div class="planner-tip" role="tooltip"><strong>'+esc(label)+'</strong><p>'+group.ingredients.map(i=>esc(i.name)).join(", ")+'</p></div></div>';
+  return '<div class="planner-group" tabindex="0" role="group" aria-label="'+esc(label)+', '+count+' шт."><div class="planner-group-picture"><picture><source media="(prefers-reduced-motion: reduce)" srcset="'+esc(first)+'"><img src="'+gif+'" width="56" height="56" alt="'+esc(label)+'" loading="lazy"></picture><strong>×'+count+'</strong></div><span class="planner-group-label">'+esc(kind)+' · '+group.level+' ур.</span><div class="planner-tip" role="tooltip"><strong>'+esc('можно выбрать любой '+{common:'обычный',seasonal:'сезонный',very_rare:'особо редкий'}[group.rarity]+' ингредиент '+group.level+' уровня:')+'</strong><p>'+group.ingredients.map(i=>esc(i.name)).join(", ")+'</p></div></div>';
 }
 function plannerRender(){
   const result=effectPlannerState.result,q=effectPlannerState.query;if(!result)return;
@@ -70,4 +70,4 @@ function initEffectPlanner(){
 }
 initEffectPlanner();
 
-function plannerMoonTile(){return '<div class="planner-group" tabindex="0" role="group" aria-label="Свет полной луны"><div class="planner-group-picture"><img src="assets/catalog/full-moon.png" width="56" height="56" alt="Свет полной луны"><strong>×1</strong></div><span class="planner-group-label">Свет полной луны</span><div class="planner-tip" role="tooltip">Добавь до 11-го ингредиента. Бонус к ценности: 0–450.</div></div>';}
+function plannerMoonTile(){return '<div class="planner-group" tabindex="0" role="group" aria-label="Свет полной луны"><div class="planner-group-picture"><img src="assets/catalog/full-moon.png" width="56" height="56" alt="Свет полной луны"><strong>×1</strong></div><span class="planner-group-label">Свет полной луны</span><div class="planner-tip" role="tooltip">рандомный бонус к ценности 0-450</div></div>';}
