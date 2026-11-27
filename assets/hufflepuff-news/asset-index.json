@@ -1,0 +1,40 @@
+{
+  "assets": [
+    "header.png",
+    "paper-background.png",
+    "heading-curator.png",
+    "heading-alchemy.png",
+    "heading-ingredients.png",
+    "heading-owl.png",
+    "heading-young-masters.png"
+  ],
+  "sections": [
+    {
+      "title": "колонка куратора",
+      "image": "heading-curator.png"
+    },
+    {
+      "title": "достижения в области зельеварения и прикладной алхимии",
+      "image": "heading-alchemy.png"
+    },
+    {
+      "title": "кладовая ингредиентов",
+      "image": "heading-ingredients.png"
+    },
+    {
+      "title": "бонжур сова",
+      "image": "heading-owl.png"
+    },
+    {
+      "title": "юные мастера зелий",
+      "image": "heading-young-masters.png"
+    }
+  ],
+  "post_width": 720,
+  "github_path": "assets/hufflepuff-news",
+  "hosting": {
+    "repository": "semiztulki/hpwf-potions",
+    "branch": "main",
+    "directory": "assets/hufflepuff-news"
+  }
+}

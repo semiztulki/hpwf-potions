@@ -1,0 +1,24 @@
+[c][table width=720 border=0 cellspacing=0 cellpadding=0 bgcolor=#F5F1E0 background=https://raw.githubusercontent.com/semiztulki/hpwf-potions/main/assets/hufflepuff-news/paper-background.png]
+[tr][td][img]https://raw.githubusercontent.com/semiztulki/hpwf-potions/main/assets/hufflepuff-news/header.png[/img][/td][/tr]
+[tr][td][table width=100% border=0 cellspacing=0 cellpadding=28][tr][td]
+[c][font=Arial][size=9][color=#805D2C]ХАФФЛПАФФ · ВЫПУСК № 01[/color][/size][/font][/c]
+
+[l][font=Georgia][size=12][color=#493821]Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.[/color][/size][/font][/l]
+
+[c][img]https://raw.githubusercontent.com/semiztulki/hpwf-potions/main/assets/hufflepuff-news/heading-curator.png[/img][/c]
+[l][font=Georgia][size=12][color=#493821]Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.[/color][/size][/font][/l]
+
+[c][img]https://raw.githubusercontent.com/semiztulki/hpwf-potions/main/assets/hufflepuff-news/heading-alchemy.png[/img][/c]
+[l][font=Georgia][size=12][color=#493821]Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.[/color][/size][/font][/l]
+
+[c][img]https://raw.githubusercontent.com/semiztulki/hpwf-potions/main/assets/hufflepuff-news/heading-ingredients.png[/img][/c]
+[l][font=Georgia][size=12][color=#493821]Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.[/color][/size][/font][/l]
+
+[c][img]https://raw.githubusercontent.com/semiztulki/hpwf-potions/main/assets/hufflepuff-news/heading-owl.png[/img][/c]
+[l][font=Georgia][size=12][color=#493821]Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.[/color][/size][/font][/l]
+
+[c][img]https://raw.githubusercontent.com/semiztulki/hpwf-potions/main/assets/hufflepuff-news/heading-young-masters.png[/img][/c]
+[l][font=Georgia][size=12][color=#493821]Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vitae sapien ut libero venenatis faucibus. Nullam quis ante, etiam sit amet orci eget eros faucibus tincidunt.[/color][/size][/font][/l]
+
+[c][font=Georgia][size=10][color=#805D2C]The Practical Potioneer[/color][/size][/font][/c]
+[/td][/tr][/table][/td][/tr][/table][/c]
