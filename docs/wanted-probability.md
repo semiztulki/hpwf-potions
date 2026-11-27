@@ -47,3 +47,13 @@ from a small deliberately selected batch.
 Validation includes exhaustive enumeration for small compositions, Moon/action
 positions, the 11th-ingredient boundary, duplicate recipes, all-category blockers,
 partial/full exhaustion, duration weights and named/scripted effect identity.
+
+Sequence corrections below 0.01 percentage point of final discovery probability are
+omitted (strict inequality). A per-composition lower bound on sequence count,
+ignoring permutations between different ingredient groups, allows skipping the full
+count whenever the resulting upper error bound is already below that threshold.
+Otherwise compute the exact count and apply the same threshold to the actual change.
+Fully exhausted compositions are always excluded, even if their uncorrected score
+was below the tolerance. The detailed availability API still returns exact counts.
+The bound and exact-count reuse live only within the existing single calculation;
+there is no new cache across filter changes or page visits, and no Worker.

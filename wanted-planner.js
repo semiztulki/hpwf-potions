@@ -125,10 +125,11 @@
     const moonIds=new Set(actions.filter(a=>a.kind==='moon').map(a=>a.id));
     // At most 11 ingredients per group: base-12 digits cannot carry into another group.
     // The nine level/rarity groups fit exactly in a Number; the low bit marks Moon.
-    const groupCodes=new Map(),codesByGroups=new WeakMap();let nextCode=2;
+    const groupCodes=new Map(),groupSizes=new Map(),codesByGroups=new WeakMap();let nextCode=2;
     for(const i of ingredients){
       const key=i.level+'-'+i.rarity;
       if(!groupCodes.has(key)){groupCodes.set(key,nextCode);nextCode*=12;}
+      groupSizes.set(key,(groupSizes.get(key)||0)+1);
     }
     function compositionKey(c,groups){
       let codes=codesByGroups.get(groups);
@@ -137,7 +138,12 @@
       for(let i=0;i<codes.length;i++)key+=codes[i]*(c.counts[i]||0);
       return key;
     }
-    const seen=new Set(),known=new Map(),cache=new Map();
+    const seen=new Set(),known=new Map(),minimumTotals=new Map(),cache=new Map();
+    const tolerance=0.0001; // 0.01 percentage point of final discovery probability.
+    function templateCount(count,moon){
+      const slots=count===11?10:count,choices=actionIds.size+1;
+      return moon?(slots+1)*Math.pow(choices,slots+1):Math.pow(choices,slots);
+    }
     for(const recipe of recipes){
       const seq=recipe.sequence;if(!seq?.length||seq.length>23||seq[0].type==='action')continue;
       let key=0,n=0,moons=0,valid=true;
@@ -157,6 +163,14 @@
       if(!valid||!n)continue;
       const signature=JSON.stringify(seq.map(x=>[x.type,x.ref]));if(seen.has(signature))continue;seen.add(signature);
       known.set(key,(known.get(key)||0)+1);
+      if(!minimumTotals.has(key)){
+        let choices=1;
+        for(const x of seq)if(x.type==='ingredient'){
+          const i=im.get(x.ref);choices*=groupSizes.get(i.level+'-'+i.rarity);
+        }
+        // Omitting permutations of different groups gives a safe lower bound on N.
+        minimumTotals.set(key,choices*templateCount(n,moons));
+      }
     }
     function calculate(c,groups,key){
       if(cache.has(key))return cache.get(key);
@@ -167,21 +181,28 @@
         for(let j=1;j<=count;j++)orders*=(used+j)/j;
         used+=count;orders*=Math.pow(g.ingredients.length,count);
       });
-      const slots=c.count===11?10:c.count,choices=actionIds.size+1;
-      const templates=c.moon?(slots+1)*Math.pow(choices,slots+1):Math.pow(choices,slots);
-      const total=orders*templates,recorded=known.get(key)||0;
+      const total=orders*templateCount(c.count,c.moon),recorded=known.get(key)||0;
       const result={total,known:recorded,remaining:Math.max(0,total-recorded),fraction:total>0?Math.max(0,1-recorded/total):0};
       cache.set(key,result);return result;
     }
     const availability=(c,groups)=>calculate(c,groups,compositionKey(c,groups));
     // Most compositions have no recorded sequences: no denominator is needed for them.
-    availability.fraction=(c,groups)=>{
+    availability.fraction=(c,groups,probability=1)=>{
       const key=compositionKey(c,groups);
-      return known.has(key)?calculate(c,groups,key).fraction:1;
+      const recorded=known.get(key);if(!recorded)return 1;
+      const minimum=minimumTotals.get(key);
+      // Short-circuit before counting permutations only when even the upper error bound
+      // is strictly below tolerance, and the composition cannot be exhausted.
+      if(minimum>recorded&&probability*recorded/minimum<tolerance)return 1;
+      const result=calculate(c,groups,key);
+      if(!result.remaining)return 0;
+      return probability*recorded/result.total<tolerance?1:result.fraction;
     };
     availability.exhausted=(c,groups)=>{
       const key=compositionKey(c,groups);
-      return known.has(key)?calculate(c,groups,key).remaining===0:false;
+      const recorded=known.get(key);
+      if(!recorded||minimumTotals.get(key)>recorded)return false;
+      return calculate(c,groups,key).remaining===0;
     };
     return availability;
   }
@@ -196,7 +217,7 @@
     const groups=planner.eachComposition(query.level,selected,mechanics,c=>{
       const score=coverage(c,scenes);if(!score.unknown||score.probability<=0)return;
       if(options.availability){
-        const fraction=options.availability.fraction?.(c,gs)??options.availability(c,gs).fraction;
+        const fraction=options.availability.fraction?.(c,gs,score.probability)??options.availability(c,gs).fraction;
         score.probability*=fraction;if(score.probability<=0)return;
       }
       const candidate={...c,unknown:score.unknown,total:score.total,probability:score.probability};

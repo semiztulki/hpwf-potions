@@ -243,7 +243,7 @@ test('exclusion and scoring share sequence totals for a recorded composition',()
  const groups=[{key:'1-common',get ingredients(){reads++;return fixtureIngredients;}}];
  const availability=wanted.sequenceAvailability(fixtureIngredients,fixtureActions,[{sequence:[step('ingredient','a')]}]);
  const c={count:1,counts:[1],moon:false},options=wanted.enumerationOptions(new Set(),availability);
- assert.equal(options.exclude(c,groups),false);assert.equal(reads,1);
+ assert.equal(options.exclude(c,groups),false);assert.equal(reads,0);
  assert.equal(availability.fraction(c,groups),5/6);assert.equal(reads,1);
  assert.equal(availability(c,groups).known,1);assert.equal(reads,1);
 });
@@ -271,4 +271,44 @@ test('custom availability functions without fast paths remain supported',()=>{
  assert.equal(wanted.enumerationOptions(new Set(),availability).exclude({},[]),true);
  const m={value:{effectDivisors:{1:{x:{concentration:100}}}}};
  assert.equal(wanted.compositions(planner,fixtureIngredients,m,[],{level:1,duration:'all',type:'all'},'rare','all',60,{availability}).candidates.length,0);
+});
+
+test('negligible sequence penalties skip permutation counting before exclusion and scoring',()=>{
+ const ing=[{id:'a',level:1,rarity:'common',basePower:100}];
+ const actions=Array.from({length:9},(_,n)=>({id:'action-'+n,kind:'action'}));
+ const recorded={sequence:Array.from({length:5},()=>step('ingredient','a'))};
+ const availability=wanted.sequenceAvailability(ing,actions,[recorded]);
+ const groups=[{key:'1-common',get ingredients(){throw new Error('Negligible penalty must skip the full count');}}];
+ const c={count:5,counts:[5],moon:false};
+ assert.equal(wanted.enumerationOptions(new Set(),availability).exclude(c,groups),false);
+ assert.equal(availability.fraction(c,groups),1); // 1/100,000 changes the score by at most 0.001 pp.
+});
+test('sequence penalty threshold is strict and uses the final probability change',()=>{
+ const ing=[{id:'a',level:1,rarity:'common',basePower:100}];
+ const actions=Array.from({length:9},(_,n)=>({id:'action-'+n,kind:'action'}));
+ const recipes=[3,4,5].map(n=>({sequence:Array.from({length:n},()=>step('ingredient','a'))}));
+ const availability=wanted.sequenceAvailability(ing,actions,recipes),groups=planner.groups(ing,1);
+ const c=n=>({count:n,counts:[n],moon:false});
+ assert.equal(availability.fraction(c(3),groups),.999); // 0.1 pp: retained.
+ assert.equal(availability.fraction(c(4),groups),.9999); // Exactly 0.01 pp: retained.
+ assert.equal(availability.fraction(c(5),groups),1); // 0.001 pp: omitted.
+ assert.equal(availability.fraction(c(4),groups,.5),1); // At a 50% base score the change is 0.005 pp.
+ assert.equal(availability.fraction(c(4),groups),.9999); // A previous small base score cannot affect a later one.
+ assert.equal(availability(c(5),groups).total,100000);
+ assert.equal(availability(c(5),groups).fraction,.99999); // Detailed counts stay exact.
+});
+test('when a lower bound is inconclusive, exact permutations decide the tolerance',()=>{
+ const ing=[{id:'a',level:1,rarity:'common',basePower:100},{id:'b',level:1,rarity:'seasonal',basePower:1000}];
+ const actions=Array.from({length:3},(_,n)=>({id:'action-'+n,kind:'action'}));
+ const sequence=['a','a','a','b','b','b'].map(ref=>step('ingredient',ref));
+ const availability=wanted.sequenceAvailability(ing,actions,[{sequence}]),groups=planner.groups(ing,1),c={count:6,counts:[3,3],moon:false};
+ assert.equal(availability(c,groups).total,20*4**6);
+ assert.equal(availability.fraction(c,groups),1);
+});
+test('fully exhausted sequences stay excluded even at a negligible uncorrected score',()=>{
+ const ing=[{id:'a',level:1,rarity:'common',basePower:100}],recipes=[{sequence:[step('ingredient','a')]}];
+ const availability=wanted.sequenceAvailability(ing,[],recipes),groups=planner.groups(ing,1),c={count:1,counts:[1],moon:false};
+ assert.equal(availability.exhausted(c,groups),true);
+ assert.equal(availability.fraction(c,groups,.000001),0);
+ assert.equal(wanted.enumerationOptions(new Set(),availability).exclude(c,groups),true);
 });
